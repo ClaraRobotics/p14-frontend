@@ -175,3 +175,5 @@ src/api/backend_api.ts
 src/node_modules
 
 *.AppImage
+
+release/
