@@ -173,3 +173,5 @@ src/.DS_Store
 src/api/backend_api.ts
 .DS_Store
 src/node_modules
+
+*.AppImage
