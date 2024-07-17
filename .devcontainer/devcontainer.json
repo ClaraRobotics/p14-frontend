@@ -1,0 +1,16 @@
+{
+    "build": { "dockerfile": "Dockerfile" },
+  
+    "customizations": {
+      "vscode": {
+        "extensions": ["dbaeumer.vscode-eslint"]
+      }
+    },
+  
+    "forwardPorts": [3000],
+
+    "mounts": [
+      "type=bind,source=${localEnv:HOME}/.ssh,target=/mnt/.ssh,readonly"
+    ]
+  }
+  
