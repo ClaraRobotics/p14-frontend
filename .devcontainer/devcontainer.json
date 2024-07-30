@@ -10,7 +10,7 @@
       }
     },
   
-    "forwardPorts": [3000],
+    // "forwardPorts": [],
 
     "mounts": [
       "type=bind,source=${localEnv:HOME}/.ssh,target=/mnt/.ssh,readonly"
