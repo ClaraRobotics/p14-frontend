@@ -1,0 +1,16 @@
+name: Backup to ota@claraindustries.com
+
+on:
+  push:
+      
+jobs:
+  backup:
+    runs-on: x64-main
+    steps:
+      - name: Execute remote ssh commands using ssh key
+        uses: fifsky/ssh-action@master
+        with:
+          host:    ${{ secrets.OTA_HOST }}
+          user:    ${{ secrets.OTA_USER }}
+          key:     ${{ secrets.OTA_KEY  }}
+          command: ./script/git-pull.sh -r "${{ github.event.repository.name }}"
