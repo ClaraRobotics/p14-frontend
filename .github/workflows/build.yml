@@ -1,0 +1,81 @@
+name: Build to ota@claraindustries.com
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - pre-release
+
+env:
+  VERSION_INCREMENT: patch
+  PRERELEASE: false
+  APP_NAME: App
+      
+jobs:
+  build:
+    runs-on: x64-main
+    steps:
+      # ===
+      # Checkout code
+      # ===
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # ===
+      # Assign version number
+      # ===
+  
+      - name: Check [minor] in commit message
+        if: contains(github.event.head_commit.message, '[minor]')
+        run: echo "VERSION_INCREMENT=minor" >> $GITHUB_ENV
+  
+      - name: Check [major] in commit message
+        if: contains(github.event.head_commit.message, '[major]')
+        run: echo "VERSION_INCREMENT=major" >> $GITHUB_ENV
+
+      - name: Get next version
+        uses: reecetech/version-increment@2023.4.1
+        id: version
+        with:
+          scheme: semver
+          increment: ${{ env.VERSION_INCREMENT }}
+
+      # ===
+      # Yarn build
+      # ===
+
+      - name: Set Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Yarn
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install # will run `yarn install` command
+  
+      - name: Build
+        run: ./script/build.sh -l
+
+      # ===
+      # Create tag and release
+      # ===
+
+      - name: Check prerelease label
+        if: contains(steps.version.outputs.pre-release-label, 'pre')
+        run: echo "PRERELEASE=true" >> $GITHUB_ENV
+
+      - name: Upload To Github Release
+        uses: xresloader/upload-to-github-release@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          tags: true
+          draft: false
+          prerelease: ${{ env.PRERELEASE }}
+          tag_name: "${{ steps.version.outputs.version }}"
+          file: "./build/release/${{ env.APP_NAME }}.AppImage"
+
+      

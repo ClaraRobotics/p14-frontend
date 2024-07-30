@@ -1,9 +1,0 @@
-version: 3.0.2
-files:
-  - url: ElectronReact-3.0.2.AppImage
-    sha512: B3vbCV8qL/0YVpKsCq2TJu9+tgq0KhL8vegsiHDoMWaCy3j6Wk/rANXw9l90I22I/oqCFFVAN1SPg7KcFKCX7Q==
-    size: 80230978
-    blockMapSize: 84566
-path: ElectronReact-3.0.2.AppImage
-sha512: B3vbCV8qL/0YVpKsCq2TJu9+tgq0KhL8vegsiHDoMWaCy3j6Wk/rANXw9l90I22I/oqCFFVAN1SPg7KcFKCX7Q==
-releaseDate: '2023-10-09T11:14:41.422Z'
