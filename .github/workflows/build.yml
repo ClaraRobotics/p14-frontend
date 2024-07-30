@@ -11,6 +11,8 @@ env:
   VERSION_INCREMENT: patch
   PRERELEASE: false
   APP_NAME: App
+  REMOTE_RELEASE_DIR: release
+  BUILD_DIR: "build/release"
       
 jobs:
   build:
@@ -60,6 +62,42 @@ jobs:
         run: ./script/build.sh -l
 
       # ===
+      # Scp to backup server
+      # ===
+          
+      - name: Get current time
+        uses: josStorer/get-current-time@v2.0.2
+        id: current-time
+        with:
+          format: YYYYMMDD-HHmmss
+          utcOffset: "+07:00"
+
+      - name: Create backup directory at server
+        uses: fifsky/ssh-action@master
+        with:
+          host:     ${{ secrets.OTA_HOST }}
+          user:     ${{ secrets.OTA_USER }}
+          key:      ${{ secrets.OTA_KEY  }}
+          command:  |
+            mkdir -p "${{ env.REMOTE_RELEASE_DIR }}/${{ github.event.repository.name }}"
+            cd       "${{ env.REMOTE_RELEASE_DIR }}/${{ github.event.repository.name }}"
+            ln -s "${{ steps.current-time.outputs.formattedTime }}" "${{ steps.version.outputs.version }}"
+          
+      - name: Insert version.txt file
+        run: |
+          echo "${{ steps.version.outputs.version }}" > ./${{ env.BUILD_DIR }}/version.txt
+          
+      - name: Copy to release server
+        uses: nogsantos/scp-deploy@master
+        with:
+          src:    "./${{ env.BUILD_DIR }}"
+          remote: "./${{ env.REMOTE_RELEASE_DIR }}/${{ github.event.repository.name }}/${{ steps.current-time.outputs.formattedTime }}"
+          port:   22
+          host:   ${{ secrets.OTA_HOST }}
+          user:   ${{ secrets.OTA_USER }}
+          key:    ${{ secrets.OTA_KEY  }}
+
+      # ===
       # Create tag and release
       # ===
 
@@ -76,6 +114,6 @@ jobs:
           draft: false
           prerelease: ${{ env.PRERELEASE }}
           tag_name: "${{ steps.version.outputs.version }}"
-          file: "./build/release/${{ env.APP_NAME }}.AppImage"
+          file: "./${{ env.BUILD_DIR }}/${{ env.APP_NAME }}.AppImage"
 
       
