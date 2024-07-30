@@ -2,13 +2,62 @@
 
 PWD="$( cd "$(dirname "$0")" > /dev/null 2>&1 ; pwd -P )"
 
-cd "$PWD"
+cd "$PWD/.."
+
+# --- Required env ---
+# ROBOT_PC_HOST
+# --------------------
+
 set -a
-. ../.env
+. .env
 set +a
 
-yarn package 
+while getopts dplv: flag
+do
+    case "${flag}" in
+        p) p2p=true;;            # build then scp to ROBOT_PC_HOST
+        l) local=true;;          # build only
+    esac
+done
 
-ssh "$ROBOT_COM_HOST" "mkdir -p $APP_NAME/frontend"
-ssh "$ROBOT_COM_HOST" "mv -f $APP_NAME/frontend/Electron*.AppImage $APP_NAME/frontend/Electron-$(date +%Y%m%d-%H%M%S)"
-scp -p ../build/release/Electron* "$ROBOT_COM_HOST:$APP_NAME/frontend/"
+[ ! -z $p2p ] && { local=''; }
+
+[ -z $p2p   ] &&
+[ -z $local ] &&
+{ p2p=true; }
+
+app_name="App"
+release_dir="build/release"
+
+echo "ROBOT_PC_HOST = $ROBOT_PC_HOST"
+echo "app_name      = $app_name"
+echo "p2p           = $p2p"
+echo "local         = $local"
+echo
+
+
+# ===
+# Test ssh connection
+# ===
+
+if [ ! -z $p2p ]
+then
+    ssh "$ROBOT_PC_HOST" "echo test ROBOT_PC_HOST connection. SUCCESS" || exit 65
+    echo
+fi
+
+
+# ===
+# Main process
+# ===
+
+yarn package
+
+mv "$release_dir"/Electron*.AppImage "$release_dir/$app_name.AppImage"
+
+if [ ! -z $p2p ]
+then
+    ssh "$ROBOT_PC_HOST" "mkdir -p $app_name/frontend"
+    ssh "$ROBOT_PC_HOST" "mv -f $app_name/frontend/$app_name.AppImage $app_name/frontend/$app_name-$(date +%Y%m%d-%H%M%S)"
+    scp -p "$release_dir/$app_name.AppImage" "$ROBOT_PC_HOST:$app_name/frontend/$app_name.AppImage"ll
+fi

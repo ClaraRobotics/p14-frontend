@@ -10,6 +10,7 @@ on:
 env:
   VERSION_INCREMENT: patch
   PRERELEASE: false
+  APP_NAME: App
       
 jobs:
   build:
@@ -54,11 +55,9 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: install # will run `yarn install` command
-      
-      - name: Yarn package
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: package # will run `yarn package` command
+  
+      - name: Build
+        run: ./script/build.sh -l
 
       # ===
       # Create tag and release
@@ -77,6 +76,6 @@ jobs:
           draft: false
           prerelease: ${{ env.PRERELEASE }}
           tag_name: "${{ steps.version.outputs.version }}"
-          file: "./build/release/ElectronReact-3.0.2.AppImage"
+          file: "./build/release/${{ env.APP_NAME }}.AppImage"
 
       
