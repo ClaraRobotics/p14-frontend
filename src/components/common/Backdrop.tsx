@@ -9,6 +9,7 @@ const transitionName = 'fade';
 interface PropsData {
   show?: boolean;
   onTap?: TouchEventHandler;
+  onClickOutside?: (e: MouseEvent) => void;
 }
 
 const BackdropElement = styled.div`
@@ -30,7 +31,14 @@ const BackdropElement = styled.div`
 `;
 
 const Backdrop = (props: PropsWithChildren<PropsData>) => {
-  const { show = false, onTap, children } = props;
+  const { show = false, onTap, onClickOutside, children } = props;
+
+  const handleClick: React.MouseEventHandler = (e) => {
+    if (onClickOutside) {
+      onClickOutside(e as unknown as MouseEvent);
+    }
+  };
+
   return (
     <div>
       <CSSTransition
@@ -39,7 +47,10 @@ const Backdrop = (props: PropsWithChildren<PropsData>) => {
         classNames={transitionName}
         unmountOnExit
       >
-        <BackdropElement onTouchEnd={onTap ? onTap : () => {}} />
+        <BackdropElement 
+        onTouchEnd={onTap ? onTap : () => {}}
+        onClick={handleClick}
+        />
       </CSSTransition>
       <div>{children || null}</div>
     </div>

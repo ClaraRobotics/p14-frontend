@@ -25,9 +25,11 @@ const RobotControlPopoverContainer = styled.div`
   padding-top: 100px;
   padding-bottom: 200px;
 `;
+
+
 const RobotControlComponent = ({ t }: WithTranslation) => {
   const [open, setOpen] = useState(false);
-  const [showControlPanel, setShowControlPanel] = useState(false);
+  // const [showControlPanel, setShowControlPanel] = useState(false);
 
   return (
     <div>
@@ -40,13 +42,13 @@ const RobotControlComponent = ({ t }: WithTranslation) => {
         containerStyle={{ zIndex: '1' }}
         content={
           <RobotControlPopoverContainer>
-            <Button
+            {/* <Button
               label="Dev"
               onTap={() => {
                 setShowControlPanel(true);
                 //  window.electron.ipcRenderer.exitFullScreen();
               }}
-            />
+            /> */}
             <Button
               label="LightCT Deactivate"
               onTap={() => {
@@ -73,14 +75,15 @@ const RobotControlComponent = ({ t }: WithTranslation) => {
           />
         </div>
       </Popover>
-      <AlertModal
+
+      {/* <AlertModal
         title={''}
         show={showControlPanel}
         actionButtonLabel={t('common.ok')}
         onActionButtonTap={() => setShowControlPanel(false)}
       >
         <ExitKioskMode />
-      </AlertModal>
+      </AlertModal> */}
     </div>
   );
 };

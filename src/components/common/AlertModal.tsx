@@ -17,6 +17,7 @@ interface PropsData {
   subButtonLabel?: string;
   onSubButtonTap?: TouchEventHandler;
   actionButtonType?: ButtonType;
+  onClickOutside?: (e: MouseEvent) => void;
 }
 
 const Container = styled.div`
@@ -83,10 +84,11 @@ const AlertModal = (props: PropsWithChildren<PropsData>) => {
     onSubButtonTap = () => {},
     actionButtonType,
     children,
+    onClickOutside
   } = props;
 
   return (
-    <Backdrop show={show}>
+    <Backdrop show={show} onClickOutside={onClickOutside}>
       <CSSTransition
         in={show}
         timeout={500}

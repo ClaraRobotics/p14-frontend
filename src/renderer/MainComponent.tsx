@@ -3,7 +3,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import styled from 'styled-components';
 import { withTranslation } from 'react-i18next';
 import { useRecoilState } from 'recoil';
-import { MemoryRouter as Router, Switch, Route } from 'react-router-dom';
+import { MemoryRouter as Router, Switch, Route, useLocation } from 'react-router-dom';
 
 import { statusState, statusActions } from '@/store';
 
@@ -11,6 +11,7 @@ import styles from '@/styles/styles';
 import OverviewView from '@/views/OverviewView';
 import TaskBuilderView from '@/views/TaskBuilderView';
 import ExistingTaskListView from '@/views/ExistingTaskListView';
+import DevPage from '@/views/DevPage';
 import ControlCenterContainer from '@/components/controlCenter/ControlCenterContainer';
 import ControlCenterButton from '@/components/navBar/ControlCenterButton';
 import NavBar from '@/components/navBar/NavBar';
@@ -68,16 +69,20 @@ const MainComponent = () => {
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState];
 
+  const location = useLocation();
+  const isDevPage = location.pathname === '/dev-page';
+
   return (
     <MainComponentContainer>
       <ModalsComponent />
-      <NavBar />
+      <NavBar noMargin={isDevPage}/>
       {/* <ControlCenterContainer /> */}
       <Switch>
         <Route exact path="/" component={OverviewView} />
         <Route path="/pattern-builder" component={TaskBuilderView} />
         <Route path="/existing-task" component={ExistingTaskListView} />
         <Route path="/dashboard" component={DashboardView} />
+        <Route path="/dev-page" component={DevPage} />
       </Switch>
       <ControlBar />
     </MainComponentContainer>

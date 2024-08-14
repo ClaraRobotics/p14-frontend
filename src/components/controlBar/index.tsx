@@ -12,6 +12,7 @@ import { BrowserWindow } from 'electron';
 import AlertModal from '../common/AlertModal';
 import ExitKioskMode from './ExitKioskMode';
 import RobotControlComponent from './RobotControlComponent';
+import DevComponent from './DevComponent';
 import { statusState, viewState, viewActions } from '@/store';
 import { useRecoilState } from 'recoil';
 import api from '@/api';
@@ -37,6 +38,7 @@ const RightBtnGroup = styled.div`
   justify-content: right;
   width: 150px;
   margin-left: auto;
+  gap: 15px;
 `;
 
 const Divider = styled.div`
@@ -171,6 +173,7 @@ const ControlBar = ({ t }: WithTranslation) => {
       </LeftBtnGroup>
       <RightBtnGroup>
         <RobotControlComponent />
+        <DevComponent />
       </RightBtnGroup>
     </Container>
   );
