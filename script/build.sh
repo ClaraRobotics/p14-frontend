@@ -59,5 +59,5 @@ if [ ! -z $p2p ]
 then
     ssh "$ROBOT_PC_HOST" "mkdir -p $app_name/frontend"
     ssh "$ROBOT_PC_HOST" "mv -f $app_name/frontend/$app_name.AppImage $app_name/frontend/$app_name-$(date +%Y%m%d-%H%M%S)"
-    scp -p "$release_dir/$app_name.AppImage" "$ROBOT_PC_HOST:$app_name/frontend/$app_name.AppImage"ll
+    scp -p "$release_dir/$app_name.AppImage" "$ROBOT_PC_HOST:$app_name/frontend/$app_name.AppImage"
 fi
