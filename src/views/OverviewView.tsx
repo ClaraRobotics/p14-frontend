@@ -199,7 +199,7 @@ const OverviewView = ({ t }: WithTranslation) => {
       {/* Preload 2 */}
       <div
         style={{
-          display: isPreload ? 'flex' : 'none',
+          display: false ? 'flex' : 'none',
           zIndex: 1000,
           position: 'fixed',
           top: 0,
@@ -421,14 +421,14 @@ const OverviewView = ({ t }: WithTranslation) => {
           <TaskStat />
           <OverViewDivider />
           <Button
-            disabled={
-              latestStatus.finishBoxIdx?.some((x) => x != 0) ||
-              latestStatus.finishLayerIdx?.some((x) => x != 0) ||
-              ((latestStatus?.palletEnabled?.[0] !== true ||
-                latestStatus?.palletState?.[0]?.mn == 6) && // wait load
-                (latestStatus?.palletEnabled?.[1] !== true ||
-                  latestStatus?.palletState?.[1]?.mn == 6)) // wait load
-            }
+            // disabled={
+            //   latestStatus.finishBoxIdx?.some((x) => x != 0) ||
+            //   latestStatus.finishLayerIdx?.some((x) => x != 0) ||
+            //   ((latestStatus?.palletEnabled?.[0] !== true ||
+            //     latestStatus?.palletState?.[0]?.mn == 6) && // wait load
+            //     (latestStatus?.palletEnabled?.[1] !== true ||
+            //       latestStatus?.palletState?.[1]?.mn == 6)) // wait load
+            // }
             frontIcon={<IoIosCreate />}
             label={t('maincomponent.createtask.button')}
             onTap={onCreateTask}

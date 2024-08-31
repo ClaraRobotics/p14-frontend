@@ -230,8 +230,9 @@ const SummaryContent = ({ t }: WithTranslation) => {
             label={t('taskbuilder.summary.button.start')}
             rearIcon={<FaWrench />}
             onTap={
-              () => checkEmerThenCallAction(() => robotStart())
+              //() => checkEmerThenCallAction(() => robotStart())
               // )
+              ()=>robotStart()
             }
           />
         )}
