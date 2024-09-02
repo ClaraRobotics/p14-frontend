@@ -199,7 +199,7 @@ const OverviewView = ({ t }: WithTranslation) => {
       {/* Preload 2 */}
       <div
         style={{
-          display: false ? 'flex' : 'none',
+          display: isPreload ? 'flex' : 'none',
           zIndex: 1000,
           position: 'fixed',
           top: 0,
