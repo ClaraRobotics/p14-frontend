@@ -106,7 +106,7 @@ const ModalsComponents = ({ t }: WithTranslation) => {
           viewActions.setAlarmModal(view, setView, false)
         }
       />
-      <ModalIntrusionDetected
+      {/* <ModalIntrusionDetected
         callbackAction={() => {
           resetLightCurtainEmergency();
           setClock02(false)
@@ -115,7 +115,7 @@ const ModalsComponents = ({ t }: WithTranslation) => {
             1
           );
         }}
-      />
+      /> */}
       <ModalPalletNotEmpty
         callbackAction={() => {
           endStack();
