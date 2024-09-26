@@ -279,7 +279,7 @@ const BoxDetailSection = ({ t }: WithTranslation) => {
           }
         />
       </Section>
-       <Row>
+       {/* <Row>
         <Field
           label={t('taskbuilder.pattern.boxdetail.pick.label')}
           slot={
@@ -303,7 +303,7 @@ const BoxDetailSection = ({ t }: WithTranslation) => {
             />
           }
         />
-      </Row>
+      </Row> */}
        <Row>
         <Field
           label={t('taskbuilder.pattern.boxdetail.robot_speed.label')}
@@ -321,7 +321,7 @@ const BoxDetailSection = ({ t }: WithTranslation) => {
           }
         />
       </Row>
-      <Row>
+      {/* <Row>
         <>
           <OptionText>
             {t('taskbuilder.pattern.boxdetail.rotateodd')}
@@ -354,7 +354,7 @@ const BoxDetailSection = ({ t }: WithTranslation) => {
             }
           />
         </>
-      </Row>
+      </Row> */}
       {/* <Row>
         {parseInt(stackHeight) < 140 && (
           <>
