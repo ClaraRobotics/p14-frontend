@@ -283,24 +283,24 @@ const BoxDetailSection = ({ t }: WithTranslation) => {
         <Field
           label={t('taskbuilder.pattern.boxdetail.pick.label')}
           slot={
-            // <Toggle
-            //   offLabel={t('taskbuilder.pattern.boxdetail.pick.normal')}
-            //   onLabel={t('taskbuilder.pattern.boxdetail.pick.sideway')}
-            //   offValue={false}
-            //   onValue={true}
-            //   selected={task.isPickSpecial}
-            //   onToggle={onPickAngleChange}
-            // />
-            <TriToggle
-              label_0={""}
-              label_1={t('taskbuilder.pattern.boxdetail.pick.sideway')}
-              label_2={t('taskbuilder.pattern.boxdetail.pick.no_tying')}
-              value_0={0}
-              value_1={1}
-              value_2={2}
-              selected={task.isNoTying ? 2 : task.isPickSpecial ? 1 : 0}
+            <Toggle
+              offLabel={t('taskbuilder.pattern.boxdetail.pick.normal')}
+              onLabel={t('taskbuilder.pattern.boxdetail.pick.sideway')}
+              offValue={false}
+              onValue={true}
+              selected={task.isPickSpecial}
               onToggle={onPickAngleChange}
             />
+            // <TriToggle
+            //   label_0={""}
+            //   label_1={t('taskbuilder.pattern.boxdetail.pick.sideway')}
+            //   label_2={t('taskbuilder.pattern.boxdetail.pick.no_tying')}
+            //   value_0={0}
+            //   value_1={1}
+            //   value_2={2}
+            //   selected={task.isNoTying ? 2 : task.isPickSpecial ? 1 : 0}
+            //   onToggle={onPickAngleChange}
+            // />
           }
         />
       </Row> */}
