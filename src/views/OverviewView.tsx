@@ -430,10 +430,23 @@ const OverviewView = ({ t }: WithTranslation) => {
             //       latestStatus?.palletState?.[1]?.mn == 6)) // wait load
             // }
             frontIcon={<IoIosCreate />}
-            label={t('maincomponent.createtask.button')}
+            label={t('maincomponent.createtask.button')+" A"}
             onTap={onCreateTask}
           />
-          <WhyDisabledText
+          <Button
+            // disabled={
+            //   latestStatus.finishBoxIdx?.some((x) => x != 0) ||
+            //   latestStatus.finishLayerIdx?.some((x) => x != 0) ||
+            //   ((latestStatus?.palletEnabled?.[0] !== true ||
+            //     latestStatus?.palletState?.[0]?.mn == 6) && // wait load
+            //     (latestStatus?.palletEnabled?.[1] !== true ||
+            //       latestStatus?.palletState?.[1]?.mn == 6)) // wait load
+            // }
+            frontIcon={<IoIosCreate />}
+            label={t('maincomponent.createtask.button')+" B"}
+            onTap={onCreateTask}
+          />
+          {/* <WhyDisabledText
             show={
               (latestStatus?.palletEnabled?.[0] !== true ||
                 latestStatus?.palletState?.[0]?.mn == 6) && // wait load
@@ -442,7 +455,7 @@ const OverviewView = ({ t }: WithTranslation) => {
             }
           >
             กรุณาโหลดพาเลท และเปิดพาเลท ก่อนเริ่มสั่งงานใหม่
-          </WhyDisabledText>
+          </WhyDisabledText> */}
           <ManualControlButtons />
           {/*Start of modal components*/}
           <BasicModal
