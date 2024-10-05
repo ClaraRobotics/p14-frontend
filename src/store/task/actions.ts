@@ -265,3 +265,10 @@ export const setRotateFlipEvery = (
 ) => {
   setter({ ...state, rotateFlipEvery: payload });
 };
+
+
+
+export const setLineIndex = (state: State, setter: SetterOrUpdater<State>, payload: number) => {
+
+  setter({...state, line_index: payload})
+};

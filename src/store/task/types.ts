@@ -9,6 +9,8 @@ import {
 import internal from 'stream';
 
 export interface State {
+  //multi-line
+  line_index:number;
   // general
   currentStep: Step;
   isPatternListShow: boolean;

@@ -34,6 +34,7 @@ import VerticalPercentBar from '@/components/PercentBar/VerticalPercentBar';
 import preloadBg from '@assets/img/CLARA.png';
 
 import Column from '@/components/common/Column';
+import { setLineIndex } from '@/store/task/actions';
 const OverviewViewContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -156,8 +157,10 @@ const OverviewView = ({ t }: WithTranslation) => {
 
   const latestStatus = status.lastHeartBeatMessage;
 
-  const onCreateTask = () => setCreateTaskModalShow(true);
-
+  const onCreateTask = (line_index) => {
+    setCreateTaskModalShow(true);
+    taskActions.setLineIndex(task,setTask,line_index);
+  }
   /* Preload 1 */
   const preload_texts = {
     unk: '( - ) กำลังเตรียมความพร้อมของระบบ',
@@ -431,7 +434,7 @@ const OverviewView = ({ t }: WithTranslation) => {
             // }
             frontIcon={<IoIosCreate />}
             label={t('maincomponent.createtask.button')+" A"}
-            onTap={onCreateTask}
+            onTap={()=>onCreateTask(0)}
           />
           <Button
             // disabled={
@@ -444,7 +447,7 @@ const OverviewView = ({ t }: WithTranslation) => {
             // }
             frontIcon={<IoIosCreate />}
             label={t('maincomponent.createtask.button')+" B"}
-            onTap={onCreateTask}
+            onTap={()=>onCreateTask(1)}
           />
           {/* <WhyDisabledText
             show={

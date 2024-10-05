@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash';
 import { State } from './types';
 
 export const defaultTask: State = {
+  line_index:0,
   currentStep: 'pattern',
   isPatternListShow: false,
   selectedPattern: null,

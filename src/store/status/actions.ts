@@ -26,7 +26,9 @@ export const setCurrentTask = (
 	setter: SetterOrUpdater<State>,
 	payload: any /*robotSimulation object*/
 ) => {
-	setter({ ...state, currentTask: payload });
+	let newCurrentTask = state.currentTask;
+	newCurrentTask[payload.line_index] = payload
+	setter({ ...state, currentTask:newCurrentTask });
 };
 export const setCurrentTaskAndLoading = (
 	state: State,
