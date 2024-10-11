@@ -22,7 +22,7 @@ import Field from '@/components/common/Field';
 import Row from '@/components/common/Row';
 import ModalSaveTask from '@/components/common/modals/ModalSaveTask';
 import { WithTranslation, withTranslation } from 'react-i18next';
-import { maxPossibleBoxesPerPallet } from '@/store/task/selectors';
+import { currentLineIndex, maxPossibleBoxesPerPallet } from '@/store/task/selectors';
 import { InfoTextSmall } from '@/components/common/texts/InfoText';
 import generatePayloadLayers from '@/util/generatePayloadLayers';
 import Toggle from '../common/Toggle';
@@ -78,7 +78,10 @@ const SummaryContent = ({ t }: WithTranslation) => {
   };
   const robotStart = () => {
     // grilled
-
+    const  valCurrentLineIndex= useRecoilValue(
+      currentLineIndex
+    );
+  
     const payloadLayers = generatePayloadLayers(
       task,
       system,
@@ -89,7 +92,8 @@ const SummaryContent = ({ t }: WithTranslation) => {
     api
       .post('/robot/start-order', {
         ...payloadLayers,
-        dryRun: isDryRun
+        dryRun: isDryRun,
+        valCurrentLineIndex
       })
       .then((res) => {
         let robotSimulation = res.data;
