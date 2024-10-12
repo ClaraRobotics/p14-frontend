@@ -92,7 +92,7 @@ const ConveyorBoxStatus = styled.div`
   margin-top: 5px;
   // margin-bottom: 65px;
   width: 350px;
-  height: 292px;
+  height: 122px;
   // border: 2px solid ${styles.colors.gray6};
 `;
 
@@ -266,7 +266,7 @@ const OverviewView = ({ t }: WithTranslation) => {
         <OverviewContent>
           <Row>
             <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
-              {t('maincomponent.overviewview.inputconveyor')}
+              {t('maincomponent.overviewview.inputconveyor')+" B"}
             </h1>
           </Row>
           <Row>
@@ -298,60 +298,24 @@ const OverviewView = ({ t }: WithTranslation) => {
                     .then((res: any) => {});
                 }}
               />
-              <br />
-              <h1
-                style={{
-                  color: styles.colors.gray3,
-                  fontWeight: 600,
-                  position: 'absolute',
-                  top: 340,
-                }}
-              >
-                {t('pallet.auto_pallet')}
-              </h1>
-              <br />
-              <br />
-              <br />
-              <Toggle
-                onLabel={t('common.on')}
-                onValue={true}
-                offLabel={t('common.off')}
-                offValue={false}
-                onToggle={(toggleValue: boolean) => {
-                  api
-                    .post('/robot/auto-pallet-toggle', {
-                      isEnable: toggleValue,
-                    })
-                    .then((res: any) => {});
-                }}
-                selected={autoPalletMode}
-                hilighted
-              />
+            
             </Column>
             <Column>
               <ConveyorBoxStatus style={{ backgroundColor: 'transparent' }}>
                 <ConveyorLine left={30} top={0} length={280} horizontal />
                 <ConveyorLine left={30} top={110} length={170} horizontal />
-                <ConveyorLine left={200} top={110} length={220} />
-                <ConveyorLine left={310} top={0} length={330} />
+                <ConveyorLine left={200} top={110} length={0} />
+                <ConveyorLine left={310} top={0} length={0} />
                 <Separator left={30} top={10} />
                 <Separator left={212} top={110} horizontal />
 
                 <BoxPositionState
-                  left={235}
-                  top={130}
-                  active={
-                    latestStatus?.conveyorBox?.[0]?.c == 2 ||
-                    latestStatus?.conveyorBox?.[0]?.c == 5
-                  }
-                />
-                <BoxPositionState
-                  left={235}
+                  left={55}
                   top={65}
                   active={latestStatus?.conveyorBox?.[0]?.d == 2}
                 />
                 <BoxPositionState
-                  left={235}
+                  left={55}
                   top={15}
                   active={
                     latestStatus?.conveyorBox?.[0]?.d == 3 ||
@@ -359,21 +323,70 @@ const OverviewView = ({ t }: WithTranslation) => {
                     latestStatus?.conveyorBox?.[0]?.d == 5
                   }
                 />
+
+                </ConveyorBoxStatus>
+            </Column>
+          </Row>
+          <Row>
+            <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
+              {t('maincomponent.overviewview.inputconveyor')+" A"}
+            </h1>
+          </Row>
+          <Row>
+            <Column>
+              <Toggle
+                onLabel={t('common.on')}
+                onValue={true}
+                offLabel={t('common.off')}
+                offValue={false}
+                onToggle={(toggleValue: boolean) => {
+                  api
+                    .post('/robot/conveyor-enable-toggle', {
+                      conveyorId: 0,
+                      isEnable: toggleValue,
+                    })
+                    .then((res: any) => {});
+                }}
+                selected={conveyor_enabled}
+                hilighted
+              />
+              <Button
+                style={{ width: 150, marginLeft: 0 }}
+                disabled={false}
+                frontIcon={<IoIosCube />}
+                label={'Clear'}
+                onTap={() => {
+                  api
+                    .post('/robot/clear-state', { input: true })
+                    .then((res: any) => {});
+                }}
+              />
+            
+            </Column>
+            <Column>
+              <ConveyorBoxStatus style={{ backgroundColor: 'transparent' }}>
+                <ConveyorLine left={30} top={0} length={280} horizontal />
+                <ConveyorLine left={30} top={110} length={170} horizontal />
+                <ConveyorLine left={200} top={110} length={0} />
+                <ConveyorLine left={310} top={0} length={0} />
+                <Separator left={30} top={10} />
+                <Separator left={212} top={110} horizontal />
+
                 <BoxPositionState
-                  left={174}
-                  top={15}
-                  active={latestStatus?.conveyorBox?.[0]?.d == 6}
+                  left={55}
+                  top={65}
+                  active={latestStatus?.conveyorBox?.[0]?.d == 2}
                 />
                 <BoxPositionState
-                  left={113}
+                  left={55}
                   top={15}
-                  active={latestStatus?.conveyorBox?.[0]?.e == 2}
+                  active={
+                    latestStatus?.conveyorBox?.[0]?.d == 3 ||
+                    latestStatus?.conveyorBox?.[0]?.d == 4 ||
+                    latestStatus?.conveyorBox?.[0]?.d == 5
+                  }
                 />
-                <BoxPositionState
-                  left={52}
-                  top={15}
-                  active={latestStatus?.conveyorBox?.[0]?.e == 3}
-                />
+                
               </ConveyorBoxStatus>
             </Column>
           </Row>
