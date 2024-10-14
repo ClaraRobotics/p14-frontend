@@ -76,11 +76,12 @@ const SummaryContent = ({ t }: WithTranslation) => {
       });
     history.push('/');
   };
+  const  valCurrentLineIndex= useRecoilValue(
+    currentLineIndex
+  );
   const robotStart = () => {
     // grilled
-    const  valCurrentLineIndex= useRecoilValue(
-      currentLineIndex
-    );
+
   
     const payloadLayers = generatePayloadLayers(
       task,
@@ -93,7 +94,7 @@ const SummaryContent = ({ t }: WithTranslation) => {
       .post('/robot/start-order', {
         ...payloadLayers,
         dryRun: isDryRun,
-        valCurrentLineIndex
+        line_index:valCurrentLineIndex
       })
       .then((res) => {
         let robotSimulation = res.data;
