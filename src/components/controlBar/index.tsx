@@ -88,12 +88,12 @@ const ControlBar = ({ t }: WithTranslation) => {
   const checkEmerThenCallAction = (callbackFunction: () => any) => {
     viewActions.checkEmerThencall(view, setView, status, callbackFunction);
   };
-  const endStack = () => {
+  const endStack = (line_index) => {
     //TODO handle error
 
     // statusActions.setCurrentTask(status, setStatus, {});
     api
-      .get('/robot/end-order')
+      .post('/robot/end-order',{line_index:line_index})
       .then((res: any) => {})
       .catch((err: any) => {
         alert(err);
@@ -147,8 +147,14 @@ const ControlBar = ({ t }: WithTranslation) => {
         <Divider />
         <ControlButton
           icon={<MdLayersClear />}
-          label={t('controlbar.button.end')}
-          onTap={() => {checkEmerThenCallAction(endStack)}}
+          label={t('controlbar.button.end')+"A"}
+          onTap={() => {checkEmerThenCallAction(()=>endStack(0))}}
+        />
+        <Divider />
+                <ControlButton
+          icon={<MdLayersClear />}
+          label={t('controlbar.button.end')+"B"}
+          onTap={() => {checkEmerThenCallAction(()=>endStack(0))}}
         />
       <RobotStatusContainer>
         <RobotStatusLabel>

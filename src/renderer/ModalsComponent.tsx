@@ -118,7 +118,7 @@ const ModalsComponents = ({ t }: WithTranslation) => {
       /> */}
       <ModalPalletNotEmpty
         callbackAction={() => {
-          endStack();
+          // endStack();
           viewActions.setPalletNotEmptyModal(view, setView, false);
         }}
         callbackSubButton={() =>

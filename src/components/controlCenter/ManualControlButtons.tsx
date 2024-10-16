@@ -76,17 +76,6 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
         alert(err);
       });
   };
-  const endStack = () => {
-    //TODO handle error
-
-    // statusActions.setCurrentTask(status, setStatus, {});
-    api
-      .get('/robot/end-order')
-      .then((res: any) => {})
-      .catch((err: any) => {
-        alert(err);
-      });
-  };
   const loadPallet = () => {
     //TODO handle error
     api
