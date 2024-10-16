@@ -257,14 +257,14 @@ const OverviewView = ({ t }: WithTranslation) => {
           style={{ width: 800, borderLeft: 'none', paddingLeft: 0 }}
         >
           <Row>
-            <PalletStackWithControls idx={1} />
+           <div style={{marginLeft:25}}> <PalletStackWithControls idx={1} /></div>
           </Row>
           <Row>
             <PalletStackWithControls idx={0} />
           </Row>
         </OverviewContent>
         <OverviewContent>
-          <Row>
+          <div style={{marginLeft:25}}><Row>
             <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
               {t('maincomponent.overviewview.inputconveyor')+" B"}
             </h1>
@@ -327,6 +327,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                 </ConveyorBoxStatus>
             </Column>
           </Row>
+          </div>
           <Row>
             <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
               {t('maincomponent.overviewview.inputconveyor')+" A"}
@@ -434,7 +435,8 @@ const OverviewView = ({ t }: WithTranslation) => {
               {t('maincomponent.overviewview.current_task')}
             </h1>
           </Row>
-          <TaskStat />
+          <TaskStat line_index={1}/>
+          <TaskStat line_index={0}/>
           <OverViewDivider />
           <Button
             // disabled={

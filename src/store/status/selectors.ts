@@ -5,10 +5,18 @@ import statusState from './state';
 
 
 
-export const isThereCurrentTask = selector({
-  key: 'isThereCurrentTask',
+export const isThereCurrentTaskA = selector({
+  key: 'isThereCurrentTaskA',
   get: ({ get }) => {
     const status = get(statusState);
-    return !isEmpty(status.currentTask);//true when there is a task, false otherwise
+    return !isEmpty(status.currentTask[0]);//true when there is a task, false otherwise
+  },
+});
+
+export const isThereCurrentTaskB = selector({
+  key: 'isThereCurrentTaskB',
+  get: ({ get }) => {
+    const status = get(statusState);
+    return !isEmpty(status.currentTask[1]);//true when there is a task, false otherwise
   },
 });

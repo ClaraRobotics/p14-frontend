@@ -10,37 +10,49 @@ import PatternPreview from '../taskBuilder/PatternPreview';
 import { isEmpty } from 'lodash';
 import Button from '../common/buttons/Button';
 import { statusSelectors } from '@/store/status';
-const TaskStatContainer = styled.div`
-  font-size: 25pt;
-  min-height: 300px;
+
+
+interface TaskStatContainerProps{
+  line_index:number
+}
+const TaskStatContainer= styled.div<TaskStatContainerProps>`
+  font-size: 15pt;
+  min-height: 200px;
+  margin-left:  ${(props) => props.line_index==1?"50px":"0px"};
 `;
 const TaskStatLabel = styled.div``;
 const TaskStatValue = styled.div``;
 const PatternPreviewWrapper = styled.div`
   zoom: 0.1;
 `;
-const TaskStat = ({ t }: WithTranslation) => {
+
+
+interface TaskStatProps extends WithTranslation {
+  line_index: number;
+}
+const TaskStat = ({ t ,line_index}: TaskStatProps) => {
   const history = useHistory();
 
   const [status, setStatus] = useRecoilState(statusState);
   const [task, setTask] = useRecoilState(taskState);
   const latestStatus = status.lastHeartBeatMessage;
 
-  const isThereCurrenTask = useRecoilValue(statusSelectors.isThereCurrentTask);
+  const isThereCurrenTask = useRecoilValue(line_index==0?statusSelectors.isThereCurrentTaskA:statusSelectors.isThereCurrentTaskB);
+  
   let currentPattern = [];
   try {
-    currentPattern = status.currentTask.stackCenter[0];
+    currentPattern = status.currentTask[line_index].stackCenter[0];
   } catch (err) {
     currentPattern = [];
   }
   return (
     <>
       {!isThereCurrenTask ? (
-        <TaskStatContainer>
+        <TaskStatContainer line_index={line_index}>
           {t('taskstatus.no_task_assigned')}
         </TaskStatContainer>
       ) : (
-        <TaskStatContainer>
+        <TaskStatContainer line_index={line_index}>
           {/* Layer: {NaNDisplay(latestStatus?.finishLayerIdx + 1)}
           <br />
           Box: {NaNDisplay(latestStatus?.finishBoxIdx + 1)}
@@ -56,10 +68,10 @@ const TaskStat = ({ t }: WithTranslation) => {
           <PatternPreviewWrapper>
             <PatternPreview boxes={currentPattern} />
           </PatternPreviewWrapper>
-          ขนาด:{status?.currentTask?.widthX}x{status?.currentTask?.heightY}x
-          {status?.currentTask?.layerHeight}
+          ขนาด:{status?.currentTask[line_index]?.widthX}x{status?.currentTask[line_index]?.heightY}x
+          {status?.currentTask[line_index]?.layerHeight}
           <br/>
-          ชื่อออเดอร์: {status?.taskTitle}
+          ชื่อออเดอร์: {status[line_index]?.taskTitle}
         </TaskStatContainer>
       )}
     </>

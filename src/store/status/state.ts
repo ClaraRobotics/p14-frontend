@@ -5,9 +5,9 @@ import { State } from './types';
 export const defaultStatus: State = {
   connectionStatus: 'closed',
   lastHeartBeatMessage: {},
-  currentTask:[{},[]],
+  currentTask:[{},{}],
   writeJobLoading:false,
-  taskTitle: 'untitled'
+  taskTitle: ['untitled','untitled']
 };
 
 const statusState = atom({
