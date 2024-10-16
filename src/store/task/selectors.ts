@@ -61,3 +61,12 @@ export const maxPossibleBoxesPerPallet = selector({
     return task.previewBoxes.length * task.layout.length;
   },
 });
+
+
+export const currentLineIndex = selector({
+  key: 'currentLineIndex',
+  get: ({ get }) => {
+    const task = get(taskState);
+    return task.line_index;
+  },
+});

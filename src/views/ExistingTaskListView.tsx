@@ -47,7 +47,7 @@ const ExistingTaskListView = () => {
   }, []);
   const [status, setStatus] = useRecoilState(statusState);
 
-  const robotStart = (task: Task) => {
+  const robotStart = (task: Task,line_index) => {
     // grilled
 
     const payloadLayers = task;
@@ -57,7 +57,8 @@ const ExistingTaskListView = () => {
     api
       .post('/robot/start-order', {
         ...payloadLayers,
-        dryRun: isDryRun
+        dryRun: isDryRun,
+        line_index: line_index
       })
       .then((res) => {
         let robotSimulation = res.data;
