@@ -206,7 +206,7 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
           />
         </ButtonColumn>
         <ButtonColumn>
-          <Button
+          {/* <Button
             style={{ width: 130 }}
             disabled={palletExists}
             label={t("maincomponent.overviewview.pick_pallet") + " 1"}
@@ -221,7 +221,7 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
             onTap={() => checkEmerThenCallAction(pickPallet2)}
             // frontIcon={<GrTable />}
             doubleLine
-          />
+          /> */}
           <Button
             label={t('manualbuttons.move_to_maintenance')}
             onTap={() => checkEmerThenCallAction(goMaintenance)}
