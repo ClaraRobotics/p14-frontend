@@ -17,7 +17,7 @@ const generatePayloadLayers = (task:TaskState,system:SystemState,maxPossibleBoxe
   const is_slip_sheet      = task.isSlipSheet;
   const isDoubleStack      = task.isDoubleStack;
   const robotSpeed         = task.robotSpeed;
-
+  const line_index = task.line_index;
   // const stack_height_condition = system.stackHeightCondition;
 
   const boxAmount =
@@ -65,7 +65,8 @@ const generatePayloadLayers = (task:TaskState,system:SystemState,maxPossibleBoxe
     "rotateType":"NORMAL",
     "tieType":"NORMAL",
     "isDoubleStack": isDoubleStack,
-    "robotSpeed": robotSpeed
+    "robotSpeed": robotSpeed,
+    "line_index": line_index
   }
   return payloadLayers;
 }

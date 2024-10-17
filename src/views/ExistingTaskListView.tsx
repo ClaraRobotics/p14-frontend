@@ -145,7 +145,7 @@ const ExistingTaskListView = () => {
         onActionButtonTap={() => {
           setIsShowTaskPreview(false);
           checkEmerThenCallAction(() => {
-            robotStart(filteredTask[currentTaskId])
+            robotStart(filteredTask[currentTaskId])//TODO LOAD LINE_LINDEX
 
             history.push('/')
             // viewActions.checkEmptyPalletThenCall(

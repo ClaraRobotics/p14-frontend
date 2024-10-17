@@ -57,5 +57,6 @@ export interface Task {
   boxAmount: number;
   pickType: PickTypeEnum;
   rotateType: RotateTypeEnum;
-  actions?: any
+  actions?: any;
+  line_index:number
 };

@@ -79,8 +79,8 @@ const ControlBar = ({ t }: WithTranslation) => {
     unk: 'สถานะหุ่นยนต์',
     idle: 'สถานะหุ่นยนต์: ว่าง',
     going_home: 'กลับจุดพัก',
-    writing_job: 'กำลังตั้งงาน',
-    writing_job_dyn_height: 'กำลังตั้งระบบปรับความสูง',
+    writing_job: 'กำลังโหลดไฟล์งาน',
+    writing_job_dyn_height: 'กำลังโหลดระบบปรับความสูง',
     gripper_set_position: 'ระบบหยิบวางพร้อม',
     playing_job: 'ระบบหยิบวางทำงาน'
   };
