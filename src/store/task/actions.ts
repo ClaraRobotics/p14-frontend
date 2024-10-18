@@ -41,8 +41,9 @@ export const goToStep = (state: State, setter: SetterOrUpdater<State>, payload: 
   setter({...state, currentStep: payload});
 };
 
-export const initialize = (setter: SetterOrUpdater<State>) => {
-  setter(cloneDeep(defaultTask));
+export const initialize = (state: State, setter: SetterOrUpdater<State>) => {
+  setter(cloneDeep({...defaultTask,line_index:state.line_index}));
+
 };
 
 export const popRedo = (state: State, setter: SetterOrUpdater<State>) => {

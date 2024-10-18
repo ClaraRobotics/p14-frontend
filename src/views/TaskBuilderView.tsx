@@ -22,7 +22,7 @@ const TaskBuilderView = () => {
   useEffect(() => {
     api.get('/load/system-env').then((res) => {
       setSystem({ ...res.data })
-      taskActions.initialize(setTask);
+      taskActions.initialize(task,setTask);
       setLoading(false);
     }).catch((err) => {
       console.log(err)
@@ -31,7 +31,7 @@ const TaskBuilderView = () => {
     });
 
     return () => {
-      taskActions.initialize(setTask);
+      taskActions.initialize(task,setTask);
     }
   }, [location]);
 
