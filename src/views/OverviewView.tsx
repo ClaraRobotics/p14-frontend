@@ -279,7 +279,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                 onToggle={(toggleValue: boolean) => {
                   api
                     .post('/robot/conveyor-enable-toggle', {
-                      conveyorId: 0,
+                      conveyorId: 1,
                       isEnable: toggleValue,
                     })
                     .then((res: any) => {});
@@ -294,7 +294,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                 label={'Clear'}
                 onTap={() => {
                   api
-                    .post('/robot/clear-state', { input: true })
+                    .post('/robot/clear-state', { input: true,line_index:1 })
                     .then((res: any) => {});
                 }}
               />
@@ -343,7 +343,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                 onToggle={(toggleValue: boolean) => {
                   api
                     .post('/robot/conveyor-enable-toggle', {
-                      conveyorId: 0,
+                      conveyorId: 1,
                       isEnable: toggleValue,
                     })
                     .then((res: any) => {});
@@ -358,7 +358,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                 label={'Clear'}
                 onTap={() => {
                   api
-                    .post('/robot/clear-state', { input: true })
+                    .post('/robot/clear-state', { input: true ,line_index:0 })
                     .then((res: any) => {});
                 }}
               />

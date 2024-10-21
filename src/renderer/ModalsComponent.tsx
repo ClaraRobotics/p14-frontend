@@ -140,7 +140,7 @@ const ModalsComponents = ({ t }: WithTranslation) => {
         callbackSubButton={() =>{
         }}
       />
-      <ModalRefillLightCurtainConfirm />
+      {/* <ModalRefillLightCurtainConfirm /> */}
     </>
   );
 };
