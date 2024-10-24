@@ -97,7 +97,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
 
   //TODO read ejected from last heatbeat message
   let palletEnabled      = latestStatus?.palletEnabled?.[idx] === true;
-  let palletExists       = latestStatus?.palletState?.[idx]?.mn == 2;
+  let palletExists       = latestStatus?.palletState?.[idx]?.mn == 1;
   let palletWaitLoad     = latestStatus?.palletState?.[idx]?.mn == 6;
   let palletOperating    = latestStatus?.palletOperating?.[idx] === true;
   let bufferOutExists    = false;

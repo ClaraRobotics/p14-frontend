@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import styles from '@/styles/styles';
@@ -53,20 +53,24 @@ const ToggleButtonContainer = styled.button`
 
 const Toggle = (props: PropsData) => {
   const { onLabel, onValue, offLabel, offValue, selected, onToggle, hilighted } = props;
-
+  const [isLoading,setIsLoading] = useState(false);
   const onToggleOff = () => {
     if (selected === offValue) return;
     onToggle(offValue);
+    setIsLoading(true)
   };
 
   const onToggleOn = () => {
     if (selected === onValue) return;
     onToggle(onValue);
+    setIsLoading(true);
   };
-
+  useEffect(()=>{
+    setIsLoading(false);
+  },[selected])
   return (
     <ToggleContainer>
-      <ToggleButtonContainer
+      {!isLoading &&<>      <ToggleButtonContainer
         className={selected !== offValue ? '' : hilighted ? 'active-off' : 'active'}
         onTouchEnd={onToggleOff}
       >
@@ -77,7 +81,8 @@ const Toggle = (props: PropsData) => {
         onTouchEnd={onToggleOn}
       >
         {onLabel}
-      </ToggleButtonContainer>
+      </ToggleButtonContainer></>}
+        {isLoading && 'loading..'}
     </ToggleContainer>
   );
 };

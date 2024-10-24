@@ -191,7 +191,9 @@ const OverviewView = ({ t }: WithTranslation) => {
   }, [latestStatus]);
   /* end Preload 1 */
 
-  let conveyor_enabled = latestStatus?.conveyorMotor?.[0]?.input === true;
+  let conveyor_enabled_A = latestStatus?.conveyorMotor?.[0]?.input === true;
+  let conveyor_enabled_B = latestStatus?.conveyorMotor?.[1]?.input === true;
+
   let autoPalletMode = latestStatus?.autoPalletMode === true;
   let palletStockAmount = latestStatus?.palletStockAmount;
   let slipSheetStockAmount = latestStatus?.slipSheetStockAmount;
@@ -284,7 +286,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                     })
                     .then((res: any) => {});
                 }}
-                selected={conveyor_enabled}
+                selected={conveyor_enabled_B}
                 hilighted
               />
               <Button
@@ -343,12 +345,12 @@ const OverviewView = ({ t }: WithTranslation) => {
                 onToggle={(toggleValue: boolean) => {
                   api
                     .post('/robot/conveyor-enable-toggle', {
-                      conveyorId: 1,
+                      conveyorId: 0,
                       isEnable: toggleValue,
                     })
                     .then((res: any) => {});
                 }}
-                selected={conveyor_enabled}
+                selected={conveyor_enabled_A}
                 hilighted
               />
               <Button
