@@ -23,7 +23,7 @@ export const defaultTask: State = {
   undoStack: [],
   redoStack: [],
   stackHeight: '',
-  stackHeightLimit: 2300,
+  stackHeightLimit: 2100,
   activeBox: null,
   layers: [{}, {}],
   patternList:[],
@@ -35,8 +35,8 @@ export const defaultTask: State = {
   isDoubleStack:false,
   robotSpeed: 0,
   isSlipSheet:false,
-  rotateFlipEvery:2,
-  slipSheetEvery:1,
+  rotateFlipEvery:1,
+  slipSheetEvery:4,
 };
 
 const taskState = atom({
