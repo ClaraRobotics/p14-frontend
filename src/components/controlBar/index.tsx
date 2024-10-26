@@ -104,8 +104,7 @@ const ControlBar = ({ t }: WithTranslation) => {
     console.log('start robot!');
     if (
       latestStatus.running_job?.job_name?.slice(0, 5) == 'LINE_' ||
-      latestStatus.running_job?.job_name?.slice(0, 9) == 'RUN_STACK' ||
-      latestStatus.running_job?.job_name?.slice(0, 5) == 'PICK_'
+      latestStatus.running_job?.job_name?.slice(0, 9) == 'RUN_STACK'
     ) {
       api
         .get('/robot/start')
