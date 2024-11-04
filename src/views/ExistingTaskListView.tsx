@@ -47,7 +47,7 @@ const ExistingTaskListView = () => {
   }, []);
   const [status, setStatus] = useRecoilState(statusState);
 
-  const robotStart = (task: Task,line_index) => {
+  const robotStart = (task: Task, line_index) => {
     // grilled
 
     const payloadLayers = task;
@@ -145,7 +145,7 @@ const ExistingTaskListView = () => {
         onActionButtonTap={() => {
           setIsShowTaskPreview(false);
           checkEmerThenCallAction(() => {
-            robotStart(filteredTask[currentTaskId],task)//TODO LOAD LINE_LINDEX
+            robotStart(filteredTask[currentTaskId], 1) //TODO LOAD LINE_LINDEX
 
             history.push('/')
             // viewActions.checkEmptyPalletThenCall(
