@@ -114,7 +114,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
     <PalletStackWithControlsContainer>
       <PalletStackWithControlsContent enabled={palletEnabled}>
         <PalletStackWrap>
-          {palletExists !== true ? (
+          {/* {palletExists !== true ? (
             <h1
               style={{
                 position: 'absolute',
@@ -132,7 +132,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
             </h1>
           ) : (
             ''
-          )}
+          )} */}
           <PalletStack idx={idx} />
         </PalletStackWrap>
         <Button
