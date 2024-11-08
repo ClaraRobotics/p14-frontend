@@ -88,6 +88,8 @@
   "manualbuttons.load_and_start": "START",
   "manualbuttons.end_order": "END ORDER",
   "manualbuttons.gripper_release": "GRIPPER RELEASE",
+  "manualbuttons.gripper_release_a": "GRIP. A RELEASE",
+  "manualbuttons.gripper_release_b": "GRIP. B RELEASE",
   "manualbuttons.manual_load_pallet": "LOAD PALLET",
   "manualbuttons.move_to_home": "MOVE TO HOME",
   "manualbuttons.move_to_maintenance": "MOVE TO MAINTENANCE",

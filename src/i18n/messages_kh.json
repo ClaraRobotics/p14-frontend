@@ -88,6 +88,8 @@
   "manualbuttons.load_and_start": "ចាប់ផ្តើមធ្វើការ",
   "manualbuttons.end_order": "បញ្ចប់ការបញ្ជាទិញ",
   "manualbuttons.gripper_release": "ប្រលែងប្រដាប់ចាប់កេស",
+  "manualbuttons.gripper_release_a": "GRIP. A RELEASE",
+  "manualbuttons.gripper_release_b": "GRIP. B RELEASE",
   "manualbuttons.manual_load_pallet": "ទាញយកពុម្ព",
   "manualbuttons.move_to_home": "ត្រទ្បប់ទៅកាន់ចំនុចសម្រាក",
   "manualbuttons.move_to_maintenance": "ត្រទ្បប់ទៅកាន់ចំនុចជួសជុល",

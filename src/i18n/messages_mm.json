@@ -88,6 +88,8 @@
   "manualbuttons.load_and_start": "ဗန်းကိုတင်ပြီး စတင်လိုက်ပါ။",
   "manualbuttons.end_order": "END ORDER",
   "manualbuttons.gripper_release": "သေတ္တာ လွှတ်",
+  "manualbuttons.gripper_release_a": "GRIP. A RELEASE",
+  "manualbuttons.gripper_release_b": "GRIP. B RELEASE",
   "manualbuttons.manual_load_pallet": "ဗန်းကို တင်ပါ။",
   "manualbuttons.move_to_home": "အိမ်အနေအထားသို့ ရွှေ့ပါ။",
   "manualbuttons.move_to_maintenance": "ပြုပြင်ထိန်းသိမ်းမှုအနေအထားသို့ရွှေ့ပါ။",

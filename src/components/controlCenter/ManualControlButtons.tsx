@@ -67,10 +67,19 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
         alert(err);
       });
   };
-  const gripperRelease = () => {
+  const gripperReleaseA = () => {
     //TODO handle error
     api
-      .post('/robot/play-job', { job: 'GP_SOLN_GRIPPER_R' })
+      .post('/robot/play-job', { job: 'GP_SOLN_GRIPPER_R_A' })
+      .then((res: any) => {})
+      .catch((err: any) => {
+        alert(err);
+      });
+  };
+  const gripperReleaseB = () => {
+    //TODO handle error
+    api
+      .post('/robot/play-job', { job: 'GP_SOLN_GRIPPER_R_B' })
       .then((res: any) => {})
       .catch((err: any) => {
         alert(err);
@@ -193,9 +202,17 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
         </ButtonsGroupLabel>
         <ButtonColumn>
           <Button
-            label={t('manualbuttons.gripper_release')}
-            onTap={() => checkEmerThenCallAction(gripperRelease)}
-            frontIcon={<GiHorizontalFlip />}
+            style={{ width: 130 }}
+            label={t('manualbuttons.gripper_release_a')}
+            onTap={() => checkEmerThenCallAction(gripperReleaseA)}
+            // frontIcon={<GiHorizontalFlip />}
+            doubleLine
+          />
+          <Button
+            style={{ width: 130 }}
+            label={t('manualbuttons.gripper_release_b')}
+            onTap={() => checkEmerThenCallAction(gripperReleaseB)}
+            // frontIcon={<GiHorizontalFlip />}
             doubleLine
           />
           <Button
@@ -209,7 +226,7 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
           <Button
             style={{ width: 130 }}
             disabled={palletExists}
-            label={t("maincomponent.overviewview.pick_pallet") + " 1"}
+            label={t("maincomponent.overviewview.pick_pallet") + " A"}
             onTap={() => checkEmerThenCallAction(pickPallet1)}
             // frontIcon={<GrTable />}
             doubleLine
@@ -217,7 +234,7 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
           <Button
             style={{ width: 130 }}
             disabled={palletExists}
-            label={t("maincomponent.overviewview.pick_pallet") + " 2"}
+            label={t("maincomponent.overviewview.pick_pallet") + " B"}
             onTap={() => checkEmerThenCallAction(pickPallet2)}
             // frontIcon={<GrTable />}
             doubleLine

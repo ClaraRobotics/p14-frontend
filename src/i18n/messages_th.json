@@ -95,6 +95,8 @@
   "manualbuttons.load_and_start": "เริ่มทำงาน",
   "manualbuttons.end_order": "จบออเดอร์",
   "manualbuttons.gripper_release": "ปล่อยที่จับกล่อง",
+  "manualbuttons.gripper_release_a": "GRIP. A RELEASE",
+  "manualbuttons.gripper_release_b": "GRIP. B RELEASE",
   "manualbuttons.manual_load_pallet": "โหลดพาเล็ต",
   "manualbuttons.move_to_home": "กลับจุดพัก",
   "manualbuttons.move_to_maintenance": "กลับจุดซ่อมบำรุง",
