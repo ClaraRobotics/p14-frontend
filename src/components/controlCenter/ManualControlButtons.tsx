@@ -224,7 +224,7 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
         </ButtonColumn>
         <ButtonColumn>
           <Button
-            style={{ width: 130 }}
+            style={{ width: 130, fontSize: '1.4rem' }}
             disabled={palletExists}
             label={t("maincomponent.overviewview.pick_pallet") + " A"}
             onTap={() => checkEmerThenCallAction(pickPallet1)}
@@ -232,7 +232,7 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
             doubleLine
           />
           <Button
-            style={{ width: 130 }}
+            style={{ width: 130, fontSize: '1.4rem' }}
             disabled={palletExists}
             label={t("maincomponent.overviewview.pick_pallet") + " B"}
             onTap={() => checkEmerThenCallAction(pickPallet2)}
