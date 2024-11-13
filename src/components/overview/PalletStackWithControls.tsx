@@ -270,7 +270,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
                       api
                         .post('/robot/adjust-dynamic-height', {
                           palletId: idx,
-                          adjustMm: layerHeightDiff - 7
+                          adjustMm: layerHeightDiff - 10
                         })
                         .then((res: any) => {});
                     }}
@@ -284,7 +284,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
                       api
                         .post('/robot/adjust-dynamic-height', {
                           palletId: idx,
-                          adjustMm: layerHeightDiff + 7
+                          adjustMm: layerHeightDiff + 10
                         })
                         .then((res: any) => {});
                     }}
