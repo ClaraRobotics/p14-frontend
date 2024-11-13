@@ -103,8 +103,9 @@ const ControlBar = ({ t }: WithTranslation) => {
   const startRobot = () => {
     console.log('start robot!');
     if (
-      latestStatus.running_job?.job_name?.slice(0, 5) == 'LINE_' ||
-      latestStatus.running_job?.job_name?.slice(0, 9) == 'RUN_STACK'
+      latestStatus.running_job?.job_name?.slice(0, 5) == 'LINE_'     ||
+      latestStatus.running_job?.job_name?.slice(0, 9) == 'RUN_STACK' ||
+      latestStatus.running_job?.job_name?.slice(0, 5) == 'PICK_'
     ) {
       api
         .get('/robot/start')
@@ -113,7 +114,7 @@ const ControlBar = ({ t }: WithTranslation) => {
     }
     else {
       api
-        .post('/robot/play-job', { job: 'RUN_STACK' })
+        .post('/robot/play-job', { job: 'RUN_STACK' }) // TODO: GO_HOME then RUN_STACK
         .then((res: any) => {})
         .catch((err: any) => {
           alert(err);
