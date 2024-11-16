@@ -1,0 +1,15 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    // "isBackground": true - Mark as a background task to avoid the spinner animation on the terminal tab
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "yarn start",
+            "type": "shell",
+            "command": "yarn start",
+            "isBackground": true,
+            "problemMatcher": []
+        }
+    ]
+}
