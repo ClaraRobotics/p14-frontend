@@ -4,5 +4,5 @@ export interface State {
   lastHeartBeatMessage:any;
   currentTask:any; //TODO robotSimulation type
   writeJobLoading:boolean;
-  taskTitle: Array<string>
+  taskTitle: string[]
 }

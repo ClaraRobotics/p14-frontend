@@ -47,7 +47,7 @@ const generatePayloadLayers = (task:TaskState,system:SystemState,maxPossibleBoxe
       layers[ Math.floor((iLayer % (rotate_flip_every*2)) / rotate_flip_every) ]
     )
 
-    console.log({is_slip_sheet})
+    // console.log({is_slip_sheet})
     layer.slipSheet = is_slip_sheet && (iLayer % slip_sheet_every == 0)
 
     layers_full.push(layer)

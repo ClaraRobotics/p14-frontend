@@ -35,9 +35,22 @@ export const setCurrentTaskAndLoading = (
 	setter: SetterOrUpdater<State>,
 	payloadTask: any /*robotSimulation object*/,
 	payloadLoading: boolean,
-  taskTitle: string
+    title: string,
+	line_index: number
 ) => {
-	setter({ ...state, currentTask: payloadTask, writeJobLoading: payloadLoading, taskTitle });
+	let currentTask = [
+		...state.currentTask.slice(0, line_index),
+		payloadTask,
+		...state.currentTask.slice(line_index + 1)
+	]
+
+	let taskTitle = [
+		...state.taskTitle.slice(0, line_index),
+		title,
+		...state.taskTitle.slice(line_index + 1)
+	]
+
+	setter({ ...state, currentTask, writeJobLoading: payloadLoading, taskTitle });
 };
 
 export const setWriteJobLoading = (

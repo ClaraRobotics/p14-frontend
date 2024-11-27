@@ -104,7 +104,8 @@ const SummaryContent = ({ t }: WithTranslation) => {
           setStatus,
           robotSimulation,
           false,
-          ''
+          'Unknown Order',
+          valCurrentLineIndex
         );
         setIsShowSaveModal(true);
       })

@@ -5,7 +5,7 @@ import { State } from './types';
 export const defaultStatus: State = {
   connectionStatus: 'closed',
   lastHeartBeatMessage: {},
-  currentTask:[{},{}],
+  currentTask:[null, null],
   writeJobLoading:false,
   taskTitle: ['untitled','untitled']
 };

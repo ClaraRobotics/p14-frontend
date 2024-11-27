@@ -9,7 +9,7 @@ export const isThereCurrentTaskA = selector({
   key: 'isThereCurrentTaskA',
   get: ({ get }) => {
     const status = get(statusState);
-    return !isEmpty(status.currentTask[0]);//true when there is a task, false otherwise
+    return status.currentTask[0] !== null;//true when there is a task, false otherwise
   },
 });
 
@@ -17,6 +17,6 @@ export const isThereCurrentTaskB = selector({
   key: 'isThereCurrentTaskB',
   get: ({ get }) => {
     const status = get(statusState);
-    return !isEmpty(status.currentTask[1]);//true when there is a task, false otherwise
+    return status.currentTask[1] !== null;//true when there is a task, false otherwise
   },
 });

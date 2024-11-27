@@ -25,7 +25,7 @@ const TaskStatContainer= styled.div<TaskStatContainerProps>`
 const TaskStatLabel = styled.div``;
 const TaskStatValue = styled.div``;
 const PatternPreviewWrapper = styled.div`
-  zoom: 0.1;
+  zoom: 0.12;
 `;
 
 
@@ -49,7 +49,8 @@ const TaskStat = ({ t ,line_index}: TaskStatProps) => {
   }
   return (
     <>
-      {!isThereCurrenTask ? (
+      { // !isThereCurrenTask ? (
+        false ? (
         <TaskStatContainer line_index={line_index}>
           {t('taskstatus.no_task_assigned')}
         </TaskStatContainer>
