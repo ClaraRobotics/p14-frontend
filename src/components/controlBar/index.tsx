@@ -114,7 +114,7 @@ const ControlBar = ({ t }: WithTranslation) => {
     }
     else {
       api
-        .post('/robot/play-job', { job: 'GO_HOME_RUN_STACK' })
+        .post('/robot/play-job', { job: 'ENTER_RUN_STACK' })
         .then((res: any) => {})
         .catch((err: any) => {
           alert(err);
