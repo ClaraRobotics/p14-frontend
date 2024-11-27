@@ -32,7 +32,7 @@
   "controlcenter.button.resume.label": "Resume",
   "controlcenter.control.title": "Control panel",
   "statusbar.emer_stopped": "EMER. STOPPED",
-  "maincomponent.createtask.button": "Assign new task",
+  "maincomponent.createtask.button": "New Order",
   "maincomponent.createtask.modal.option.new": "Create New",
   "maincomponent.createtask.modal.option.existing": "Choose from Existing Task",
   "navbar.status.robotstatus.robot.label": "ROBOT",

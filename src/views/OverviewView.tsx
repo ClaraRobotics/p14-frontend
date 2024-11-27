@@ -259,77 +259,13 @@ const OverviewView = ({ t }: WithTranslation) => {
           style={{ width: 800, borderLeft: 'none', paddingLeft: 0 }}
         >
           <Row>
-           <div style={{marginLeft:25}}> <PalletStackWithControls idx={1} /></div>
+            <PalletStackWithControls idx={0} />
           </Row>
           <Row>
-            <PalletStackWithControls idx={0} />
+            <PalletStackWithControls idx={1} />
           </Row>
         </OverviewContent>
         <OverviewContent>
-          <div style={{marginLeft:25}}><Row>
-            <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
-              {t('maincomponent.overviewview.inputconveyor')+" B"}
-            </h1>
-          </Row>
-          <Row>
-            <Column>
-              <Toggle
-                onLabel={t('common.on')}
-                onValue={true}
-                offLabel={t('common.off')}
-                offValue={false}
-                onToggle={(toggleValue: boolean) => {
-                  api
-                    .post('/robot/conveyor-enable-toggle', {
-                      conveyorId: 1,
-                      isEnable: toggleValue,
-                    })
-                    .then((res: any) => {});
-                }}
-                selected={conveyor_enabled_B}
-                hilighted
-              />
-              <Button
-                style={{ width: 150, marginLeft: 0 }}
-                disabled={false}
-                frontIcon={<IoIosCube />}
-                label={'Clear'}
-                onTap={() => {
-                  api
-                    .post('/robot/clear-state', { input: true,line_index:1 })
-                    .then((res: any) => {});
-                }}
-              />
-            
-            </Column>
-            <Column>
-              <ConveyorBoxStatus style={{ backgroundColor: 'transparent' }}>
-                <ConveyorLine left={30} top={0} length={280} horizontal />
-                <ConveyorLine left={30} top={110} length={170} horizontal />
-                <ConveyorLine left={200} top={110} length={0} />
-                <ConveyorLine left={310} top={0} length={0} />
-                <Separator left={30} top={10} />
-                <Separator left={212} top={110} horizontal />
-
-                <BoxPositionState
-                  left={55}
-                  top={65}
-                  active={latestStatus?.conveyorBox?.[0]?.d == 2}
-                />
-                <BoxPositionState
-                  left={55}
-                  top={15}
-                  active={
-                    latestStatus?.conveyorBox?.[0]?.d == 3 ||
-                    latestStatus?.conveyorBox?.[0]?.d == 4 ||
-                    latestStatus?.conveyorBox?.[0]?.d == 5
-                  }
-                />
-
-                </ConveyorBoxStatus>
-            </Column>
-          </Row>
-          </div>
           <Row>
             <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
               {t('maincomponent.overviewview.inputconveyor')+" A"}
@@ -369,11 +305,10 @@ const OverviewView = ({ t }: WithTranslation) => {
             <Column>
               <ConveyorBoxStatus style={{ backgroundColor: 'transparent' }}>
                 <ConveyorLine left={30} top={0} length={280} horizontal />
-                <ConveyorLine left={30} top={110} length={170} horizontal />
+                <ConveyorLine left={30} top={110} length={280} horizontal />
                 <ConveyorLine left={200} top={110} length={0} />
                 <ConveyorLine left={310} top={0} length={0} />
                 <Separator left={30} top={10} />
-                <Separator left={212} top={110} horizontal />
 
                 <BoxPositionState
                   left={55}
@@ -395,6 +330,68 @@ const OverviewView = ({ t }: WithTranslation) => {
           </Row>
           <Row>
             <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
+              {t('maincomponent.overviewview.inputconveyor')+" B"}
+            </h1>
+          </Row>
+          <Row>
+            <Column>
+              <Toggle
+                onLabel={t('common.on')}
+                onValue={true}
+                offLabel={t('common.off')}
+                offValue={false}
+                onToggle={(toggleValue: boolean) => {
+                  api
+                    .post('/robot/conveyor-enable-toggle', {
+                      conveyorId: 1,
+                      isEnable: toggleValue,
+                    })
+                    .then((res: any) => {});
+                }}
+                selected={conveyor_enabled_B}
+                hilighted
+              />
+              <Button
+                style={{ width: 150, marginLeft: 0 }}
+                disabled={false}
+                frontIcon={<IoIosCube />}
+                label={'Clear'}
+                onTap={() => {
+                  api
+                    .post('/robot/clear-state', { input: true,line_index:1 })
+                    .then((res: any) => {});
+                }}
+              />
+            
+            </Column>
+            <Column>
+              <ConveyorBoxStatus style={{ backgroundColor: 'transparent' }}>
+                <ConveyorLine left={30} top={0} length={280} horizontal />
+                <ConveyorLine left={30} top={110} length={280} horizontal />
+                <ConveyorLine left={200} top={110} length={0} />
+                <ConveyorLine left={310} top={0} length={0} />
+                <Separator left={30} top={10} />
+
+                <BoxPositionState
+                  left={55}
+                  top={65}
+                  active={latestStatus?.conveyorBox?.[0]?.d == 2}
+                />
+                <BoxPositionState
+                  left={55}
+                  top={15}
+                  active={
+                    latestStatus?.conveyorBox?.[0]?.d == 3 ||
+                    latestStatus?.conveyorBox?.[0]?.d == 4 ||
+                    latestStatus?.conveyorBox?.[0]?.d == 5
+                  }
+                />
+
+                </ConveyorBoxStatus>
+            </Column>
+          </Row>
+          <Row>
+            <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
               {t('pallet.pallet_slipsh')}
             </h1>
           </Row>
@@ -409,7 +406,7 @@ const OverviewView = ({ t }: WithTranslation) => {
               }
             />
 
-            <VerticalPercentBar
+            {/* <VerticalPercentBar
               label={t('maincomponent.overviewview.remaining_slipsheet') + ' 1'}
               percent={slipSheetStockAmount?.[0] / 100}
               color={
@@ -417,8 +414,8 @@ const OverviewView = ({ t }: WithTranslation) => {
                   ? styles.colors.danger2
                   : styles.colors.success1
               }
-            />
-            <VerticalPercentBar
+            /> */}
+            {/* <VerticalPercentBar
               label={t('maincomponent.overviewview.remaining_slipsheet') + ' 2'}
               percent={slipSheetStockAmount?.[1] / 100}
               color={
@@ -426,7 +423,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                   ? styles.colors.danger2
                   : styles.colors.success1
               }
-            />
+            /> */}
           </Row>
         </OverviewContent>
         <OverviewContent>
@@ -437,8 +434,8 @@ const OverviewView = ({ t }: WithTranslation) => {
               {t('maincomponent.overviewview.current_task')}
             </h1>
           </Row>
-          <TaskStat line_index={1}/>
           <TaskStat line_index={0}/>
+          <TaskStat line_index={1}/>
           <OverViewDivider />
           <Button
             // disabled={

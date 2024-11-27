@@ -17,8 +17,10 @@ interface TaskStatContainerProps{
 }
 const TaskStatContainer= styled.div<TaskStatContainerProps>`
   font-size: 14pt;
-  min-height: 150px;
-  margin-left:  ${(props) => props.line_index==1?"50px":"0px"};
+  width: 300px;
+  height: 300px;
+  margin-left:  ${(props) => props.line_index==1?"0px":"0px"};
+  display: inline-block;
 `;
 const TaskStatLabel = styled.div``;
 const TaskStatValue = styled.div``;
