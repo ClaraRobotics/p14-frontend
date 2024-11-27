@@ -71,10 +71,10 @@ const TaskStat = ({ t ,line_index}: TaskStatProps) => {
           <PatternPreviewWrapper>
             <PatternPreview boxes={currentPattern} />
           </PatternPreviewWrapper>
-          ขนาด:{status?.currentTask[line_index]?.widthX}x{status?.currentTask[line_index]?.heightY}x
+          ขนาด: {status?.currentTask[line_index]?.widthX}x{status?.currentTask[line_index]?.heightY}x
           {status?.currentTask[line_index]?.layerHeight}
           <br/>
-          ชื่อออเดอร์: {status[line_index]?.taskTitle}
+          ชื่อออเดอร์: {status?.taskTitle[line_index]}
         </TaskStatContainer>
       )}
     </>

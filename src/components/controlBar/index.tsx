@@ -144,7 +144,7 @@ const ControlBar = ({ t }: WithTranslation) => {
           label={t('controlbar.button.pause')}
           onTap={() => {holdRobot()}}
         />
-        <Divider />
+        {/* <Divider />
         <ControlButton
           icon={<MdLayersClear />}
           label={t('controlbar.button.end')+"A"}
@@ -155,7 +155,7 @@ const ControlBar = ({ t }: WithTranslation) => {
           icon={<MdLayersClear />}
           label={t('controlbar.button.end')+"B"}
           onTap={() => {checkEmerThenCallAction(()=>endStack(0))}}
-        />
+        /> */}
       <RobotStatusContainer>
         <RobotStatusLabel>
           {

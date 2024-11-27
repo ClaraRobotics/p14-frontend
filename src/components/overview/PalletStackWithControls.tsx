@@ -136,15 +136,15 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
           <PalletStack idx={idx} />
         </PalletStackWrap>
         <Button
-          disabled={
-            palletOperating ||
-            (
-              !palletWaitLoad &&
-              (
-                !finishBoxIdxSafe || !finishLayerIdxSafe
-              )
-            )
-          }
+          // disabled={
+          //   palletOperating ||
+          //   (
+          //     !palletWaitLoad &&
+          //     (
+          //       !finishBoxIdxSafe || !finishLayerIdxSafe
+          //     )
+          //   )
+          // }
           vertical
           style={{
             width: 60,
@@ -250,8 +250,8 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
               <Column style={{ paddingTop: 10 }}>
                 <Row>
                   <NumberDisplay
-                      value={bufferOutExists ? t('common.full') : t('common.empty')}
-                      label={t('pallet.waiting_area')}
+                      value={'A'}
+                      label={t('pallet.pallet_order')}
                     />
                 </Row>
                 <Row style={{height: 80}}>

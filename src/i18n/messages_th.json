@@ -117,7 +117,7 @@
   "maincomponent.overviewview.remaining_pallet": "พาเล็ตคงเหลือ{br}{br}",
   "maincomponent.overviewview.remaining_slipsheet": "กระดาษคั่น{br}คงเหลือ",
   "maincomponent.overviewview.pick_pallet": "หยิบพาเล็ต",
-  "pallet.waiting_area": "กองงานขาออก",
+  "pallet.pallet_order": "ออเดอร์",
   "pallet.no_in_output": "ไม่มีพาเลท",
   "pallet.operating": "กำลังทำงาน",
   "pallet.adjust_height": "ปรับความสูง",
