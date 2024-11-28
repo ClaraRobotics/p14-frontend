@@ -13,6 +13,7 @@ import api from '@/api';
 import { statusState, statusActions } from '@/store';
 import { viewActions, viewState } from '@/store/view';
 import Toggle from '../common/Toggle';
+import TriToggle from '@/components/common/TriToggle';
 import NumberDisplay from '../text/NumberDisplay';
 import Column from '../common/Column';
 import VerticalPercentBar from '../PercentBar/VerticalPercentBar';
@@ -51,7 +52,7 @@ const PalletInfoContainer = styled.div`
 const PalletControlContainer = styled.div`
   position: absolute;
   top:  300px;
-  left: 198px;
+  left: 80px;
   z-index: 1;
 `;
 
@@ -175,7 +176,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
             </div>
             : ''
           }
-          <Toggle
+          {/* <Toggle
             onLabel={t('common.on')}
             onValue={true}
             offLabel={t('common.off')}
@@ -191,6 +192,30 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
                 .then((res: any) => {});
             }}
             selected={palletEnabled}
+            hilighted
+          /> */}
+          <TriToggle
+            label_0={'OFF'}
+            label_1={'Order A'}
+            label_2={'Order B'}
+            value_0={99}
+            value_1={0}
+            value_2={1}
+            selected={
+              !palletEnabled ? 99 : 
+              latestStatus.nextOrder?.[idx] == 0 ? 0 :
+              latestStatus.nextOrder?.[idx] == 1 ? 1 :
+              99
+            }
+            onToggle={(value) => {
+              api
+                .post('/robot/pallet-enable-toggle', {
+                  palletId: idx,        // 0, 1
+                  isEnable: value != 99,
+                  nextOrder: value
+                })
+                .then((res: any) => {});
+            }}
             hilighted
           />
         </PalletControlContainer>
@@ -250,7 +275,11 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
               <Column style={{ paddingTop: 10 }}>
                 <Row>
                   <NumberDisplay
-                      value={'A'}
+                      value={
+                        latestStatus.currentOrder?.[idx] == 0 ? 'Order A' : 
+                        latestStatus.currentOrder?.[idx] == 1 ? 'Order B' :
+                                                                'No Order'
+                      }
                       label={t('pallet.pallet_order')}
                     />
                 </Row>

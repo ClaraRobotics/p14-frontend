@@ -13,6 +13,7 @@ interface PropsData {
   value_2:   string | number;
   selected:  string | number;
   onToggle: (value: any) => void;
+  hilighted?: boolean;
 }
 
 const TriToggleContainer = styled.div`
@@ -40,10 +41,20 @@ const TriToggleButtonContainer = styled.button`
     --btn-background: ${styles.colors.white};
     --btn-text: ${styles.colors.gray8};
   }
+
+  &.active-on {
+    --btn-background: ${styles.colors.success1};
+    --btn-text: ${styles.colors.gray8};
+  }
+
+  &.active-off {
+    --btn-background: ${styles.colors.danger2};
+    --btn-text: ${styles.colors.gray8};
+  }
 `;
 
 const TriToggle = (props: PropsData) => {
-  const { label_0, label_1, label_2, value_0, value_1, value_2, selected, onToggle } = props;
+  const { label_0, label_1, label_2, value_0, value_1, value_2, selected, onToggle, hilighted } = props;
 
   const onToggle0 = () => {
     if (selected === value_0) return;
@@ -63,19 +74,19 @@ const TriToggle = (props: PropsData) => {
   return (
     <TriToggleContainer>
       <TriToggleButtonContainer
-        className={selected === value_0 ? 'active' : ''}
+        className={selected !== value_0 ? '' : hilighted ? 'active-off' : 'active'}
         onTouchEnd={onToggle0}
       >
         {label_0}
       </TriToggleButtonContainer>
       <TriToggleButtonContainer
-        className={selected === value_1 ? 'active' : ''}
+        className={selected !== value_1 ? '' : hilighted ? 'active-on' : 'active'}
         onTouchEnd={onToggle1}
       >
         {label_1}
       </TriToggleButtonContainer>
       <TriToggleButtonContainer
-        className={selected === value_2 ? 'active' : ''}
+        className={selected !== value_2 ? '' : hilighted ? 'active-on' : 'active'}
         onTouchEnd={onToggle2}
       >
         {label_2}
