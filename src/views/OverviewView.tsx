@@ -147,6 +147,14 @@ const DblStackerActive = styled.div<{ active: boolean }>`
   display: ${(p) => (p.active ? 'initial' : 'none')};
 `;
 
+const Green = styled.span`
+  color: ${styles.colors.green};
+`
+
+const Red = styled.span`
+  color: ${styles.colors.danger2};
+`
+
 const OverviewView = ({ t }: WithTranslation) => {
   const history = useHistory();
   const goToPatternBuilder = () => history.push('/pattern-builder');
@@ -191,13 +199,11 @@ const OverviewView = ({ t }: WithTranslation) => {
   }, [latestStatus]);
   /* end Preload 1 */
 
-  let conveyor_enabled_A = latestStatus?.conveyorMotor?.[0]?.input === true;
-  let conveyor_enabled_B = latestStatus?.conveyorMotor?.[1]?.input === true;
-
-  let autoPalletMode = latestStatus?.autoPalletMode === true;
-  let palletStockAmount = latestStatus?.palletStockAmount;
-  let slipSheetStockAmount = latestStatus?.slipSheetStockAmount;
-  const dangerTreshold = 0.3;
+  let conveyor_enabled   = latestStatus?.conveyorEnabled??([false, false]);
+  let pallet_enabled     = latestStatus?.palletEnabled??([false, false]);
+  let pallet_operating   = latestStatus?.palletOperating??([false, false]);
+  let curent_order       = latestStatus?.currentOrder??([99, 99]);
+  let curent_task        = status.currentTask;
 
   return (
     <Page>
@@ -286,7 +292,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                     })
                     .then((res: any) => {});
                 }}
-                selected={conveyor_enabled_A}
+                selected={conveyor_enabled[0]}
                 hilighted
               />
               <Button
@@ -348,7 +354,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                     })
                     .then((res: any) => {});
                 }}
-                selected={conveyor_enabled_B}
+                selected={conveyor_enabled[1]}
                 hilighted
               />
               <Button
@@ -397,10 +403,27 @@ const OverviewView = ({ t }: WithTranslation) => {
           </Row>
           <Row>
             <div>
-              <h2>✅&ensp;Line A to A | <span style={{color: styles.colors.green}}>ON</span></h2>
-              <h2>⛔&ensp;Line B to B | Input Conveyor B is <span style={{color: styles.colors.danger2}}>OFF</span></h2>
-              <h2>⛔&ensp;Line A to B | Pallet B is <span style={{color: styles.colors.danger2}}>Order A</span></h2>
-              <h2>⛔&ensp;Line B to A | <span style={{color: styles.colors.danger2}}>No pallet</span></h2>
+              {[[0,0], [1,1], [0,1], [1,0]].map(([iConv, iPallet]) =>
+                <h2 key={iConv*2 + iPallet}>
+                  {
+                    pallet_enabled[iPallet] && 
+                    curent_order[iPallet] == iConv && 
+                    conveyor_enabled[iConv] && 
+                    curent_task[iConv] !== null && 
+                    pallet_operating[iPallet] ? 
+                    '✅' : '⛔'
+                  }
+                  &ensp;Line {iConv==0 ? 'A':'B'} to {iPallet==0 ? 'A':'B'} |&nbsp;
+                  {
+                    !pallet_enabled[iPallet]       ?  <>Pallet {iPallet==0 ? 'A':'B'} is <Red>OFF</Red></> : 
+                    curent_order[iPallet] != iConv ?  <>Pallet {iPallet==0 ? 'A':'B'} is currently <Red>Order {iConv==1 ? 'A':'B'}</Red></> : 
+                    !conveyor_enabled[iConv]       ?  <>Input Conveyor {iConv==0 ? 'A':'B'} is <Red>OFF</Red></> : 
+                    curent_task[iConv] === null    ?  <>Please create <Red>New Order {iConv==0 ? 'A':'B'}</Red></> : 
+                    !pallet_operating[iPallet]     ?  <Red>No pallet</Red> : 
+                                                      <Green>ON</Green>
+                  }
+                </h2>
+              )}
             </div>
           </Row>
           {/* <Row>

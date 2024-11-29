@@ -104,7 +104,7 @@ const SummaryContent = ({ t }: WithTranslation) => {
           setStatus,
           robotSimulation,
           false,
-          'Unknown Order',
+          'Unspec. Order',
           valCurrentLineIndex
         );
         setIsShowSaveModal(true);
@@ -184,12 +184,12 @@ const SummaryContent = ({ t }: WithTranslation) => {
         info
         labelCol={4}
       />
-      <Field
+      {/* <Field
         label={'ความเร็วหุ่นยนต์'}
         slot={<FieldBody>{task.robotSpeed == 0 ? 'อัตโนมัติ' : task.robotSpeed == 1 ? 'เร็ว' : 'ช้า'}</FieldBody>}
         info
         labelCol={4}
-      />
+      /> */}
       <Field
         label={t('slipsheet.slipsheet')}
         slot={
