@@ -392,11 +392,24 @@ const OverviewView = ({ t }: WithTranslation) => {
           </Row>
           <Row>
             <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
-              {t('pallet.pallet_slipsh')}
+              {'Checklist'}
             </h1>
           </Row>
           <Row>
-            <VerticalPercentBar
+            <div>
+              <h2>✅&ensp;Line A to A | <span style={{color: styles.colors.green}}>ON</span></h2>
+              <h2>⛔&ensp;Line B to B | Input Conveyor B is <span style={{color: styles.colors.danger2}}>OFF</span></h2>
+              <h2>⛔&ensp;Line A to B | Pallet B is <span style={{color: styles.colors.danger2}}>Order A</span></h2>
+              <h2>⛔&ensp;Line B to A | <span style={{color: styles.colors.danger2}}>No pallet</span></h2>
+            </div>
+          </Row>
+          {/* <Row>
+            <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
+              {t('pallet.pallet_slipsh')}
+            </h1>
+          </Row> */}
+          <Row>
+            {/* <VerticalPercentBar
               label={t('maincomponent.overviewview.remaining_pallet')}
               percent={palletStockAmount / 100}
               color={
@@ -404,7 +417,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                   ? styles.colors.danger2
                   : styles.colors.success1
               }
-            />
+            /> */}
 
             {/* <VerticalPercentBar
               label={t('maincomponent.overviewview.remaining_slipsheet') + ' 1'}

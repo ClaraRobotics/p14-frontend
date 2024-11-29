@@ -99,7 +99,7 @@
   "manualbuttons.gripper_release_b": "GRIP. B RELEASE",
   "manualbuttons.manual_load_pallet": "LOAD PALLET",
   "manualbuttons.move_to_home": "MOVE TO HOME",
-  "manualbuttons.move_to_maintenance": "MOVE TO MAINTENANCE",
+  "manualbuttons.move_to_maintenance": "MAINTENANCE",
   "alert.please_release_emergency": "Emergency stop button(s) is being depressed. Please release the emergency button(s) to start.",
   "alert.emergency_stop": "EMERGENCY STOPPED",
   "undocomponent.start_at_item": "Start at box {number}",

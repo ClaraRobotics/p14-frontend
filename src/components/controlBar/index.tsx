@@ -46,11 +46,10 @@ const Divider = styled.div`
 const RobotStatusContainer = styled.div`
   padding: 2px 24px;
   height: 88px;
-  width: 500px;
-  max-width: 70%;
+  width: 700px;
   border: 2px solid ${styles.colors.gray6};
   line-height: 24px;
-  margin-left: 340px;
+  margin-left: 180px;
   display: flex;
   font-size:0.9em;
 `;
@@ -74,6 +73,8 @@ const ControlBar = ({ t }: WithTranslation) => {
   const [view, setView] = useRecoilState(viewState);
 
   const latestStatus = status.lastHeartBeatMessage;
+
+  const palletStockAmount = latestStatus?.palletStockAmount;
 
   const status_code_texts = {
     unk: 'สถานะหุ่นยนต์',
@@ -103,8 +104,8 @@ const ControlBar = ({ t }: WithTranslation) => {
   const startRobot = () => {
     console.log('start robot!');
     if (
-      latestStatus.running_job?.job_name?.slice(0, 5) == 'LINE_'     ||
-      latestStatus.running_job?.job_name?.slice(0, 9) == 'RUN_STACK' ||
+      latestStatus.running_job?.job_name?.slice(0, 5) == 'LINE_' ||
+      latestStatus.running_job?.job_name?.slice(0, 4) == 'RUN_'  ||
       latestStatus.running_job?.job_name?.slice(0, 5) == 'PICK_'
     ) {
       api
@@ -144,6 +145,19 @@ const ControlBar = ({ t }: WithTranslation) => {
           label={t('controlbar.button.pause')}
           onTap={() => {holdRobot()}}
         />
+        <Divider />
+        <Divider />
+        <div style={{width: 100, textAlign: 'center'}}>
+          <span 
+            style={{
+              fontSize: '3rem', 
+              color: palletStockAmount < 30 ? styles.colors.danger2 : styles.colors.green
+            }}
+          >
+            {parseInt(palletStockAmount)}%
+          </span><br/>
+          Pallets
+        </div>
         {/* <Divider />
         <ControlButton
           icon={<MdLayersClear />}

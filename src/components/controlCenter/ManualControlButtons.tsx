@@ -53,8 +53,6 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
 
   const latestStatus = status.lastHeartBeatMessage;
 
-  let palletExists         = latestStatus?.palletState?.[0]?.a
-
   const checkEmerThenCallAction = (callbackFunction: () => any) => {
     viewActions.checkEmerThencall(view, setView, status, callbackFunction);
   };
@@ -80,15 +78,6 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
     //TODO handle error
     api
       .post('/robot/play-job', { job: 'GP_SOLN_GRIPPER_R_B' })
-      .then((res: any) => {})
-      .catch((err: any) => {
-        alert(err);
-      });
-  };
-  const loadPallet = () => {
-    //TODO handle error
-    api
-      .post('/robot/play-job', { job: 'PALLET_LOAD' })
       .then((res: any) => {})
       .catch((err: any) => {
         alert(err);
@@ -202,28 +191,34 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
         </ButtonsGroupLabel>
         <ButtonColumn>
           <Button
-            style={{ width: 130 }}
+            label={t('manualbuttons.move_to_home')}
+            onTap={() => checkEmerThenCallAction(goHome)}
+            frontIcon={<AiFillHome />}
+            doubleLine
+          />
+          <Button
+            label={t('manualbuttons.move_to_maintenance')}
+            onTap={() => checkEmerThenCallAction(goMaintenance)}
+            frontIcon={<GrVmMaintenance />}
+            doubleLine
+          />
+        </ButtonColumn>
+        <ButtonColumn>
+          <Button
+            // style={{ width: 130 }}
             label={t('manualbuttons.gripper_release_a')}
             onTap={() => checkEmerThenCallAction(gripperReleaseA)}
             // frontIcon={<GiHorizontalFlip />}
             doubleLine
           />
           <Button
-            style={{ width: 130 }}
+            // style={{ width: 130 }}
             label={t('manualbuttons.gripper_release_b')}
             onTap={() => checkEmerThenCallAction(gripperReleaseB)}
             // frontIcon={<GiHorizontalFlip />}
             doubleLine
           />
-          <Button
-            label={t('manualbuttons.move_to_home')}
-            onTap={() => checkEmerThenCallAction(goHome)}
-            frontIcon={<AiFillHome />}
-            doubleLine
-          />
-        </ButtonColumn>
-        <ButtonColumn>
-          <Button
+          {/* <Button
             style={{ width: 130, fontSize: '1.4rem' }}
             disabled={palletExists}
             label={t("maincomponent.overviewview.pick_pallet") + " A"}
@@ -238,13 +233,7 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
             onTap={() => checkEmerThenCallAction(pickPallet2)}
             // frontIcon={<GrTable />}
             doubleLine
-          />
-          <Button
-            label={t('manualbuttons.move_to_maintenance')}
-            onTap={() => checkEmerThenCallAction(goMaintenance)}
-            frontIcon={<GrVmMaintenance />}
-            doubleLine
-          />
+          /> */}
         </ButtonColumn>
       </ButtonsGroup>
     </ManualControlButtonsContainer>

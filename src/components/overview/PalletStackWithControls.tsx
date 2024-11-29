@@ -55,31 +55,29 @@ const PalletControlContainer = styled.div`
   left: 80px;
   z-index: 1;
 `;
+const TextWatermark = styled.h1`
+    position: absolute;
+    top: -19px;
+    left:  0px;
+    z-index:  1;
+    background-color: rgba(50, 50, 50, 0.5);
+    width:  250px;
+    height: 300px;
+    line-height: 300px;
+    text-align: center;
+`
 
 const idxToChr = (idx: number): string => {
   return String.fromCharCode('A'.charCodeAt(0) + idx);
 };
 
-const onEjectLoadTap = (palletWaitLoad, idx) => {
-  console.log(palletWaitLoad);
-  console.log(idx);
-  console.log(idxToChr(idx));
-  if(palletWaitLoad){
-    api
-      .post('/robot/load-pallet', { palletId: idx })
-      .then((res: any) => {})
-      .catch((err: any) => {
-        alert(err);
-      });
-  }
-  else{
-    api
-      .post('/robot/eject-pallet', { palletId: idx })
-      .then((res: any) => {})
-      .catch((err: any) => {
-        alert(err);
-      });
-  }
+const onEjectLoadTap = (idx) => {
+  api
+    .post('/robot/eject-pallet', { palletId: idx })
+    .then((res: any) => {})
+    .catch((err: any) => {
+      alert(err);
+    });
 };
 
 interface PalletStackWithControlsProps extends WithTranslation {
@@ -96,18 +94,12 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
 
   const latestStatus = status.lastHeartBeatMessage;
 
-  //TODO read ejected from last heatbeat message
   let palletEnabled      = latestStatus?.palletEnabled?.[idx] === true;
-  let palletExists       = latestStatus?.palletState?.[idx]?.mn == 1;
-  let palletWaitLoad     = latestStatus?.palletState?.[idx]?.mn == 6;
   let palletOperating    = latestStatus?.palletOperating?.[idx] === true;
-  let bufferOutExists    = false;
   let layerHeightDiff    = latestStatus?.layerHeightDiff?.[idx];
-  let finishBoxIdxSafe   = latestStatus?.finishBoxIdx?.[idx] == 0;
-  let finishLayerIdxSafe = latestStatus?.finishLayerIdx?.[idx] == 0;
   let adjustEnabled      = latestStatus?.status_code?.slice(0, 8) != 'writing_' && (
     latestStatus?.running_job?.job_name?.slice(0, 5) == 'LINE_' ||
-    latestStatus?.running_job?.job_name?.slice(0, 9) == 'RUN_STACK' ||
+    latestStatus?.running_job?.job_name?.slice(0, 4) == 'RUN_'  ||
     latestStatus?.running_job?.job_name?.slice(0, 5) == 'PICK_'
   )
 
@@ -115,38 +107,15 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
     <PalletStackWithControlsContainer>
       <PalletStackWithControlsContent enabled={palletEnabled}>
         <PalletStackWrap>
-          {/* {palletExists !== true ? (
-            <h1
-              style={{
-                position: 'absolute',
-                top: -19,
-                left: 0,
-                zIndex: 1,
-                backgroundColor: 'rgba(50, 50, 50, 0.5)',
-                width: '250px',
-                height: '300px',
-                lineHeight: '300px',
-                textAlign: 'center',
-              }}
-            >
-              {t('pallet.no_in_output')}
-            </h1>
-          ) : (
-            ''
-          )} */}
-          <PalletStack idx={idx} />
+          {
+            palletOperating ?
+              <PalletStack idx={idx} />
+            :
+              <TextWatermark>{t('pallet.no_in_output')}</TextWatermark>
+          }
         </PalletStackWrap>
         <Button
-          // disabled={
-          //   palletOperating ||
-          //   (
-          //     !palletWaitLoad &&
-          //     (
-          //       !finishBoxIdxSafe || !finishLayerIdxSafe
-          //     )
-          //   )
-          // }
-          vertical
+          disabled={false}
           style={{
             width: 60,
             height: 300,
@@ -154,46 +123,17 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
             zIndex: 1
           }}
           onTap={() => {
-            checkEmerThenCallAction(() => onEjectLoadTap(palletWaitLoad, idx));
+            checkEmerThenCallAction(() => onEjectLoadTap(idx));
           }}
           frontIcon={
             <MdEject
-              style={{ transform: palletWaitLoad ? 'rotate(90deg)' : 'rotate(-90deg)' }}
+              style={{ transform: 'rotate(-90deg)' }}
             />
           }
-          label={palletWaitLoad ? t('common.load') : t('common.eject')}
+          label={t('common.eject')}
+          vertical
         />
         <PalletControlContainer>
-          {palletOperating ?
-            <div style={{
-              position: 'absolute',
-              top: 7,
-              left: -190,
-              color: styles.colors.green,
-              fontSize: '1.5em'
-            }}>
-              {t('pallet.operating')}...
-            </div>
-            : ''
-          }
-          {/* <Toggle
-            onLabel={t('common.on')}
-            onValue={true}
-            offLabel={t('common.off')}
-            offValue={false}
-            onToggle={(toggleValue: boolean) => {
-              // alert("toggle");
-              api
-                .post('/robot/pallet-enable-toggle', {
-                  // deprecated
-                  palletId: idx, // 0, 1
-                  isEnable: toggleValue,
-                })
-                .then((res: any) => {});
-            }}
-            selected={palletEnabled}
-            hilighted
-          /> */}
           <TriToggle
             label_0={'OFF'}
             label_1={'Order A'}
@@ -218,6 +158,24 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
             }}
             hilighted
           />
+          {/* <Toggle
+            onLabel={t('common.on')}
+            onValue={true}
+            offLabel={t('common.off')}
+            offValue={false}
+            onToggle={(toggleValue: boolean) => {
+              // alert("toggle");
+              api
+                .post('/robot/pallet-enable-toggle', {
+                  // deprecated
+                  palletId: idx, // 0, 1
+                  isEnable: toggleValue,
+                })
+                .then((res: any) => {});
+            }}
+            selected={palletEnabled}
+            hilighted
+          /> */}
         </PalletControlContainer>
       </PalletStackWithControlsContent>
       <PalletInfoContainer>
