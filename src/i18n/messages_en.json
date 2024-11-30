@@ -36,7 +36,7 @@
   "maincomponent.createtask.modal.option.new": "Create New",
   "maincomponent.createtask.modal.option.existing": "Choose from Existing Task",
   "navbar.status.robotstatus.robot.label": "ROBOT",
-  "navbar.status.robotstatus.robot.nomsg": "-",
+  "navbar.status.robotstatus.robot.nomsg": "- Unknown robot status -",
   "taskbuilder.layer.bundleperpallet": "Bundle per pallet",
   "taskbuilder.layer.options.rotate": "Rotate",
   "taskbuilder.layer.options.flip": "Flip",

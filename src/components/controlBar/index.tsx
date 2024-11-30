@@ -68,6 +68,20 @@ const RobotStatusValue = styled.div<{status?: boolean}>`
     p.status ? styles.colors.gray3 : styles.colors.gray4};
 `;
 
+const Green = styled.span`
+  color: ${styles.colors.green};
+`
+
+const Yellow = styled.span`
+  color: ${styles.colors.primary2};
+`
+
+const Red = styled.span`
+  color: ${styles.colors.danger2};
+`
+
+
+
 const ControlBar = ({ t }: WithTranslation) => {
   const [status, setStatus] = useRecoilState(statusState);
   const [view, setView] = useRecoilState(viewState);
@@ -77,18 +91,19 @@ const ControlBar = ({ t }: WithTranslation) => {
   const palletStockAmount = latestStatus?.palletStockAmount;
 
   const status_code_texts = {
-    unk: 'สถานะหุ่นยนต์',
-    idle: 'สถานะหุ่นยนต์: ว่าง',
-    going_home: 'กลับจุดพัก',
-    writing_job: 'กำลังโหลดไฟล์งาน',
-    writing_job_dyn_height: 'กำลังโหลดระบบปรับความสูง',
-    gripper_set_position: 'ระบบหยิบวางพร้อม',
-    playing_job: 'ระบบหยิบวางทำงาน'
+    idle: 'หุ่นยนต์พร้อมทำงาน',
+    order_write_job: 'กำลังตั้งค่าหุ่นยนต์ (ระบบหยิบวาง)',
+    order_write_dyn_height: 'กำลังตั้งค่าหุ่นยนต์ (ระบบปรับความสูง)',
+    running_line: 'หุ่นยนต์กำลังทำงาน (ระบบหยิบวาง)',
+    play_job: 'หุ่นยนต์กำลังทำงาน (คำสั่งทั่วไป)'
   };
+
+  const status_code = latestStatus['status_code'];
 
   const checkEmerThenCallAction = (callbackFunction: () => any) => {
     viewActions.checkEmerThencall(view, setView, status, callbackFunction);
   };
+
   const endStack = (line_index) => {
     //TODO handle error
 
@@ -173,20 +188,20 @@ const ControlBar = ({ t }: WithTranslation) => {
       <RobotStatusContainer>
         <RobotStatusLabel>
           {
-            latestStatus.servo_on === true && latestStatus.running === false ?
-              <span style={{ color: styles.colors.primary2 }}>
-                หุ่นยนต์หยุดชั่วคราว
-              </span>
-              :
-              (
-                status_code_texts[latestStatus['status_code']] ||
-                t('navbar.status.robotstatus.robot.nomsg')
-              )
+            latestStatus.alarm?.all ?           <Red>หุ่นยนต์ขึ้นสัญญาณเตือน</Red> : 
+            latestStatus.emergency?.all ?       <Red>หุ่นยนต์หยุดทำงาน</Red> : 
+            latestStatus.servo_on && 
+            !latestStatus.running ?             <Yellow>หุ่นยนต์หยุดชั่วคราว</Yellow> :
+            !latestStatus.servo_on && 
+            status_code == 'running_line' ?     <Yellow>หุ่นยนต์หยุดชั่วคราว</Yellow> :
+            [ // status that has yellow text
+              'order_write_job', 
+              'order_write_dyn_height'
+            ].includes(status_code) ?           <Yellow>{status_code_texts[status_code]}</Yellow> :
+            status_code in status_code_texts ?  <>{status_code_texts[status_code]}</> :
+            t('navbar.status.robotstatus.robot.nomsg')
           }
         </RobotStatusLabel>
-        {/* <RobotStatusValue status={!!status.lastHeartBeatMessage['status_code']}>
-
-        </RobotStatusValue> */}
       </RobotStatusContainer>
       </LeftBtnGroup>
       <RightBtnGroup>

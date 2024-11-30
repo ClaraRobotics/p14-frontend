@@ -97,7 +97,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
   let palletEnabled      = latestStatus?.palletEnabled?.[idx] === true;
   let palletOperating    = latestStatus?.palletOperating?.[idx] === true;
   let layerHeightDiff    = latestStatus?.layerHeightDiff?.[idx];
-  let adjustEnabled      = latestStatus?.status_code?.slice(0, 8) != 'writing_' && (
+  let adjustEnabled      = latestStatus?.status_code?.slice(0, 6) != 'order_' && (
     latestStatus?.running_job?.job_name?.slice(0, 5) == 'LINE_' ||
     latestStatus?.running_job?.job_name?.slice(0, 4) == 'RUN_'  ||
     latestStatus?.running_job?.job_name?.slice(0, 5) == 'PICK_'
