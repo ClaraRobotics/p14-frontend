@@ -16,9 +16,10 @@ const CONTAINER_HEIGHT = 300;
 
 const PalletStack = ({ t, idx }: PalletStackProps) => {
   const [status, setStatus] = useRecoilState(statusState);
-  const currentFullStack = idx == 0 ? status.currentTask.stackCenterLHR : status.currentTask.stackCenter;
-  const isDoubleStack = status.currentTask.isDoubleStack
-  const layerHeight   = status.currentTask.layerHeight;
+  const currentFullStack = idx == 0 ? status.currentTask[idx]?.stackCenterLHR : status.currentTask[idx]?.stackCenter;
+  const isDoubleStack = status.currentTask[idx]?.isDoubleStack
+  const layerHeight   = status.currentTask[idx]?.layerHeight;
+  const boxLength     = status.currentTask[idx]?.baseBoxes?.length;
   const latestStatus  = status.lastHeartBeatMessage;
 
   const [currentBoxIndex, setCurrentBoxIndex] = useState(1);
@@ -28,11 +29,11 @@ const PalletStack = ({ t, idx }: PalletStackProps) => {
   // finishLayerIdx, finishBoxIdx
   useEffect(() => {
     const currentHeartbeatIndex =
-      latestStatus?.finishLayerIdx?.[idx] * status.currentTask?.baseBoxes?.length +
+      latestStatus?.finishLayerIdx?.[idx] * boxLength +
       latestStatus?.finishBoxIdx?.[idx];
     if (!isNaN(currentHeartbeatIndex)) {
       setCurrentBoxIndex(
-        latestStatus.finishLayerIdx?.[idx] * status.currentTask?.baseBoxes?.length +
+        latestStatus.finishLayerIdx?.[idx] * boxLength +
           latestStatus.finishBoxIdx?.[idx]
       );
     }
