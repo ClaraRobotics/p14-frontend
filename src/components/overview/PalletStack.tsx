@@ -16,11 +16,12 @@ const CONTAINER_HEIGHT = 300;
 
 const PalletStack = ({ t, idx }: PalletStackProps) => {
   const [status, setStatus] = useRecoilState(statusState);
-  const currentFullStack = idx == 0 ? status.currentTask[idx]?.stackCenterLHR : status.currentTask[idx]?.stackCenter;
-  const isDoubleStack = status.currentTask[idx]?.isDoubleStack
-  const layerHeight   = status.currentTask[idx]?.layerHeight;
-  const boxLength     = status.currentTask[idx]?.baseBoxes?.length;
   const latestStatus  = status.lastHeartBeatMessage;
+  const current_order = latestStatus?.currentOrder?.[idx];
+  const currentFullStack = idx == 0 ? status.currentTask[current_order]?.stackCenterLHR : status.currentTask[current_order]?.stackCenter;
+  const isDoubleStack = status.currentTask[current_order]?.isDoubleStack
+  const layerHeight   = status.currentTask[current_order]?.layerHeight;
+  const boxLength     = status.currentTask[current_order]?.baseBoxes?.length;
 
   const [currentBoxIndex, setCurrentBoxIndex] = useState(1);
 

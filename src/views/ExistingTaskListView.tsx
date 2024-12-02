@@ -71,7 +71,8 @@ const ExistingTaskListView = () => {
           setStatus,
           robotSimulation,
           false,
-          payloadLayers.taskTitle
+          payloadLayers.taskTitle,
+          line_index
         );
       })
       .catch((err) => {
@@ -137,7 +138,7 @@ const ExistingTaskListView = () => {
 
       <AlertModal
         show={isShowTaskPreview}
-        actionButtonLabel="LOAD"
+        actionButtonLabel="LOAD B"
         subButtonLabel="Cancel"
         onSubButtonTap={() => {
           setIsShowTaskPreview(false);

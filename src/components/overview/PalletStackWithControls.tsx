@@ -94,6 +94,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
 
   const latestStatus = status.lastHeartBeatMessage;
 
+  const current_order    = latestStatus?.currentOrder?.[idx];
   let palletEnabled      = latestStatus?.palletEnabled?.[idx] === true;
   let palletOperating    = latestStatus?.palletOperating?.[idx] === true;
   let layerHeightDiff    = latestStatus?.layerHeightDiff?.[idx];
@@ -105,6 +106,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
 
   return (
     <PalletStackWithControlsContainer>
+      <h1 style={{position: 'absolute', left: 0, top: -33, color: styles.colors.gray3}}>Pallet {idx==0 ? 'A' : 'B'}</h1>
       <PalletStackWithControlsContent enabled={palletEnabled}>
         <PalletStackWrap>
           {
@@ -187,7 +189,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
               <Column style={{ width: 150 }}>
                 <NumberDisplay
                   value={
-                    status.currentTask?.isDoubleStack
+                    status.currentTask[current_order]?.isDoubleStack
                       ? `${latestStatus?.finishLayerIdx?.[idx] + 1}-${
                           latestStatus?.finishLayerIdx?.[idx] + 2
                         }`
@@ -199,7 +201,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
               <Column style={{ width: 150 }}>
                 <NumberDisplay
                   value={
-                    status.currentTask?.isDoubleStack
+                    status.currentTask[current_order]?.isDoubleStack
                       ? `${latestStatus?.finishBoxIdx?.[idx] * 2 + 1}-${
                           latestStatus?.finishBoxIdx?.[idx] * 2 + 2
                         }`
@@ -215,19 +217,19 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
                   label={t('overview.current_stack')}
                   percent={
                     (latestStatus.finishLayerIdx?.[idx] *
-                      status.currentTask?.baseBoxes?.length +
+                      status.currentTask[current_order]?.baseBoxes?.length +
                       latestStatus.finishBoxIdx?.[idx] *
-                        (status.currentTask?.isDoubleStack ? 2 : 1)) /
-                      status?.currentTask?.boxAmount ?? Number.MAX_SAFE_INTEGER
+                        (status.currentTask[current_order]?.isDoubleStack ? 2 : 1)) /
+                      status?.currentTask[current_order]?.boxAmount ?? Number.MAX_SAFE_INTEGER
                   }
                 >
                   {NaNDisplay(
                     latestStatus.finishLayerIdx?.[idx] *
-                      status.currentTask?.baseBoxes?.length +
+                      status.currentTask[current_order]?.baseBoxes?.length +
                       latestStatus.finishBoxIdx?.[idx] *
-                        (status.currentTask?.isDoubleStack ? 2 : 1)
+                        (status.currentTask[current_order]?.isDoubleStack ? 2 : 1)
                   )}
-                  <br />/{NaNDisplay(status?.currentTask?.boxAmount)}
+                  <br />/{NaNDisplay(status?.currentTask[current_order]?.boxAmount)}
                 </VerticalPercentBar>
               </Column>
               <Column style={{ paddingTop: 10 }}>
