@@ -51,6 +51,7 @@ const PalletStack = ({ t, idx }: PalletStackProps) => {
       layerHeight={layerHeight}
       maxBoxes={currentBoxIndex}
       isDoubleStack={isDoubleStack}
+      idx={idx}
     />
   );
 };

@@ -45,6 +45,7 @@ interface PropsData {
   divContainerWidth?: number;
   areaSizeX?: number;
   areaSizeY?: number;
+  idx?: number;
 }
 
 const Stack3DPreview = ({
@@ -55,7 +56,8 @@ const Stack3DPreview = ({
   divContainerHeight = 500,
   divContainerWidth = 500,
   areaSizeX=2000,
-  areaSizeY=1700
+  areaSizeY=1700,
+  idx=0
 }: PropsData) => {
   let boxesToRender: ReactNode[] = [];
   // console.log("datatodisplay:",dataToDisplay,"layerheight",layerHeight);
@@ -78,6 +80,7 @@ const Stack3DPreview = ({
           heightYmm={box.heightY}
           stackHeightZmm={layerHeight - 2}
           key={indexLayer * boxesInlayer + index}
+          color={'#e4b144'}
         />
       );
     });
@@ -118,26 +121,26 @@ const Stack3DPreview = ({
 
           {/* robot position */}
           <Box
-            positionXmm={800  - areaSizeX / 2}
-            positionYmm={2300 - areaSizeY / 2}
+            positionXmm={(800  - areaSizeX / 2) * -1}
+            positionYmm={(2000 - areaSizeY / 2) * (idx==0 ? 1 : -1)}
             positionZmm={1200 - 900}
             widthXmm={300}
             heightYmm={300}
             stackHeightZmm={300}
             key={9999}
-            color={styles.colors.green}
+            color={'#349BEB'}
           />
 
           {/* pallet position */}
           <Box
             positionXmm={300 + 700 - areaSizeX / 2}
             positionYmm={300 + 550 - areaSizeY / 2}
-            positionZmm={-100 - 900}
+            positionZmm={-100 - 900 - 35}
             widthXmm={1400}
             heightYmm={1100}
             stackHeightZmm={100}
             key={9998}
-            color={styles.colors.green}
+            color={'#555555'}
           />
         </Canvas>
       </Stack3DPreviewContainer>
