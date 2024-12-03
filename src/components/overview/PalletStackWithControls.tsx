@@ -106,7 +106,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
 
   return (
     <PalletStackWithControlsContainer>
-      <h1 style={{position: 'absolute', left: 0, top: -33, color: styles.colors.gray3}}>Pallet {idx==0 ? 'A' : 'B'}</h1>
+      <h1 style={{position: 'absolute', left: 0, top: -33, color: styles.colors.gray1, zIndex: 10}}>Pallet {idx==0 ? 'A' : 'B'}</h1>
       <PalletStackWithControlsContent enabled={palletEnabled}>
         <PalletStackWrap>
           {
