@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import styles from '@/styles/styles';
@@ -56,41 +56,59 @@ const TriToggleButtonContainer = styled.button`
 const TriToggle = (props: PropsData) => {
   const { label_0, label_1, label_2, value_0, value_1, value_2, selected, onToggle, hilighted } = props;
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const onToggle0 = () => {
     if (selected === value_0) return;
     onToggle(value_0);
+    setIsLoading(true);
   };
 
   const onToggle1 = () => {
     if (selected === value_1) return;
     onToggle(value_1);
+    setIsLoading(true);
   };
 
   const onToggle2 = () => {
     if (selected === value_2) return;
     onToggle(value_2);
+    setIsLoading(true);
   };
+
+  useEffect(()=>{
+    setIsLoading(false);
+  }, [selected])
 
   return (
     <TriToggleContainer>
-      <TriToggleButtonContainer
-        className={selected !== value_0 ? '' : hilighted ? 'active-off' : 'active'}
-        onTouchEnd={onToggle0}
-      >
-        {label_0}
-      </TriToggleButtonContainer>
-      <TriToggleButtonContainer
-        className={selected !== value_1 ? '' : hilighted ? 'active-on' : 'active'}
-        onTouchEnd={onToggle1}
-      >
-        {label_1}
-      </TriToggleButtonContainer>
-      <TriToggleButtonContainer
-        className={selected !== value_2 ? '' : hilighted ? 'active-on' : 'active'}
-        onTouchEnd={onToggle2}
-      >
-        {label_2}
-      </TriToggleButtonContainer>
+      {
+        isLoading ? 
+          <>
+            &emsp;&emsp;&emsp;&emsp;&emsp;loading..
+          </>
+          :
+          <>
+            <TriToggleButtonContainer
+              className={selected !== value_0 ? '' : hilighted ? 'active-off' : 'active'}
+              onTouchEnd={onToggle0}
+            >
+              {label_0}
+            </TriToggleButtonContainer>
+            <TriToggleButtonContainer
+              className={selected !== value_1 ? '' : hilighted ? 'active-on' : 'active'}
+              onTouchEnd={onToggle1}
+            >
+              {label_1}
+            </TriToggleButtonContainer>
+            <TriToggleButtonContainer
+              className={selected !== value_2 ? '' : hilighted ? 'active-on' : 'active'}
+              onTouchEnd={onToggle2}
+            >
+              {label_2}
+            </TriToggleButtonContainer>
+          </>
+      }
     </TriToggleContainer>
   );
 };
