@@ -91,7 +91,7 @@ const ControlBar = ({ t }: WithTranslation) => {
   const palletStockAmount = latestStatus?.palletStockAmount;
 
   const status_code_texts = {
-    idle: 'หุ่นยนต์พร้อมทำงาน',
+    idle: 'หุ่นยนต์ว่าง',
     order_write_job: 'กำลังตั้งค่าหุ่นยนต์ (ระบบหยิบวาง)',
     order_write_dyn_height: 'กำลังตั้งค่าหุ่นยนต์ (ระบบปรับความสูง)',
     running_line: 'หุ่นยนต์กำลังทำงาน (ระบบหยิบวาง)',
@@ -195,9 +195,10 @@ const ControlBar = ({ t }: WithTranslation) => {
             !latestStatus.servo_on && 
             status_code == 'running_line' ?     <Yellow>หุ่นยนต์หยุดชั่วคราว</Yellow> :
             [ // status that has yellow text
-              'order_write_job', 
-              'order_write_dyn_height'
+              'order_write_job'
             ].includes(status_code) ?           <Yellow>{status_code_texts[status_code]}</Yellow> :
+            status_code?.startsWith(
+            'order_write_dyn_height') ?         <Yellow>{status_code_texts.order_write_dyn_height} {status_code.split('_')[4]}/{status_code.split('_')[5]}</Yellow> :
             status_code in status_code_texts ?  <>{status_code_texts[status_code]}</> :
             t('navbar.status.robotstatus.robot.nomsg')
           }
