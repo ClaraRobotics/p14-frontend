@@ -12,14 +12,14 @@ const EmergencyStatusContainer = styled.div`
   font-size: 25px;
   font-weight: 600;
   line-height: 60px;
-  margin-left: 400px;
-  padding: 2px 48px;
+  margin-left: 380px;
+  padding: 2px 25px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   height: 36px;
-  max-width: 60%;
+  width: 335px;
   border-radius: 16px;
 
   &.stopped {
@@ -30,24 +30,31 @@ const EmergencyStatusContainer = styled.div`
 
 const EmergencyText = styled.div`
   font-size: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 //TODO HANDLE UNDEFINED IF WEBSOCKET ISNT LOADED
 const EmergencyStatus = ({ t }: WithTranslation) => {
   const [status, setStatus] = useRecoilState(statusState);
-  const latestEmergencyStatus = status.lastHeartBeatMessage.emergency;
-  const latestEmergencyButton = status.lastHeartBeatMessage.emergencyButton
+  const emergencyStatus = status.lastHeartBeatMessage.emergency;
+  const emergencyButton = status.lastHeartBeatMessage.emergencyButton
   // console.log(' >>>>>> ', latestEmergencyStatus);
   return (
     <EmergencyStatusContainer
       // className={'stopped'}
-      className={!latestEmergencyStatus?.all ? '' : 'stopped'}
+      className={emergencyStatus?.all ? '' : 'stopped'}
     >
       <EmergencyText>{t('statusbar.emer_stopped')} (ปุ่ม {
-        latestEmergencyButton ?
-          Object.entries(latestEmergencyButton).filter(btn => btn[1]).map(btn => btn[0].toUpperCase()).join(', ')
-          :
-          ''
+        emergencyStatus && emergencyButton ?
+        [
+          ...(emergencyStatus.pendant === false ? ['A'] : []),
+          ...(emergencyStatus.door    === false ? ['B'] : []),
+          ...Object.entries(emergencyButton).filter(btn => btn[1] === false).map(btn => btn[0].toUpperCase())
+        ].join(', ')
+        :
+        ''
       })</EmergencyText>
     </EmergencyStatusContainer>
   );

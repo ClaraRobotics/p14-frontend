@@ -76,7 +76,7 @@ const StartPauseButtons = ({ t }: WithTranslation) => {
   const [view, setView] = useRecoilState(viewState);
   const latestEmergencyStatus = status.lastHeartBeatMessage.emergency;
 
-  const isStartDisabled = latestEmergencyStatus?.all !== false;
+  const isStartDisabled = latestEmergencyStatus?.all === false;
 
   const onRobotResume = () =>
     viewActions.checkEmerThencall(view, setView, status, startRobot);

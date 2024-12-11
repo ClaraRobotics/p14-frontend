@@ -189,7 +189,7 @@ const ControlBar = ({ t }: WithTranslation) => {
         <RobotStatusLabel>
           {
             latestStatus.alarm?.all ?           <Red>หุ่นยนต์ขึ้นสัญญาณเตือน</Red> : 
-            latestStatus.emergency?.all ?       <Red>หุ่นยนต์หยุดทำงาน</Red> : 
+            !latestStatus.emergency?.all ?      <Red>หุ่นยนต์หยุดทำงาน</Red> : 
             latestStatus.servo_on && 
             !latestStatus.running ?             <Yellow>หุ่นยนต์หยุดชั่วคราว</Yellow> :
             !latestStatus.servo_on && 

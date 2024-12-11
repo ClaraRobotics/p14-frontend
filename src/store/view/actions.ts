@@ -39,7 +39,7 @@ export const checkEmerThencall = (
   statusState: StatusState,
   callback: () => any
 ) => {
-  const isEmergencyTriggered = statusState.lastHeartBeatMessage.emergency?.all!==false
+  const isEmergencyTriggered = statusState.lastHeartBeatMessage.emergency?.all === false
   if (isEmergencyTriggered === true) {
     setter({ ...state, showReleaseEmerModal: true });
     return;

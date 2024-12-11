@@ -42,7 +42,7 @@ const StatusLightBar = () => {
   const status = useRecoilValue(statusState);
   return <StatusLightbar
     isAlarm={status.lastHeartBeatMessage.alarm_status?.all}
-    isEmergency={status.lastHeartBeatMessage.emergency?.all}
+    isEmergency={status.lastHeartBeatMessage.emergency?.all === false}
     isServoOn={status.lastHeartBeatMessage.servo_on}
   />
 };
