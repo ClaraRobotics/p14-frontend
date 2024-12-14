@@ -41,7 +41,7 @@ const StatusLightbar = styled.div<StatusLightbarProps>`
 const StatusLightBar = () => {
   const status = useRecoilValue(statusState);
   return <StatusLightbar
-    isAlarm={status.lastHeartBeatMessage.alarm_status?.all}
+    isAlarm={status.lastHeartBeatMessage.alarm?.all}
     isEmergency={status.lastHeartBeatMessage.emergency?.all === false}
     isServoOn={status.lastHeartBeatMessage.servo_on}
   />
