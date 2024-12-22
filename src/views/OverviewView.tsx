@@ -482,6 +482,10 @@ const OverviewView = ({ t }: WithTranslation) => {
             //     (latestStatus?.palletEnabled?.[1] !== true ||
             //       latestStatus?.palletState?.[1]?.mn == 6)) // wait load
             // }
+            disabled={
+              latestStatus?.currentOrder?.[0] === 0 && (latestStatus?.finishLayerIdx?.[0] !== 0 || latestStatus?.finishBoxIdx?.[0] !== 0) ||
+              latestStatus?.currentOrder?.[1] === 0 && (latestStatus?.finishLayerIdx?.[1] !== 0 || latestStatus?.finishBoxIdx?.[1] !== 0)
+            }
             frontIcon={<IoIosCreate />}
             label={t('maincomponent.createtask.button')+" A"}
             onTap={()=>onCreateTask(0)}
@@ -495,6 +499,10 @@ const OverviewView = ({ t }: WithTranslation) => {
             //     (latestStatus?.palletEnabled?.[1] !== true ||
             //       latestStatus?.palletState?.[1]?.mn == 6)) // wait load
             // }
+            disabled={
+              latestStatus?.currentOrder?.[0] === 1 && (latestStatus?.finishLayerIdx?.[0] !== 0 || latestStatus?.finishBoxIdx?.[0] !== 0) ||
+              latestStatus?.currentOrder?.[1] === 1 && (latestStatus?.finishLayerIdx?.[1] !== 0 || latestStatus?.finishBoxIdx?.[1] !== 0)
+            }
             frontIcon={<IoIosCreate />}
             label={t('maincomponent.createtask.button')+" B"}
             onTap={()=>onCreateTask(1)}
