@@ -419,7 +419,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                     curent_order[iPallet] != iConv ?  <>Pallet {iPallet==0 ? 'A':'B'} is currently <Red>Order {iConv==1 ? 'A':'B'}</Red></> : 
                     !conveyor_enabled[iConv]       ?  <>Input Conveyor {iConv==0 ? 'A':'B'} is <Red>OFF</Red></> : 
                     curent_task[iConv] === null    ?  <>Please create <Red>New Order {iConv==0 ? 'A':'B'}</Red></> : 
-                    !pallet_operating[iPallet]     ?  <Red>No pallet</Red> : 
+                    !pallet_operating[iPallet]     ?  <><Red>No pallet</Red>. Wait for picking...</>: 
                                                       <Green>ON</Green>
                   }
                 </h2>
