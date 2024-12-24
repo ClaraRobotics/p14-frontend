@@ -171,7 +171,7 @@ const ControlBar = ({ t }: WithTranslation) => {
           >
             {parseInt(palletStockAmount)}%
           </span><br/>
-          Pallets
+          {t('pallet.pallets')}
         </div>
         {/* <Divider />
         <ControlButton

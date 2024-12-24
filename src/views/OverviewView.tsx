@@ -35,6 +35,15 @@ import preloadBg from '@assets/img/CLARA.png';
 
 import Column from '@/components/common/Column';
 import { setLineIndex } from '@/store/task/actions';
+
+
+String.prototype.replaceJSX = function(from, to){
+  to = React.cloneElement(to, { key: '0' });
+  
+  return this.split(from).flatMap(e => [e, to]).slice(0, -1)
+}
+
+
 const OverviewViewContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -299,7 +308,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                 style={{ width: 150, marginLeft: 0 }}
                 disabled={false}
                 frontIcon={<IoIosCube />}
-                label={'Clear'}
+                label={t('common.clear')}
                 onTap={() => {
                   api
                     .post('/robot/clear-state', { input: true ,line_index:0 })
@@ -361,7 +370,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                 style={{ width: 150, marginLeft: 0 }}
                 disabled={false}
                 frontIcon={<IoIosCube />}
-                label={'Clear'}
+                label={t('common.clear')}
                 onTap={() => {
                   api
                     .post('/robot/clear-state', { input: true,line_index:1 })
@@ -398,7 +407,7 @@ const OverviewView = ({ t }: WithTranslation) => {
           </Row>
           <Row>
             <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
-              {'Checklist'}
+              {t('overview.checklist')}
             </h1>
           </Row>
           <Row>
@@ -413,9 +422,9 @@ const OverviewView = ({ t }: WithTranslation) => {
                     pallet_operating[iPallet] ? 
                     '✅' : '⛔'
                   }
-                  &ensp;Line {iConv==0 ? 'A':'B'} to {iPallet==0 ? 'A':'B'} |&nbsp;
+                  &ensp;{t('overview.line')} {iConv==0 ? 'A':'B'} {t('overview.to')} {iPallet==0 ? 'A':'B'} |&nbsp;
                   {
-                    !pallet_enabled[iPallet]       ?  <>Pallet {iPallet==0 ? 'A':'B'} is <Red>OFF</Red></> : 
+                    !pallet_enabled[iPallet]       ?  t('overview.pallet_is_off').replace('{i}', iPallet==0 ? 'A':'B').replaceJSX('{off}', <Red>{t('pallet.off')}</Red>) : // <>Pallet {iPallet==0 ? 'A':'B'} is <Red>OFF</Red></> : 
                     curent_order[iPallet] != iConv ?  <>Pallet {iPallet==0 ? 'A':'B'} is currently <Red>Order {iConv==1 ? 'A':'B'}</Red></> : 
                     !conveyor_enabled[iConv]       ?  <>Input Conveyor {iConv==0 ? 'A':'B'} is <Red>OFF</Red></> : 
                     curent_task[iConv] === null    ?  <>Please create <Red>New Order {iConv==0 ? 'A':'B'}</Red></> : 

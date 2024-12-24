@@ -44,14 +44,14 @@ const ModalRefillLightCurtainConfirm = ({
 
   return (
     <AlertModal
-      title={'เติมพาเล็ต / แผ่นคั่น'}
+      title={'เติมพาเลต / แผ่นคั่น'}
       show={latestStatus?.refillMode}
     >
       <ContentText>{
         latestStatus?.refillSafe ?
           <div>กดปุ่มเหลืองเมื่อออกมานอกกรงแล้ว<br/>&nbsp;</div>
           :
-          <div>โปรดรอสัญญาณไฟเขียวก่อนเข้าไปเติมพาเล็ต / แผ่นคั่น<br/>หรือกดปุ่มสีเหลืองเพื่อยกเลิก</div>
+          <div>โปรดรอสัญญาณไฟเขียวก่อนเข้าไปเติมพาเลต / แผ่นคั่น<br/>หรือกดปุ่มสีเหลืองเพื่อยกเลิก</div>
       }
 </ContentText>
       <br/><br/>

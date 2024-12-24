@@ -15,6 +15,7 @@
   "common.load": "load",
   "common.eject": "eject",
   "common.total": "total",
+  "common.clear": "Clear",
   "component.common.loading.text": "Loading",
   "component.common.error.text": "Error has occurred. Please try again later.",
   "controlbar.button.start": "start",
@@ -24,6 +25,10 @@
   "controlcenter.button.pause.label": "ခဏရပ်ပါ",
   "controlcenter.button.resume.label": "ပြန်စသည်",
   "controlcenter.control.title": "ထိန်းချုပ်ရာနေရာ",
+  "overview.checklist": "Checklist",
+  "overview.line": "Line",
+  "overview.to": "to",
+  "overview.pallet_is_off": "Pallet {i} is {off}",
   "statusbar.emer_stopped": "အရေးပေါ်ရပ်ရန်",
   "maincomponent.createtask.button": "စတင်လုပ်ဆောင်ပါ",
   "maincomponent.createtask.modal.option.new": "စတင်လုပ်ဆောင်ပါ",
@@ -103,5 +108,9 @@
   "validation.pallet.exceed": "The number of bundles exceeds possible number per pallet",
   "validation.pallet.exceed.short": "exceeds possible number",
   "pallet.operating": "Operating",
-  "pallet.adjust_height": "Adjust height"
+  "pallet.adjust_height": "Adjust height",
+  "pallet.pallet": "Pallet",
+  "pallet.pallets": "Pallets",
+  "pallet.order": "Order",
+  "pallet.off": "Off"
 }

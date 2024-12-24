@@ -22,6 +22,7 @@
   "common.eject": "eject",
   "common.box": "box",
   "common.total": "total",
+  "common.clear": "Clear",
   "component.common.loading.text": "Loading",
   "component.common.error.text": "Error has occurred. Please try again later.",
   "controlbar.button.start": "start",
@@ -92,6 +93,10 @@
   "tasklist.info.boxdimension": "box dimension",
   "overview.addnewtask": "Add new task",
   "overview.current_stack": "Current Stack",
+  "overview.checklist": "Checklist",
+  "overview.line": "Line",
+  "overview.to": "to",
+  "overview.pallet_is_off": "Pallet {i} is {off}",
   "manualbuttons.load_and_start": "START",
   "manualbuttons.end_order": "END ORDER",
   "manualbuttons.gripper_release": "GRIPPER RELEASE",
@@ -122,5 +127,9 @@
   "pallet.operating": "Operating",
   "pallet.adjust_height": "Adjust height",
   "pallet.auto_pallet": "Auto Pallet",
-  "pallet.pallet_slipsh": "Pallet & Slip Sheet"
+  "pallet.pallet_slipsh": "Pallet & Slip Sheet",
+  "pallet.pallet": "Pallet",
+  "pallet.pallets": "Pallets",
+  "pallet.order": "Order",
+  "pallet.off": "OFF"
 }

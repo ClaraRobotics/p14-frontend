@@ -106,7 +106,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
 
   return (
     <PalletStackWithControlsContainer>
-      <h1 style={{position: 'absolute', left: 0, top: -33, color: styles.colors.gray1, zIndex: 10}}>Pallet {idx==0 ? 'A' : 'B'}</h1>
+      <h1 style={{position: 'absolute', left: 0, top: -33, color: styles.colors.gray1, zIndex: 10}}>{t('pallet.pallet')} {idx==0 ? 'A' : 'B'}</h1>
       <PalletStackWithControlsContent enabled={palletEnabled}>
         <PalletStackWrap>
           {
@@ -137,9 +137,9 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
         />
         <PalletControlContainer>
           <TriToggle
-            label_0={'OFF'}
-            label_1={'Order A'}
-            label_2={'Order B'}
+            label_0={t('pallet.off')}
+            label_1={t('pallet.order') + ' A'}
+            label_2={t('pallet.order') + ' B'}
             value_0={99}
             value_1={0}
             value_2={1}
@@ -236,8 +236,8 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
                 <Row>
                   <NumberDisplay
                       value={
-                        latestStatus.currentOrder?.[idx] == 0 ? 'Order A' : 
-                        latestStatus.currentOrder?.[idx] == 1 ? 'Order B' :
+                        latestStatus.currentOrder?.[idx] == 0 ? t('pallet.order') + ' A' : 
+                        latestStatus.currentOrder?.[idx] == 1 ? t('pallet.order') + ' B' :
                                                                 'No Order'
                       }
                       label={t('pallet.pallet_order')}

@@ -36,7 +36,7 @@ const ModalLowPallet = ({
   const [view, setView] = useRecoilState(viewState);
   return (
     <AlertModal
-      title={'พาเล็ตใกล้หมด'}
+      title={'พาเลตใกล้หมด'}
       show={view.showLowPalletModal}
       actionButtonLabel={'ตกลง'}
       onActionButtonTap={() => {
