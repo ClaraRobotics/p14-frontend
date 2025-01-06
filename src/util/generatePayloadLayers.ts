@@ -62,7 +62,7 @@ const generatePayloadLayers = (task:TaskState,system:SystemState,maxPossibleBoxe
     "layers": layers_full,
     "boxAmount":boxAmount,
     "pickType":"NORMAL",
-    "rotateType":"NORMAL",
+    "rotateType":isRotate?"ALTERNATE":"NORMAL",
     "tieType":"NORMAL",
     "isDoubleStack": isDoubleStack,
     "robotSpeed": robotSpeed,

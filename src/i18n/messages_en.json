@@ -97,6 +97,7 @@
   "overview.line": "Line",
   "overview.to": "to",
   "overview.pallet_is_off": "Pallet {i} is {off}",
+  "overview.pallet_is_order": "Pallet {iPallet} is currently {order} {iConv}",
   "manualbuttons.load_and_start": "START",
   "manualbuttons.end_order": "END ORDER",
   "manualbuttons.gripper_release": "GRIPPER RELEASE",

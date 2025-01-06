@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactElement } from 'react';
 import { BiLayerPlus, BiListUl } from 'react-icons/bi';
 import { IconContext } from 'react-icons';
 import { useHistory } from 'react-router';
@@ -36,8 +36,13 @@ import preloadBg from '@assets/img/CLARA.png';
 import Column from '@/components/common/Column';
 import { setLineIndex } from '@/store/task/actions';
 
+declare global {
+  interface String {
+    replaceJSX(from: string, to: ReactElement): Array<string | ReactElement>;
+  }
+}
 
-String.prototype.replaceJSX = function(from, to){
+String.prototype.replaceJSX = function(from: string, to: ReactElement){
   to = React.cloneElement(to, { key: '0' });
   
   return this.split(from).flatMap(e => [e, to]).slice(0, -1)
@@ -60,11 +65,11 @@ const CreateTaskOptionContainer = styled.div`
   justify-content: space-between;
 `;
 
-const WhyDisabledText = styled.div<{
-  show: boolean;
-}>`
-  display: ${(p) => (p.show ? 'block' : 'none')};
-`;
+// const WhyDisabledText = styled.div<{
+//   show: boolean;
+// }>`
+//   display: ${(p) => (p.show ? 'block' : 'none')};
+// `;
 
 const CreateTaskOption = styled.div`
   width: 30%;
@@ -146,15 +151,15 @@ const BoxPositionState = styled.div<{
   background-color: ${(p) => (p.active ? styles.colors.gray2 : 'none')};
 `;
 
-const DblStackerActive = styled.div<{ active: boolean }>`
-  position: absolute;
-  left: 60px;
-  top: 5px;
-  width: 300px;
-  height: 30px;
-  color: ${styles.colors.green};
-  display: ${(p) => (p.active ? 'initial' : 'none')};
-`;
+// const DblStackerActive = styled.div<{ active: boolean }>`
+//   position: absolute;
+//   left: 60px;
+//   top: 5px;
+//   width: 300px;
+//   height: 30px;
+//   color: ${styles.colors.green};
+//   display: ${(p) => (p.active ? 'initial' : 'none')};
+// `;
 
 const Green = styled.span`
   color: ${styles.colors.green};

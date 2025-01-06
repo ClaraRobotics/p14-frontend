@@ -97,6 +97,7 @@
   "overview.line": "ไลน์",
   "overview.to": "ไป",
   "overview.pallet_is_off": "พาเลต {i} {off}อยู่",
+  "overview.pallet_is_order": "พาเลต {iPallet} กำลังทำ {order} {iConv} อยู่",
   "manualbuttons.load_and_start": "เริ่มทำงาน",
   "manualbuttons.end_order": "จบออเดอร์",
   "manualbuttons.gripper_release": "ปล่อยที่จับกล่อง",

@@ -29,6 +29,7 @@
   "overview.line": "Line",
   "overview.to": "to",
   "overview.pallet_is_off": "Pallet {i} is {off}",
+  "overview.pallet_is_order": "Pallet {iPallet} is currently {order} {iConv}",
   "statusbar.emer_stopped": "အရေးပေါ်ရပ်ရန်",
   "maincomponent.createtask.button": "စတင်လုပ်ဆောင်ပါ",
   "maincomponent.createtask.modal.option.new": "စတင်လုပ်ဆောင်ပါ",

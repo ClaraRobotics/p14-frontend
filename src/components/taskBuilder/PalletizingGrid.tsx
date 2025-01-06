@@ -73,7 +73,7 @@ const PalletizingGrid = ({ t }: WithTranslation) => {
 
   const scale = GRID_DISPLAY_WIDTH / gridWidth;
 
-  console.log({ gridWidth, gridHeight, palletDimension });
+  // console.log({ gridWidth, gridHeight, palletDimension });
 
   const onDragStart = () => {
     taskActions.pushUndo(pattern, setPattern, layout);

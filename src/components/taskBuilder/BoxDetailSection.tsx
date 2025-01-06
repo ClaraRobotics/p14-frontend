@@ -304,7 +304,7 @@ const BoxDetailSection = ({ t }: WithTranslation) => {
           }
         />
       </Row> */}
-       <Row>
+       {/* <Row>
         <Field
           label={t('taskbuilder.pattern.boxdetail.robot_speed.label')}
           slot={
@@ -320,9 +320,9 @@ const BoxDetailSection = ({ t }: WithTranslation) => {
             />
           }
         />
-      </Row>
-      {/* <Row>
-        <>
+      </Row> */}
+      <Row>
+        {/* <>
           <OptionText>
             {t('taskbuilder.pattern.boxdetail.rotateodd')}
           </OptionText>
@@ -339,9 +339,9 @@ const BoxDetailSection = ({ t }: WithTranslation) => {
             }}
           >
             <AiOutlineRotateLeft />
-          </IconContext.Provider>
+          </IconContext.Provider> */}
           <Field
-            label={''}
+            label={'Rotate Layer'}
             slot={
               <Toggle
                 offLabel={t('common.no')}
@@ -353,8 +353,8 @@ const BoxDetailSection = ({ t }: WithTranslation) => {
               />
             }
           />
-        </>
-      </Row> */}
+        {/* </> */}
+      </Row>
       {/* <Row>
         {parseInt(stackHeight) < 140 && (
           <>

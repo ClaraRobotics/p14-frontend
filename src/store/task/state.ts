@@ -30,7 +30,7 @@ export const defaultTask: State = {
   boxAmount:undefined,
   previewBoxes:[[]],
   isPickSpecial:true,
-  isRotate:true,
+  isRotate:false,
   isNoTying:true,
   isDoubleStack:false,
   robotSpeed: 0,
