@@ -179,8 +179,8 @@ const SummaryContent = ({ t }: WithTranslation) => {
         labelCol={4}
       />
       <Field
-        label={'ตัวหยิบซ้อน'}
-        slot={<FieldBody>{task.isDoubleStack ? 'ใช้' : 'ไม่ใช้'}</FieldBody>}
+        label={t('taskbuilder.layer.dbl_stacker')}
+        slot={<FieldBody>{task.isDoubleStack ? t('common.yes') : t('common.no')}</FieldBody>}
         info
         labelCol={4}
       />
@@ -197,8 +197,8 @@ const SummaryContent = ({ t }: WithTranslation) => {
             {task.isSlipSheet
               ? `${t('common.every')} ${
                   task.slipSheetEvery
-                } ${'taskbuilder.layer.title'}`
-              : t('common.do_not_exist')}
+                } ${t('taskbuilder.layer.title')}`
+              : t('common.no')}
           </FieldBody>
         }
         info
@@ -211,13 +211,13 @@ const SummaryContent = ({ t }: WithTranslation) => {
       <h1>{t('taskbuilder.summary.title')}</h1>
       {taskDetailContent}
       <Field
-        label="วิ่งทดสอบ"
+        label={t('taskbuilder.layer.test_run')}
         slot={
           <FieldBody>
             <Toggle
-                onLabel={'เปิด'}
+                onLabel={t('common.on')}
                 onValue={true}
-                offLabel={'ปิด'}
+                offLabel={t('common.off')}
                 offValue={false}
                 onToggle={setIsDryRun}
                 selected={isDryRun}

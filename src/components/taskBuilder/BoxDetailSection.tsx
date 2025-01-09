@@ -341,7 +341,7 @@ const BoxDetailSection = ({ t }: WithTranslation) => {
             <AiOutlineRotateLeft />
           </IconContext.Provider> */}
           <Field
-            label={'Rotate Layer'}
+            label={t('taskbuilder.pattern.boxdetail.rotateodd')}
             slot={
               <Toggle
                 offLabel={t('common.no')}
