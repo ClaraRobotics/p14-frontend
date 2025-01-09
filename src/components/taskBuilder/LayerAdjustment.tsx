@@ -310,6 +310,7 @@ const LayerAdjustment = ({ t }: WithTranslation) => {
       <Row style={{ paddingTop: '24px' }}>
         <Button label={t('common.back')} className="secondary" onTap={back} />
         <Button
+          disabled={!task.boxAmount}
           label={t('common.next')}
           rearIcon={<HiArrowRight />}
           onTap={next}

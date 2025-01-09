@@ -429,12 +429,20 @@ const OverviewView = ({ t }: WithTranslation) => {
                   }
                   &ensp;{t('overview.line')} {iConv==0 ? 'A':'B'} {t('overview.to')} {iPallet==0 ? 'A':'B'} |&nbsp;
                   {
-                    !pallet_enabled[iPallet]       ?  t('overview.pallet_is_off').replace('{i}', iPallet==0 ? 'A':'B').replaceJSX('{off}', <Red>{t('pallet.off')}</Red>) : // <>Pallet {iPallet==0 ? 'A':'B'} is <Red>OFF</Red></> : 
-                    curent_order[iPallet] != iConv ?  <>Pallet {iPallet==0 ? 'A':'B'} is currently <Red>Order {iConv==1 ? 'A':'B'}</Red></> : 
-                    !conveyor_enabled[iConv]       ?  <>Input Conveyor {iConv==0 ? 'A':'B'} is <Red>OFF</Red></> : 
-                    curent_task[iConv] === null    ?  <>Please create <Red>New Order {iConv==0 ? 'A':'B'}</Red></> : 
-                    !pallet_operating[iPallet]     ?  <><Red>No pallet</Red>. Wait for picking...</>: 
-                                                      <Green>ON</Green>
+                    !pallet_enabled[iPallet]       ?  t('overview.pallet_is_off')
+                                                        .replace('{i}', iPallet==0 ? 'A':'B')
+                                                        .replaceJSX('{off}', <Red>{t('pallet.off')}</Red>) : // <>Pallet {iPallet==0 ? 'A':'B'} is <Red>OFF</Red></> : 
+                    curent_order[iPallet] != iConv ?  t('overview.pallet_is_order')
+                                                        .replace('{iPallet}', iPallet==0 ? 'A':'B')
+                                                        .replaceJSX('{order}', <Red>{t('pallet.order')} {iConv==1 ? 'A':'B'}</Red>) : // <>Pallet {iPallet==0 ? 'A':'B'} is currently <Red>Order {iConv==1 ? 'A':'B'}</Red></> : 
+                    !conveyor_enabled[iConv]       ?  t('overview.conv_is_off')
+                                                        .replace('{i}', iConv==0 ? 'A':'B')
+                                                        .replaceJSX('{off}', <Red>{t('pallet.off')}</Red>) : // <>Input Conveyor {iConv==0 ? 'A':'B'} is <Red>OFF</Red></> : 
+                    curent_task[iConv] === null    ?  t('overview.create_new_order')
+                                                        .replaceJSX('{new_order}', <Red>{t('overview.new_order').replace('{i}', iConv==0 ? 'A':'B')}</Red>) : // <>Please create <Red>New Order {iConv==0 ? 'A':'B'}</Red></> : 
+                    !pallet_operating[iPallet]     ?  t('overview.no_pallet')
+                                                        .replaceJSX('{no_pallet}', <Red>{t('pallet.no_in_output')}</Red>) : // <><Red>No pallet</Red>. Wait for picking...</> : 
+                                                      <Green>{t('overview.on')}</Green>
                   }
                 </h2>
               )}
