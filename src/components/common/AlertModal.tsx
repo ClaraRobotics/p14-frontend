@@ -14,9 +14,12 @@ interface PropsData {
   show?: boolean;
   actionButtonLabel?: string;
   onActionButtonTap?: TouchEventHandler;
+  action2ButtonLabel?: string;
+  onAction2ButtonTap?: TouchEventHandler;
   subButtonLabel?: string;
   onSubButtonTap?: TouchEventHandler;
   actionButtonType?: ButtonType;
+  action2ButtonType?: ButtonType;
 }
 
 const Container = styled.div`
@@ -79,11 +82,16 @@ const AlertModal = (props: PropsWithChildren<PropsData>) => {
     show,
     actionButtonLabel,
     onActionButtonTap = () => {},
+    action2ButtonLabel,
+    onAction2ButtonTap = () => {},
     subButtonLabel,
     onSubButtonTap = () => {},
     actionButtonType,
+    action2ButtonType,
     children,
   } = props;
+
+  const numButton = (!!actionButtonLabel?1:0) + (!!action2ButtonLabel?1:0) + (!!subButtonLabel?1:0)
 
   return (
     <Backdrop show={show}>
@@ -102,6 +110,7 @@ const AlertModal = (props: PropsWithChildren<PropsData>) => {
                   label={subButtonLabel}
                   onTap={onSubButtonTap}
                   className="secondary"
+                  style={numButton == 3 ? {width: 230} : {}}
                 />
               ) : null}
               {actionButtonLabel && subButtonLabel ? <ButtonDivider /> : null}
@@ -110,6 +119,16 @@ const AlertModal = (props: PropsWithChildren<PropsData>) => {
                   className={actionButtonType}
                   label={actionButtonLabel}
                   onTap={onActionButtonTap}
+                  style={numButton == 3 ? {width: 230} : {}}
+                />
+              ) : null}
+              {actionButtonLabel && action2ButtonLabel ? <ButtonDivider /> : null}
+              {action2ButtonLabel ? (
+                <Button
+                  className={action2ButtonType}
+                  label={action2ButtonLabel}
+                  onTap={onAction2ButtonTap}
+                  style={numButton == 3 ? {width: 230} : {}}
                 />
               ) : null}
             </ButtonGroup>

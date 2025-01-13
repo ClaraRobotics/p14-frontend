@@ -138,7 +138,8 @@ const ExistingTaskListView = () => {
 
       <AlertModal
         show={isShowTaskPreview}
-        actionButtonLabel="LOAD B"
+        actionButtonLabel="LOAD A"
+        action2ButtonLabel="LOAD B"
         subButtonLabel="Cancel"
         onSubButtonTap={() => {
           setIsShowTaskPreview(false);
