@@ -147,15 +147,17 @@ const ExistingTaskListView = () => {
         onActionButtonTap={() => {
           setIsShowTaskPreview(false);
           checkEmerThenCallAction(() => {
-            robotStart(filteredTask[currentTaskId], 1) //TODO LOAD LINE_LINDEX
+            robotStart(filteredTask[currentTaskId], 0)
 
             history.push('/')
-            // viewActions.checkEmptyPalletThenCall(
-            //   view,
-            //   setView,
-            //   status,
-              // ()=>
-            // )
+          })
+        }}
+        onAction2ButtonTap={() => {
+          setIsShowTaskPreview(false);
+          checkEmerThenCallAction(() => {
+            robotStart(filteredTask[currentTaskId], 1)
+
+            history.push('/')
           })
         }}
       >
