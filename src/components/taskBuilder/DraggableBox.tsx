@@ -29,6 +29,7 @@ interface StyledProps {
   width: number;
   height: number;
   margin: number;
+  rotated?: boolean;
   active?: boolean;
 }
 
@@ -48,7 +49,32 @@ const BoxModel = styled.div<StyledProps>`
   align-items: center;
   position: absolute;
   overflow: hidden;
+
+  :before {
+    ${(props) => props.rotated ?
+      'width: 100%;height: 12px;top: 20%;left: 50%;' :
+      'height: 100%;width: 12px;top: 50%;left: 20%;'
+    }
+    content: '';
+    background: ${styles.colors.gray3};
+    position: absolute;
+    transform: translate(-50%,-50%);
+    transform-origin: 50% 50%;
+  }
+
+  :after {
+    ${(props) => props.rotated ?
+      'width: 100%;height: 12px;bottom: 20%;left: 50%;' :
+      'height: 100%;width: 12px;top: 50%;right: 20%;'
+    }
+    content: '';
+    background: ${styles.colors.gray3};
+    position: absolute;
+    transform: translate(-50%,-50%);
+    transform-origin: 50% 50%;
+  }
 `;
+
 
 const DraggableBox = (propsData: PropsData) => {
   const {
@@ -117,6 +143,7 @@ const DraggableBox = (propsData: PropsData) => {
         height={displayHeight}
         margin={margin}
         active={active}
+        rotated={rotated}
       >
         {t('taskbuilder.pattern.grid.dragtomove')}
       </BoxModel>
