@@ -46,14 +46,13 @@ const SummaryContent = ({ t }: WithTranslation) => {
   const history = useHistory();
   const [view, setView] = useRecoilState(viewState);
   const [isDryRun, setIsDryRun] = useState(false);
+  const valMaxPossibleBoxesPerPallet = useRecoilValue(maxPossibleBoxesPerPallet);
+  const valCurrentLineIndex = useRecoilValue(currentLineIndex);
 
   const checkEmerThenCallAction = (callbackFunction: () => any) => {
     viewActions.checkEmerThencall(view, setView, status, callbackFunction);
   };
 
-  const valMaxPossibleBoxesPerPallet = useRecoilValue(
-    maxPossibleBoxesPerPallet
-  );
 
   const back = () => {
     taskActions.goToStep(task, setTask, 'layer');
@@ -65,20 +64,21 @@ const SummaryContent = ({ t }: WithTranslation) => {
       system,
       toInteger(valMaxPossibleBoxesPerPallet)
     );
-    const saveTaskPayload = { ...payloadLayers, taskTitle: taskTitle };
+    const saveTaskPayload = { ...payloadLayers, taskTitle };
     api
       .post('/save/task', saveTaskPayload)
       .then((res: any) => {
-        setStatus({ ...status, taskTitle });
+        setStatus({ ...status, taskTitle: [
+          ...status.taskTitle.slice(0, valCurrentLineIndex), 
+          taskTitle, 
+          ...status.taskTitle.slice(valCurrentLineIndex + 1)
+        ]});
       })
       .catch((err: any) => {
         alert(err);
       });
     history.push('/');
   };
-  const  valCurrentLineIndex= useRecoilValue(
-    currentLineIndex
-  );
   const robotStart = () => {
     // grilled
 
