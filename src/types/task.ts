@@ -26,7 +26,8 @@ export type BoxItemBackend = {
   yCenter: number;
   widthX: number;
   heightY: number;
-  id?:number;
+  id?: number;
+  wh?: string
 };
 
 export interface PatternTemplate {

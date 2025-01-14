@@ -15,6 +15,7 @@ interface BoxProps {
   heightY: number;
   xCenter: number;
   yCenter: number;
+  wh?: string;
 }
 
 // GRID_DISPLAY_WIDTH
@@ -35,6 +36,30 @@ const Box = styled.div<BoxProps>`
   height: ${(props) => props.heightY}px;
   top: ${(props) => props.yCenter - props.heightY / 2}px;
   left: ${(props) => props.xCenter - props.widthX / 2}px;
+
+  :before {
+    ${(props) => props.wh == 'yx' ?
+      'width: 100%;height: 12px;top: 20%;left: 50%;' :
+      'height: 100%;width: 12px;top: 50%;left: 20%;'
+    }
+    content: '';
+    background: ${styles.colors.gray3};
+    position: absolute;
+    transform: translate(-50%,-50%);
+    transform-origin: 50% 50%;
+  }
+
+  :after {
+    ${(props) => props.wh == 'yx' ?
+      'width: 100%;height: 12px;bottom: 20%;left: 50%;' :
+      'height: 100%;width: 12px;top: 50%;right: 20%;'
+    }
+    content: '';
+    background: ${styles.colors.gray3};
+    position: absolute;
+    transform: translate(-50%,-50%);
+    transform-origin: 50% 50%;
+  }
 `;
 
 const PreviewText = styled.div`
@@ -61,6 +86,7 @@ const PatternPreview = ({ t, boxes }: PatternPreviewProps) => {
                 heightY={box.heightY}
                 xCenter={box.xCenter}
                 yCenter={box.yCenter}
+                wh={box.wh}
               />
             );
           })
