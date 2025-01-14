@@ -64,10 +64,10 @@ const RobotControlComponent = ({ t }: WithTranslation) => {
               }}
             />
             <Button
-              label="Gripper Clear Torque"
+              label="Pallet Release"
               onTap={() => {
                 api
-                  .post('/robot/play-job', { job: 'BTN_GRIPPER_TM_R' })
+                  .post('/robot/play-job', { job: 'BTN_PALLET_RELEASE' })
                   .then((res: any) => {})
                   .catch((err: any) => {
                     alert(err);
