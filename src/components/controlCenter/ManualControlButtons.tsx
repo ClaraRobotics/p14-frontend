@@ -68,7 +68,7 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
   const gripperReleaseA = () => {
     //TODO handle error
     api
-      .post('/robot/play-job', { job: 'BTN_SOLN_GRIPPER_R_A' })
+      .post('/robot/play-job', { job: 'BTN_GRIPPER_R_A' })
       .then((res: any) => {})
       .catch((err: any) => {
         alert(err);
@@ -77,7 +77,7 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
   const gripperReleaseB = () => {
     //TODO handle error
     api
-      .post('/robot/play-job', { job: 'BTN_SOLN_GRIPPER_R_B' })
+      .post('/robot/play-job', { job: 'BTN_GRIPPER_R_B' })
       .then((res: any) => {})
       .catch((err: any) => {
         alert(err);

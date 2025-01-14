@@ -63,6 +63,17 @@ const RobotControlComponent = ({ t }: WithTranslation) => {
                   .then((res: any) => {});
               }}
             />
+            <Button
+              label="Gripper Clear Torque"
+              onTap={() => {
+                api
+                  .post('/robot/play-job', { job: 'BTN_GRIPPER_TM_R' })
+                  .then((res: any) => {})
+                  .catch((err: any) => {
+                    alert(err);
+                  });
+              }}
+            />
           </RobotControlPopoverContainer>
         }
       >
