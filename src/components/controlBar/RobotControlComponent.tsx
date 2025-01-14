@@ -19,11 +19,9 @@ const RobotControlPopoverContainer = styled.div`
   -webkit-box-shadow: 0px 0px 18px 0px rgba(31, 31, 31, 0.5);
   -moz-box-shadow: 0px 0px 18px 0px rgba(31, 31, 31, 0.5);
   box-shadow: 0px 0px 18px 0px rgba(31, 31, 31, 0.5);
-  width: 400px;
+  width: 350px;
   z-index: 2;
-  padding: 100px;
-  padding-top: 100px;
-  padding-bottom: 200px;
+  padding: 30px;
 `;
 const RobotControlComponent = ({ t }: WithTranslation) => {
   const [open, setOpen] = useState(false);
@@ -68,6 +66,28 @@ const RobotControlComponent = ({ t }: WithTranslation) => {
               onTap={() => {
                 api
                   .post('/robot/play-job', { job: 'BTN_PALLET_RELEASE' })
+                  .then((res: any) => {})
+                  .catch((err: any) => {
+                    alert(err);
+                  });
+              }}
+            />
+            <Button
+              label="DBL Stack wide home"
+              onTap={() => {
+                api
+                  .post('/robot/dbl-servo-wide-home', {})
+                  .then((res: any) => {})
+                  .catch((err: any) => {
+                    alert(err);
+                  });
+              }}
+            />
+            <Button
+              label="DBL Stack up home"
+              onTap={() => {
+                api
+                  .post('/robot/dbl-servo-up-home', {})
                   .then((res: any) => {})
                   .catch((err: any) => {
                     alert(err);
