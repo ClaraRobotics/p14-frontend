@@ -49,7 +49,7 @@ const RobotStatusContainer = styled.div`
   width: 700px;
   border: 2px solid ${styles.colors.gray6};
   line-height: 24px;
-  margin-left: 180px;
+  margin-left: 68px;
   display: flex;
   font-size:0.9em;
 `;
@@ -145,6 +145,13 @@ const ControlBar = ({ t }: WithTranslation) => {
       .catch((err) => {});
   };
 
+  const robotSpeed = () => {
+    api
+      .post('/robot/change-robot-speed', { speed: latestStatus.robotSpeed === 0 ? 1 : 0 })
+      .then((res) => {})
+      .catch((err) => {});
+  };
+
   return (
     <Container>
       <LeftBtnGroup>
@@ -158,9 +165,15 @@ const ControlBar = ({ t }: WithTranslation) => {
         <ControlButton
           icon={<BsPauseFill />}
           label={t('controlbar.button.pause')}
-          onTap={() => {holdRobot()}}
+          onTap={holdRobot}
         />
         <Divider />
+        <ControlButton
+          icon={<span style={{fontSize: '2rem'}}>{latestStatus.robotSpeed === 0 ? 'เร็ว' : 'ช้า'}</span>}
+          style={{width: 112}}
+          label={'ความเร็ว'}
+          onTap={robotSpeed}
+        />
         <Divider />
         <div style={{width: 100, textAlign: 'center'}}>
           <span 
