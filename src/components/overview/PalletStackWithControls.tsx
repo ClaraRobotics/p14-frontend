@@ -238,7 +238,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
                       value={
                         latestStatus.currentOrder?.[idx] == 0 ? t('pallet.order') + ' A' : 
                         latestStatus.currentOrder?.[idx] == 1 ? t('pallet.order') + ' B' :
-                                                                'No Order'
+                                                                t('pallet.no_order')
                       }
                       label={t('pallet.pallet_order')}
                     />

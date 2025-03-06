@@ -28,6 +28,8 @@ const BoxesContainer = styled.div`
   position: relative;
   background-color: ${styles.colors.gray8};
 `;
+
+// Box styled component for displaying each box with edge lines to show direction
 const Box = styled.div<BoxProps>`
   position: absolute;
   background-color: ${styles.colors.gray4};
@@ -62,18 +64,44 @@ const Box = styled.div<BoxProps>`
   }
 `;
 
-const PreviewText = styled.div`
+// Alert container for error messages, centered and responsive
+const AlertContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 4em;
-  padding: 8px;
-  background-color: ${styles.colors.danger1};
-  color: ${styles.colors.gray7};
+  justify-content: center;
+  gap: 3rem;
+  padding: 3rem;
+  background: ${styles.colors.danger1}15;
+  border-left: 8px solid ${styles.colors.danger1};
+  min-width: 80%;
+  min-height: 200px;
+  touch-action: none;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
-const PatternPreview = ({ t, boxes }: PatternPreviewProps) => {
-  // console.log('pattern preview:', boxes);
 
+// Warning icon with large size for touch screens
+const AlertIcon = styled(AiOutlineWarning)`
+  color: ${styles.colors.danger1};
+  font-size: 10rem;
+  flex-shrink: 0;
+`;
+
+// Large text for error messages on touch screens
+const AlertText = styled.div`
+  color: ${styles.colors.danger1};
+  font-size: 8rem;
+  line-height: 1.4;
+  font-weight: 600;
+  text-align: center;
+`;
+
+// Main component for pattern preview with boxes or error message
+const PatternPreview = ({ t, boxes }: PatternPreviewProps) => {
   return (
     <div>
       <BoxesContainer>
@@ -91,10 +119,13 @@ const PatternPreview = ({ t, boxes }: PatternPreviewProps) => {
             );
           })
         ) : (
-          <PreviewText>
-            <AiOutlineWarning />
-            &nbsp;{t('taskbuilder.pattern.patternlist.error.toolarge')}
-          </PreviewText>
+          // Show error message when no boxes are present
+          <AlertContainer>
+            <AlertIcon />
+            <AlertText>
+              {t('taskbuilder.pattern.patternlist.error.toolarge')}
+            </AlertText>
+          </AlertContainer>
         )}
       </BoxesContainer>
     </div>

@@ -355,7 +355,7 @@ const BoxDetailSection = ({ t }: WithTranslation) => {
           />
         {/* </> */}
       </Row>
-      {/* <Row>
+      <Row>
         {parseInt(stackHeight) < 140 && (
           <>
            <OptionText>{t('taskbuilder.pattern.doublestacker')}</OptionText>
@@ -381,7 +381,7 @@ const BoxDetailSection = ({ t }: WithTranslation) => {
             />
           </>
         )}
-      </Row> */}
+      </Row>
       <Row style={{ paddingTop: '24px' }}>
         <Button
           label={t('common.next')}

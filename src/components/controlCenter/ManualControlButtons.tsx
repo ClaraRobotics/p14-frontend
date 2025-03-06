@@ -187,7 +187,7 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
           >
             <ImCogs />
           </IconContext.Provider>{' '}
-          คำสั่งหุ่นยนต์
+          {t('robotcommand.title')}
         </ButtonsGroupLabel>
         <ButtonColumn>
           <Button

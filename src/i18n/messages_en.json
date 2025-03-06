@@ -139,5 +139,20 @@
   "pallet.pallet": "Pallet",
   "pallet.pallets": "Pallets",
   "pallet.order": "Order",
-  "pallet.off": "OFF"
+  "pallet.off": "OFF",
+  "robotcommand.title": "Robot Commands",
+  "pallet.no_order": "No order",
+  "navbar.status.robotstatus.robot.alarm": "Robot alarm triggered",
+  "navbar.status.robotstatus.robot.running": "Robot is running",
+  "statusbar.emer_stopped": "Emergency stopped",
+  "controlcenter.button.pause.label": "Pause",
+  "robotstatus.code.idle": "Robot idle",
+  "robotstatus.code.order_write_job": "Setting up robot (Pick & Place)",
+  "robotstatus.code.order_write_dyn_height": "Setting up robot (Height Adjustment)",
+  "robotstatus.code.running_line": "Robot is running (Pick & Place)",
+  "robotstatus.code.play_job": "Robot is running (General Command)",
+  "control.button.change_speed": "Speed",
+  "emergency.text": "tap",
+  "Task.Preview.Size": "Size",
+  "Task.Preview.OrderName": "Order Name"
 }

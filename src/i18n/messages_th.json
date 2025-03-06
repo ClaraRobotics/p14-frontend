@@ -139,5 +139,20 @@
   "pallet.pallet": "พาเลต",
   "pallet.pallets": "พาเลต",
   "pallet.order": "ออเดอร์",
-  "pallet.off": "ปิด"
+  "pallet.off": "ปิด",
+  "robotcommand.title": "คำสั่งหุ่นยนต์",
+  "pallet.no_order": "No Order",
+  "navbar.status.robotstatus.robot.alarm": "หุ่นยนต์ขึ้นสัญญาณเตือน",
+  "navbar.status.robotstatus.robot.running": "หุ่นยนต์กำลังทำงาน",
+  "statusbar.emer_stopped": "หยุดฉุกเฉิน",
+  "controlcenter.button.pause.label": "หยุดชั่วคราว",
+  "robotstatus.code.idle": "หุ่นยนต์ว่าง",
+  "robotstatus.code.order_write_job": "กำลังตั้งค่าหุ่นยนต์ (ระบบหยิบวาง)",
+  "robotstatus.code.order_write_dyn_height": "กำลังตั้งค่าหุ่นยนต์ (ระบบปรับความสูง)",
+  "robotstatus.code.running_line": "หุ่นยนต์กำลังทำงาน (ระบบหยิบวาง)",
+  "robotstatus.code.play_job": "หุ่นยนต์กำลังทำงาน (คำสั่งทั่วไป)",
+  "control.button.change_speed": "ปรับความเร็ว",
+  "emergency.text": "ปุ่ม",
+  "Task.Preview.Size": "ขนาด",
+  "Task.Preview.OrderName": "ชื่อออเดอร์"
 }

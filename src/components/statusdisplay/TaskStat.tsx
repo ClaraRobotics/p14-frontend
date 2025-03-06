@@ -71,10 +71,10 @@ const TaskStat = ({ t ,line_index}: TaskStatProps) => {
           <PatternPreviewWrapper>
             <PatternPreview boxes={currentPattern} />
           </PatternPreviewWrapper>
-          ขนาด: {status?.currentTask[line_index]?.widthX}x{status?.currentTask[line_index]?.heightY}x
+          {t('Task.Preview.Size')}: {status?.currentTask[line_index]?.widthX}x{status?.currentTask[line_index]?.heightY}x
           {status?.currentTask[line_index]?.layerHeight}
           <br/>
-          ชื่อออเดอร์: {status?.taskTitle[line_index]}
+          {t('Task.Preview.OrderName')}: {status?.taskTitle[line_index]}
         </TaskStatContainer>
       )}
     </>

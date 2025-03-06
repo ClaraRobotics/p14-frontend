@@ -46,7 +46,7 @@ const EmergencyStatus = ({ t }: WithTranslation) => {
       // className={'stopped'}
       className={emergencyStatus?.all ? '' : 'stopped'}
     >
-      <EmergencyText>{t('statusbar.emer_stopped')} (ปุ่ม {
+      <EmergencyText>{t('statusbar.emer_stopped')} ({t('emergency.text')} {
         emergencyStatus && emergencyButton ?
         [
           ...(emergencyStatus.pendant === false ? ['A'] : []),
