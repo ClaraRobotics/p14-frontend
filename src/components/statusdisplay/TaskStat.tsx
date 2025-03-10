@@ -68,8 +68,9 @@ const TaskStat = ({ t ,line_index}: TaskStatProps) => {
           )}
           /{status?.currentTask?.boxAmount}
           <br /> */}
+
           <PatternPreviewWrapper>
-            <PatternPreview boxes={currentPattern} />
+            <PatternPreview boxes={currentPattern} line_index={line_index} />
           </PatternPreviewWrapper>
           {t('Task.Preview.Size')}: {status?.currentTask[line_index]?.widthX}x{status?.currentTask[line_index]?.heightY}x
           {status?.currentTask[line_index]?.layerHeight}

@@ -8,6 +8,7 @@ import styles from '@/styles/styles';
 
 interface PatternPreviewProps extends WithTranslation {
   boxes: BoxItemBackend[];
+  line_index?: number;
 }
 
 interface BoxProps {
@@ -65,10 +66,10 @@ const Box = styled.div<BoxProps>`
 `;
 
 // Alert container for error messages, centered and responsive
-const AlertContainer = styled.div`
+const AlertContainer = styled.div<{ positionOffset?: { top: string, left: string } }>`
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: ${props => props.positionOffset ? props.positionOffset.top : '50%'};
+  left: ${props => props.positionOffset ? props.positionOffset.left : '50%'};
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
@@ -101,7 +102,11 @@ const AlertText = styled.div`
 `;
 
 // Main component for pattern preview with boxes or error message
-const PatternPreview = ({ t, boxes }: PatternPreviewProps) => {
+const PatternPreview = ({ t, boxes, line_index = 0 }: PatternPreviewProps) => {
+  const positionOffset = line_index === 0 
+    ? { top: '20%', left: '45%' }
+    : { top: '80%', left: '55%' };
+  
   return (
     <div>
       <BoxesContainer>
@@ -120,7 +125,7 @@ const PatternPreview = ({ t, boxes }: PatternPreviewProps) => {
           })
         ) : (
           // Show error message when no boxes are present
-          <AlertContainer>
+          <AlertContainer positionOffset={positionOffset}>
             <AlertIcon />
             <AlertText>
               {t('taskbuilder.pattern.patternlist.error.toolarge')}
