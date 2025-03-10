@@ -29,7 +29,6 @@
   "controlbar.button.pause": "ခဏရပ်",
   "controlbar.button.end": "ပြီးဆုံး",
   "controlbar.button.robotcontrol": "စက်ရုပ်ထိန်းချုပ်မှု",
-  "controlcenter.button.pause.label": "ခဏရပ်ပါ",
   "controlcenter.button.resume.label": "ပြန်စသည်",
   "controlcenter.control.title": "ထိန်းချုပ်ရာနေရာ",
   "overview.checklist": "စစ်ဆေးရန်စာရင်း",
@@ -42,7 +41,6 @@
   "overview.create_new_order": "{new_order} {i} ကို ဖန်တီးပါ",
   "overview.no_pallet": "{no_pallet}။ ဆွဲယူရန် စောင့်ဆိုင်းနေသည်...",
   "overview.on": "ဖွင့်ထား",
-  "statusbar.emer_stopped": "အရေးပေါ်ရပ်ရန်",
   "maincomponent.createtask.button": "စတင်လုပ်ဆောင်ပါ",
   "maincomponent.createtask.modal.option.new": "အသစ်ဖန်တီးရန်",
   "maincomponent.createtask.modal.option.existing": "ရှိပြီးသားမှ",
@@ -154,5 +152,11 @@
   "control.button.change_speed": "အမြန်နှုန်းပြောင်းရန်",
   "emergency.text": "တက်",
   "Task.Preview.Size": "အရွယ်အစား ",
-  "Task.Preview.OrderName": "အော်ဒါအမည်"
+  "Task.Preview.OrderName": "အော်ဒါအမည်",
+  "robotcontrol.button.dev": "ဖွံ့ဖြိုးတိုးတက်မှုမုဒ်",
+  "robotcontrol.button.lightct_deactivate": "အလင်းကာပိတ်",
+  "robotcontrol.button.lightct_activate": "အလင်းကာဖွင့်",
+  "robotcontrol.button.pallet_release": "ပလက်ဖောင်းလွှတ်",
+  "robotcontrol.button.dbl_stack_wide_home": "ထပ်ထားသောအနံပြန်ညှိ",
+  "robotcontrol.button.dbl_stack_up_home": "ထပ်ထားသောအမြင့်ပြန်ညှိ"
 }

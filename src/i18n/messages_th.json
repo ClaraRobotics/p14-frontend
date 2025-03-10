@@ -29,10 +29,8 @@
   "controlbar.button.pause": "หยุด",
   "controlbar.button.end": "จบงาน",
   "controlbar.button.robotcontrol": "ควบคุมหุ่นยนต์",
-  "controlcenter.button.pause.label": "หยุดชั่วคราว",
   "controlcenter.button.resume.label": "ทำต่อ",
   "controlcenter.control.title": "แผงควบคถุม",
-  "statusbar.emer_stopped": "หยุดฉุกเฉิน",
   "maincomponent.createtask.button": "ออเดอร์ใหม่",
   "maincomponent.createtask.modal.option.new": "สร้างใหม่",
   "maincomponent.createtask.modal.option.existing": "โหลดจากงานเก่า",
@@ -154,5 +152,11 @@
   "control.button.change_speed": "ปรับความเร็ว",
   "emergency.text": "ปุ่ม",
   "Task.Preview.Size": "ขนาด",
-  "Task.Preview.OrderName": "ชื่อออเดอร์"
+  "Task.Preview.OrderName": "ชื่อออเดอร์",
+  "robotcontrol.button.dev": "โหมดนักพัฒนา",
+  "robotcontrol.button.lightct_deactivate": "ปิดม่านแสง",
+  "robotcontrol.button.lightct_activate": "เปิดม่านแสง",
+  "robotcontrol.button.pallet_release": "ปล่อยพาเลต",
+  "robotcontrol.button.dbl_stack_wide_home": "รีเซ็ตยกซ้อนกว้าง",
+  "robotcontrol.button.dbl_stack_up_home": "รีเซ็ตยกซ้อนสูง"
 }

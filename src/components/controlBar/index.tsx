@@ -326,7 +326,7 @@ const ControlBar = ({ t }: WithTranslation) => {
               justifyContent: 'center',
               alignItems: 'center'
             }}
-            label={isCountingDown ? '...' : "ปรับความเร็ว"}
+            label={isCountingDown ? '...' : t('control.button.change_speed')}
             onTap={robotSpeed}
             disabled={isCountingDown}
           />

@@ -29,10 +29,8 @@
   "controlbar.button.pause": "pause",
   "controlbar.button.end": "end",
   "controlbar.button.robotcontrol": "robot control",
-  "controlcenter.button.pause.label": "Pause",
   "controlcenter.button.resume.label": "Resume",
   "controlcenter.control.title": "Control panel",
-  "statusbar.emer_stopped": "EMER. STOPPED",
   "maincomponent.createtask.button": "New Order",
   "maincomponent.createtask.modal.option.new": "Create New",
   "maincomponent.createtask.modal.option.existing": "Existing Task",
@@ -154,5 +152,11 @@
   "control.button.change_speed": "Speed",
   "emergency.text": "tap",
   "Task.Preview.Size": "Size",
-  "Task.Preview.OrderName": "Order Name"
-}
+  "Task.Preview.OrderName": "Order Name",
+  "robotcontrol.button.dev": "Dev",
+  "robotcontrol.button.lightct_deactivate": "LightCT Deactivate",
+  "robotcontrol.button.lightct_activate": "LightCT Activate",
+  "robotcontrol.button.pallet_release": "Pallet Release",
+  "robotcontrol.button.dbl_stack_wide_home": "DBL Stack wide home",
+  "robotcontrol.button.dbl_stack_up_home": "DBL Stack up home"
+  }

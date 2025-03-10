@@ -39,14 +39,14 @@ const RobotControlComponent = ({ t }: WithTranslation) => {
         content={
           <RobotControlPopoverContainer>
             <Button
-              label="Dev"
+              label={t('robotcontrol.button.dev')}
               onTap={() => {
                 setShowControlPanel(true);
                 //  window.electron.ipcRenderer.exitFullScreen();
               }}
             />
             <Button
-              label="LightCT Deactivate"
+              label={t('robotcontrol.button.lightct_deactivate')}
               onTap={() => {
                 api
                   .post('/robot/light-ct-inact-toggle', {isInact: true})
@@ -54,7 +54,7 @@ const RobotControlComponent = ({ t }: WithTranslation) => {
               }}
             />
             <Button
-              label="LightCT Activate"
+              label={t('robotcontrol.button.lightct_activate')}
               onTap={() => {
                 api
                   .post('/robot/light-ct-inact-toggle', {isInact: false})
@@ -62,7 +62,7 @@ const RobotControlComponent = ({ t }: WithTranslation) => {
               }}
             />
             <Button
-              label="Pallet Release"
+              label={t('robotcontrol.button.pallet_release')}
               onTap={() => {
                 api
                   .post('/robot/play-job', { job: 'BTN_PALLET_RELEASE' })
@@ -73,7 +73,7 @@ const RobotControlComponent = ({ t }: WithTranslation) => {
               }}
             />
             <Button
-              label="DBL Stack wide home"
+              label={t('robotcontrol.button.dbl_stack_wide_home')}
               onTap={() => {
                 api
                   .post('/robot/dbl-servo-wide-home', {})
@@ -84,7 +84,7 @@ const RobotControlComponent = ({ t }: WithTranslation) => {
               }}
             />
             <Button
-              label="DBL Stack up home"
+              label={t('robotcontrol.button.dbl_stack_up_home')}
               onTap={() => {
                 api
                   .post('/robot/dbl-servo-up-home', {})

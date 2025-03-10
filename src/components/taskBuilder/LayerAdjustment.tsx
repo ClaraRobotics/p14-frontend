@@ -98,17 +98,39 @@ const LayerAdjustment = ({ t }: WithTranslation) => {
   };
 
   const onBoxAmountInputChange = (boxAmount: string) => {
-    let boxAmountValue: number | undefined = parseInt(boxAmount);
-    if (isNaN(boxAmountValue)) {
-      //boxAmountValue = task.previewBoxes.length * task.layout.length;
-    } else {
+    console.log('onBoxAmountInputChange received:', boxAmount);
+    
+    if (boxAmount === null || boxAmount === undefined || boxAmount.trim() === '') {
+      taskActions.setBoxAmount(task, setTask, undefined);
+      return;
+    }
+    
+    const numericValue = boxAmount.replace(/\D/g, '');
+    
+    const boxAmountValue = numericValue !== '' ? Number(numericValue) : undefined;
+    
+    if (boxAmountValue !== undefined) {
       taskActions.setBoxAmount(task, setTask, boxAmountValue);
+    } else {
+      taskActions.setBoxAmount(task, setTask, undefined);
     }
   };
 
   const onRotateFlipEveryChange = (rotateFlipEvery:string)=>{
-    let rotateFlipEveryValue: number | undefined = parseInt(rotateFlipEvery);
-    taskActions.setRotateFlipEvery(task,setTask,rotateFlipEveryValue);
+    if (rotateFlipEvery === null || rotateFlipEvery === undefined || rotateFlipEvery.trim() === '') {
+      taskActions.setRotateFlipEvery(task, setTask, undefined);
+      return;
+    }
+    
+    const numericValue = rotateFlipEvery.replace(/\D/g, '');
+    
+    const rotateFlipEveryValue = numericValue !== '' ? Number(numericValue) : undefined;
+    
+    if (rotateFlipEveryValue !== undefined) {
+      taskActions.setRotateFlipEvery(task, setTask, rotateFlipEveryValue);
+    } else {
+      taskActions.setRotateFlipEvery(task, setTask, undefined);
+    }
   }
 
   const valMaxPossibleBoxesPerPallet = useRecoilValue(
@@ -205,9 +227,18 @@ const LayerAdjustment = ({ t }: WithTranslation) => {
             slot={
               <NumberInput
                 keyboardPosition="bottom"
-                value={task.rotateFlipEvery?.toString()}
+                value={task.rotateFlipEvery?.toString() || ''}
                 label={`${t('common.max')}: ${"ชั้น"}`}
                 onChange={onRotateFlipEveryChange}
+                onFocus={(e) => {
+                  e.target.select();
+                }}
+                onBlur={(e) => {
+                  // ถ้าค่าว่าง ให้เซ็ตเป็น undefined
+                  if (!e.target.value.trim()) {
+                    taskActions.setRotateFlipEvery(task, setTask, undefined);
+                  }
+                }}
               />
             }
             labelCol={4}
@@ -224,9 +255,19 @@ const LayerAdjustment = ({ t }: WithTranslation) => {
           slot={
             <NumberInput
               keyboardPosition="top"
-              value={task.boxAmount?.toString()}
+              value={task.boxAmount?.toString() || ''}
               label={`${t('common.max')}: ${valMaxPossibleBoxesPerPallet}`}
               onChange={onBoxAmountInputChange}
+              onFocus={(e) => {
+                if (e && e.target && typeof e.target.select === 'function') {
+                  e.target.select();
+                }
+              }}
+              onBlur={(e) => {
+                if (e && e.target && (!e.target.value || !e.target.value.trim())) {
+                  taskActions.setBoxAmount(task, setTask, undefined);
+                }
+              }}
             />
           }
           labelCol={4}
@@ -264,14 +305,32 @@ const LayerAdjustment = ({ t }: WithTranslation) => {
                         slot={
                           <NumberInput
                             keyboardPosition="top"
-                            value={task.slipSheetEvery?.toString()}
+                            value={task.slipSheetEvery?.toString() || ''}
                             label={'ชั้น'}
                             onChange={(everyNumber: string) => {
-                              taskActions.setSlipSheetEvery(
-                                task,
-                                setTask,
-                                parseInt(everyNumber)
-                              );
+                              if (!everyNumber || everyNumber.trim() === '') {
+                                taskActions.setSlipSheetEvery(task, setTask, undefined);
+                                return;
+                              }
+                              
+                              const numericValue = everyNumber.replace(/\D/g, '');
+                              const numValue = numericValue !== '' ? Number(numericValue) : undefined;
+                              
+                              if (numValue !== undefined) {
+                                taskActions.setSlipSheetEvery(task, setTask, numValue);
+                              } else {
+                                taskActions.setSlipSheetEvery(task, setTask, undefined);
+                              }
+                            }}
+                            onFocus={(e) => {
+                              if (e && e.target && typeof e.target.select === 'function') {
+                                e.target.select();
+                              }
+                            }}
+                            onBlur={(e) => {
+                              if (e && e.target && (!e.target.value || !e.target.value.trim())) {
+                                taskActions.setSlipSheetEvery(task, setTask, undefined);
+                              }
                             }}
                           />
                         }
