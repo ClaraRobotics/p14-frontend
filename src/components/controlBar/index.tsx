@@ -271,7 +271,7 @@ const ControlBar = ({ t }: WithTranslation) => {
     if (isCountingDown) return;
 
     api
-      .post('/robot/change-robot-speed', { speed: latestStatus.robotSpeed === 1 ? 1 : 0 })
+      .post('/robot/change-robot-speed', { speed: latestStatus.robotSpeed === 1 ? 0 : 1 })
       .then((res) => {
         console.log('Robot speed changed successfully');
       })
@@ -315,7 +315,7 @@ const ControlBar = ({ t }: WithTranslation) => {
               isCountingDown ? (
                 <div style={{ fontSize: '20px', fontWeight: 'bold' }}>{countdown}</div>
               ) : (
-                <SpeedIconWrapper isHighSpeed={latestStatus.robotSpeed === 0}>
+                <SpeedIconWrapper isHighSpeed={latestStatus.robotSpeed === 1}>
                   {latestStatus.robotSpeed === 1 ? <RabbitIcon /> : <TortoiseIcon />}
                 </SpeedIconWrapper>
               )
