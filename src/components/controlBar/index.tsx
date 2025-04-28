@@ -315,7 +315,7 @@ const ControlBar = ({ t }: WithTranslation) => {
               isCountingDown ? (
                 <div style={{ fontSize: '20px', fontWeight: 'bold' }}>{countdown}</div>
               ) : (
-                <SpeedIconWrapper isHighSpeed={latestStatus.robotSpeed === 1}>
+                <SpeedIconWrapper isHighSpeed={latestStatus.robotSpeed === 0}>
                   {latestStatus.robotSpeed === 1 ? <RabbitIcon /> : <TortoiseIcon />}
                 </SpeedIconWrapper>
               )
