@@ -161,6 +161,16 @@ const BoxPositionState = styled.div<{
 //   display: ${(p) => (p.active ? 'initial' : 'none')};
 // `;
 
+const MaintenanceButton = styled(Button)`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 100px;
+  height: 30px;
+  font-size: 0.6rem;
+  z-index: 1000;
+`;
+
 const Green = styled.span`
   color: ${styles.colors.green};
 `
@@ -219,6 +229,14 @@ const OverviewView = ({ t }: WithTranslation) => {
   let curent_order       = latestStatus?.currentOrder??([99, 99]);
   let curent_task        = status.currentTask;
 
+  const preloadError = Object.values(preload_texts).some(text => text !== '');
+
+  const goMaintenance = () => {
+    api
+      .post('/robot/play-job', { job: 'BTN_GO_MAINTENANCE' })
+      .catch(err => alert(err));
+  };
+  
   return (
     <Page>
       {/* Preload 2 */}
@@ -264,6 +282,14 @@ const OverviewView = ({ t }: WithTranslation) => {
           >
             {`${preload_texts[latestStatus?.status_code ?? 'unk']}`}
           </span>
+          {preloadError && (
+              <MaintenanceButton
+                // label={t('manualbuttons.move_to_maintenance')}
+                onTap={() => goMaintenance()}
+                frontIcon={<GrVmMaintenance />}
+                doubleLine
+              />
+            )}
         </div>
       </div>
       {/* end Preload 2 */}
