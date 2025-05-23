@@ -48,13 +48,15 @@ const EmergencyStatus = ({ t }: WithTranslation) => {
     >
       <EmergencyText>{t('statusbar.emer_stopped')} ({t('emergency.text')} {
         emergencyStatus && emergencyButton ?
-        [
-          ...(emergencyStatus.pendant === false ? ['A'] : []),
-          ...(emergencyStatus.door    === false ? ['B'] : []),
-          ...Object.entries(emergencyButton).filter(btn => btn[1] === false).map(btn => btn[0].toUpperCase())
-        ].join(', ')
-        :
-        ''
+          [
+            ...(emergencyStatus.pendant === false ? ['A'] : []),
+            ...(emergencyStatus.door === false ? ['B'] : []),
+            ...Object.entries(emergencyButton)
+              .filter(btn => btn[1] === false)
+              .map(btn => btn[0].replace('tap_', '').toUpperCase())
+          ].join(', ')
+          :
+          ''
       })</EmergencyText>
     </EmergencyStatusContainer>
   );
