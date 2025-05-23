@@ -51,9 +51,7 @@ const EmergencyStatus = ({ t }: WithTranslation) => {
           [
             ...(emergencyStatus.pendant === false ? ['A'] : []),
             ...(emergencyStatus.door === false ? ['B'] : []),
-            ...Object.entries(emergencyButton)
-              .filter(btn => btn[1] === false)
-              .map(btn => btn[0].replace('tap_', '').toUpperCase())
+            ...Object.entries(emergencyButton).filter(btn => btn[1] === false).map(btn => btn[0].toUpperCase())
           ].join(', ')
           :
           ''

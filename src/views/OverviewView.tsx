@@ -35,6 +35,7 @@ import preloadBg from '@assets/img/CLARA.png';
 
 import Column from '@/components/common/Column';
 import { setLineIndex } from '@/store/task/actions';
+import { GrVmMaintenance } from 'react-icons/gr';
 
 declare global {
   interface String {
