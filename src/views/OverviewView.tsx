@@ -43,9 +43,9 @@ declare global {
   }
 }
 
-String.prototype.replaceJSX = function(from: string, to: ReactElement){
+String.prototype.replaceJSX = function (from: string, to: ReactElement) {
   to = React.cloneElement(to, { key: '0' });
-  
+
   return this.split(from).flatMap(e => [e, to]).slice(0, -1)
 }
 
@@ -192,7 +192,7 @@ const OverviewView = ({ t }: WithTranslation) => {
 
   const onCreateTask = (line_index) => {
     setCreateTaskModalShow(true);
-    taskActions.setLineIndex(task,setTask,line_index);
+    taskActions.setLineIndex(task, setTask, line_index);
   }
   /* Preload 1 */
   const preload_texts = {
@@ -224,11 +224,13 @@ const OverviewView = ({ t }: WithTranslation) => {
   }, [latestStatus]);
   /* end Preload 1 */
 
-  let conveyor_enabled   = latestStatus?.conveyorEnabled??([false, false]);
-  let pallet_enabled     = latestStatus?.palletEnabled??([false, false]);
-  let pallet_operating   = latestStatus?.palletOperating??([false, false]);
-  let curent_order       = latestStatus?.currentOrder??([99, 99]);
-  let curent_task        = status.currentTask;
+  console.log('latestStatus', latestStatus)
+
+  let conveyor_enabled = latestStatus?.conveyorEnabled ?? ([false, false]);
+  let pallet_enabled = latestStatus?.palletEnabled ?? ([false, false]);
+  let pallet_operating = latestStatus?.palletOperating ?? ([false, false]);
+  let curent_order = latestStatus?.currentOrder ?? ([99, 99]);
+  let curent_task = status.currentTask;
 
   const preloadError = Object.values(preload_texts).some(text => text !== '');
 
@@ -237,7 +239,7 @@ const OverviewView = ({ t }: WithTranslation) => {
       .post('/robot/play-job', { job: 'BTN_GO_MAINTENANCE' })
       .catch(err => alert(err));
   };
-  
+
   return (
     <Page>
       {/* Preload 2 */}
@@ -276,7 +278,7 @@ const OverviewView = ({ t }: WithTranslation) => {
               fontSize: '0.5em',
               color:
                 latestStatus?.status_code?.slice(0, 'error_'.length) ===
-                'error_'
+                  'error_'
                   ? 'red'
                   : 'inherit',
             }}
@@ -284,16 +286,21 @@ const OverviewView = ({ t }: WithTranslation) => {
             {`${preload_texts[latestStatus?.status_code ?? 'unk']}`}
           </span>
           {preloadError && (
-              <MaintenanceButton
-                // label={t('manualbuttons.move_to_maintenance')}
-                onTap={() => goMaintenance()}
-                frontIcon={<GrVmMaintenance />}
-                doubleLine
-              />
-            )}
+            <MaintenanceButton
+              // label={t('manualbuttons.move_to_maintenance')}
+              onTap={() => goMaintenance()}
+              frontIcon={<GrVmMaintenance />}
+              doubleLine
+            />
+          )}
         </div>
       </div>
       {/* end Preload 2 */}
+
+
+      <div>
+        {JSON.stringify(latestStatus)}
+      </div>
 
       <OverviewViewContainer>
         {/* <div>
@@ -308,14 +315,14 @@ const OverviewView = ({ t }: WithTranslation) => {
           <Row>
             <PalletStackWithControls idx={0} />
           </Row>
-          <Row>
+          <Row style={{marginLeft: 50}}>
             <PalletStackWithControls idx={1} />
           </Row>
         </OverviewContent>
         <OverviewContent>
           <Row>
             <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
-              {t('maincomponent.overviewview.inputconveyor')+" A"}
+              {t('maincomponent.overviewview.inputconveyor') + " A"}
             </h1>
           </Row>
           <Row>
@@ -331,7 +338,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                       conveyorId: 0,
                       isEnable: toggleValue,
                     })
-                    .then((res: any) => {});
+                    .then((res: any) => { });
                 }}
                 selected={conveyor_enabled[0]}
                 hilighted
@@ -343,11 +350,11 @@ const OverviewView = ({ t }: WithTranslation) => {
                 label={t('common.clear')}
                 onTap={() => {
                   api
-                    .post('/robot/clear-state', { input: true ,line_index:0 })
-                    .then((res: any) => {});
+                    .post('/robot/clear-state', { input: true, line_index: 0 })
+                    .then((res: any) => { });
                 }}
               />
-            
+
             </Column>
             <Column>
               <ConveyorBoxStatus style={{ backgroundColor: 'transparent' }}>
@@ -371,16 +378,16 @@ const OverviewView = ({ t }: WithTranslation) => {
                     latestStatus?.conveyorBox?.[0]?.d == 5
                   }
                 />
-                
+
               </ConveyorBoxStatus>
             </Column>
           </Row>
-          <Row>
+          <Row style={{marginLeft: 50}}>
             <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
-              {t('maincomponent.overviewview.inputconveyor')+" B"}
+              {t('maincomponent.overviewview.inputconveyor') + " B"}
             </h1>
           </Row>
-          <Row>
+          <Row style={{marginLeft: 50}}>
             <Column>
               <Toggle
                 onLabel={t('common.on')}
@@ -393,7 +400,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                       conveyorId: 1,
                       isEnable: toggleValue,
                     })
-                    .then((res: any) => {});
+                    .then((res: any) => { });
                 }}
                 selected={conveyor_enabled[1]}
                 hilighted
@@ -405,11 +412,11 @@ const OverviewView = ({ t }: WithTranslation) => {
                 label={t('common.clear')}
                 onTap={() => {
                   api
-                    .post('/robot/clear-state', { input: true,line_index:1 })
-                    .then((res: any) => {});
+                    .post('/robot/clear-state', { input: true, line_index: 1 })
+                    .then((res: any) => { });
                 }}
               />
-            
+
             </Column>
             <Column>
               <ConveyorBoxStatus style={{ backgroundColor: 'transparent' }}>
@@ -434,7 +441,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                   }
                 />
 
-                </ConveyorBoxStatus>
+              </ConveyorBoxStatus>
             </Column>
           </Row>
           <Row>
@@ -444,32 +451,32 @@ const OverviewView = ({ t }: WithTranslation) => {
           </Row>
           <Row>
             <div>
-              {[[0,0], [1,1], [0,1], [1,0]].map(([iConv, iPallet]) =>
-                <h2 key={iConv*2 + iPallet}>
+              {[[0, 0], [1, 1], [0, 1], [1, 0]].map(([iConv, iPallet]) =>
+                <h2 key={iConv * 2 + iPallet}>
                   {
-                    pallet_enabled[iPallet] && 
-                    curent_order[iPallet] == iConv && 
-                    conveyor_enabled[iConv] && 
-                    curent_task[iConv] !== null && 
-                    pallet_operating[iPallet] ? 
-                    '✅' : '⛔'
+                    pallet_enabled[iPallet] &&
+                      curent_order[iPallet] == iConv &&
+                      conveyor_enabled[iConv] &&
+                      curent_task[iConv] !== null &&
+                      pallet_operating[iPallet] ?
+                      '✅' : '⛔'
                   }
-                  &ensp;{t('overview.line')} {iConv==0 ? 'A':'B'} {t('overview.to')} {iPallet==0 ? 'A':'B'} |&nbsp;
+                  &ensp;{t('overview.line')} {iConv == 0 ? 'A' : 'B'} {t('overview.to')} {iPallet == 0 ? 'A' : 'B'} |&nbsp;
                   {
-                    !pallet_enabled[iPallet]       ?  t('overview.pallet_is_off')
-                                                        .replace('{i}', iPallet==0 ? 'A':'B')
-                                                        .replaceJSX('{off}', <Red>{t('pallet.off')}</Red>) : // <>Pallet {iPallet==0 ? 'A':'B'} is <Red>OFF</Red></> : 
-                    curent_order[iPallet] != iConv ?  t('overview.pallet_is_order')
-                                                        .replace('{iPallet}', iPallet==0 ? 'A':'B')
-                                                        .replaceJSX('{order}', <Red>{t('pallet.order')} {iConv==1 ? 'A':'B'}</Red>) : // <>Pallet {iPallet==0 ? 'A':'B'} is currently <Red>Order {iConv==1 ? 'A':'B'}</Red></> : 
-                    !conveyor_enabled[iConv]       ?  t('overview.conv_is_off')
-                                                        .replace('{i}', iConv==0 ? 'A':'B')
-                                                        .replaceJSX('{off}', <Red>{t('pallet.off')}</Red>) : // <>Input Conveyor {iConv==0 ? 'A':'B'} is <Red>OFF</Red></> : 
-                    curent_task[iConv] === null    ?  t('overview.create_new_order')
-                                                        .replaceJSX('{new_order}', <Red>{t('overview.new_order').replace('{i}', iConv==0 ? 'A':'B')}</Red>) : // <>Please create <Red>New Order {iConv==0 ? 'A':'B'}</Red></> : 
-                    !pallet_operating[iPallet]     ?  t('overview.no_pallet')
-                                                        .replaceJSX('{no_pallet}', <Red>{t('pallet.no_in_output')}</Red>) : // <><Red>No pallet</Red>. Wait for picking...</> : 
-                                                      <Green>{t('overview.on')}</Green>
+                    !pallet_enabled[iPallet] ? t('overview.pallet_is_off')
+                      .replace('{i}', iPallet == 0 ? 'A' : 'B')
+                      .replaceJSX('{off}', <Red>{t('pallet.off')}</Red>) : // <>Pallet {iPallet==0 ? 'A':'B'} is <Red>OFF</Red></> : 
+                      curent_order[iPallet] != iConv ? t('overview.pallet_is_order')
+                        .replace('{iPallet}', iPallet == 0 ? 'A' : 'B')
+                        .replaceJSX('{order}', <Red>{t('pallet.order')} {iConv == 1 ? 'A' : 'B'}</Red>) : // <>Pallet {iPallet==0 ? 'A':'B'} is currently <Red>Order {iConv==1 ? 'A':'B'}</Red></> : 
+                        !conveyor_enabled[iConv] ? t('overview.conv_is_off')
+                          .replace('{i}', iConv == 0 ? 'A' : 'B')
+                          .replaceJSX('{off}', <Red>{t('pallet.off')}</Red>) : // <>Input Conveyor {iConv==0 ? 'A':'B'} is <Red>OFF</Red></> : 
+                          curent_task[iConv] === null ? t('overview.create_new_order')
+                            .replaceJSX('{new_order}', <Red>{t('overview.new_order').replace('{i}', iConv == 0 ? 'A' : 'B')}</Red>) : // <>Please create <Red>New Order {iConv==0 ? 'A':'B'}</Red></> : 
+                            !pallet_operating[iPallet] ? t('overview.no_pallet')
+                              .replaceJSX('{no_pallet}', <Red>{t('pallet.no_in_output')}</Red>) : // <><Red>No pallet</Red>. Wait for picking...</> : 
+                              <Green>{t('overview.on')}</Green>
                   }
                 </h2>
               )}
@@ -519,8 +526,8 @@ const OverviewView = ({ t }: WithTranslation) => {
               {t('maincomponent.overviewview.current_task')}
             </h1>
           </Row>
-          <TaskStat line_index={0}/>
-          <TaskStat line_index={1}/>
+          <TaskStat line_index={0} />
+          <TaskStat line_index={1} />
           <OverViewDivider />
           <Button
             // disabled={
@@ -536,8 +543,8 @@ const OverviewView = ({ t }: WithTranslation) => {
               latestStatus?.currentOrder?.[1] === 0 && (latestStatus?.finishLayerIdx?.[1] !== 0 || latestStatus?.finishBoxIdx?.[1] !== 0)
             }
             frontIcon={<IoIosCreate />}
-            label={t('maincomponent.createtask.button')+" A"}
-            onTap={()=>onCreateTask(0)}
+            label={t('maincomponent.createtask.button') + " A"}
+            onTap={() => onCreateTask(0)}
           />
           <Button
             // disabled={
@@ -553,8 +560,8 @@ const OverviewView = ({ t }: WithTranslation) => {
               latestStatus?.currentOrder?.[1] === 1 && (latestStatus?.finishLayerIdx?.[1] !== 0 || latestStatus?.finishBoxIdx?.[1] !== 0)
             }
             frontIcon={<IoIosCreate />}
-            label={t('maincomponent.createtask.button')+" B"}
-            onTap={()=>onCreateTask(1)}
+            label={t('maincomponent.createtask.button') + " B"}
+            onTap={() => onCreateTask(1)}
           />
           {/* <WhyDisabledText
             show={
