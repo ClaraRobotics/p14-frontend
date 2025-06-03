@@ -298,9 +298,9 @@ const OverviewView = ({ t }: WithTranslation) => {
       {/* end Preload 2 */}
 
 
-      <div>
+      {/* <div>
         {JSON.stringify(latestStatus)}
-      </div>
+      </div> */}
 
       <OverviewViewContainer>
         {/* <div>
@@ -315,7 +315,7 @@ const OverviewView = ({ t }: WithTranslation) => {
           <Row>
             <PalletStackWithControls idx={0} />
           </Row>
-          <Row style={{marginLeft: 50}}>
+          <Row style={{marginLeft: 30}}>
             <PalletStackWithControls idx={1} />
           </Row>
         </OverviewContent>
@@ -382,12 +382,12 @@ const OverviewView = ({ t }: WithTranslation) => {
               </ConveyorBoxStatus>
             </Column>
           </Row>
-          <Row style={{marginLeft: 50}}>
+          <Row style={{marginLeft: 30}}>
             <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
               {t('maincomponent.overviewview.inputconveyor') + " B"}
             </h1>
           </Row>
-          <Row style={{marginLeft: 50}}>
+          <Row style={{marginLeft: 30}}>
             <Column>
               <Toggle
                 onLabel={t('common.on')}
