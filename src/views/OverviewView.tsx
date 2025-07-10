@@ -49,28 +49,23 @@ String.prototype.replaceJSX = function (from: string, to: ReactElement) {
   return this.split(from).flatMap(e => [e, to]).slice(0, -1)
 }
 
-
 const OverviewViewContainer = styled.div`
   display: flex;
   flex-direction: row;
   height: 100%;
 `;
+
 const OverviewContent = styled.div`
   padding-left: 50px;
   border-left: 1px solid ${styles.colors.gray6};
   flex: 1;
 `;
+
 const CreateTaskOptionContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
 `;
-
-// const WhyDisabledText = styled.div<{
-//   show: boolean;
-// }>`
-//   display: ${(p) => (p.show ? 'block' : 'none')};
-// `;
 
 const CreateTaskOption = styled.div`
   width: 30%;
@@ -105,10 +100,8 @@ const OverViewDivider = styled.div`
 const ConveyorBoxStatus = styled.div`
   position: relative;
   margin-top: 5px;
-  // margin-bottom: 65px;
   width: 350px;
   height: 122px;
-  // border: 2px solid ${styles.colors.gray6};
 `;
 
 const ConveyorLine = styled.div<{
@@ -152,16 +145,6 @@ const BoxPositionState = styled.div<{
   background-color: ${(p) => (p.active ? styles.colors.gray2 : 'none')};
 `;
 
-// const DblStackerActive = styled.div<{ active: boolean }>`
-//   position: absolute;
-//   left: 60px;
-//   top: 5px;
-//   width: 300px;
-//   height: 30px;
-//   color: ${styles.colors.green};
-//   display: ${(p) => (p.active ? 'initial' : 'none')};
-// `;
-
 const MaintenanceButton = styled(Button)`
   position: fixed;
   bottom: 20px;
@@ -174,11 +157,11 @@ const MaintenanceButton = styled(Button)`
 
 const Green = styled.span`
   color: ${styles.colors.green};
-`
+`;
 
 const Red = styled.span`
   color: ${styles.colors.danger2};
-`
+`;
 
 const OverviewView = ({ t }: WithTranslation) => {
   const history = useHistory();
@@ -188,12 +171,56 @@ const OverviewView = ({ t }: WithTranslation) => {
   const [task, setTask] = useRecoilState(taskState);
   const [createTaskModalShow, setCreateTaskModalShow] = useState(false);
 
+  const [loadingStates, setLoadingStates] = useState({
+    conveyorToggle: { isLoading: false, conveyorId: null },
+    clearState: { isLoading: false, lineIndex: null },
+    maintenance: false,
+    createTask: false
+  });
+
   const latestStatus = status.lastHeartBeatMessage;
 
   const onCreateTask = (line_index) => {
     setCreateTaskModalShow(true);
     taskActions.setLineIndex(task, setTask, line_index);
   }
+
+  const handleApiCall = async (
+    apiCall: () => Promise<any>,
+    loadingKey: string,
+    additionalData: any = null,
+    successMessage: string = 'สำเร็จ'
+  ) => {
+    try {
+      setLoadingStates(prev => ({
+        ...prev,
+        [loadingKey]: additionalData ? { isLoading: true, ...additionalData } : true
+      }));
+
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timeout')), 10000);
+      });
+
+      await Promise.race([apiCall(), timeoutPromise]);
+
+      console.log(successMessage);
+
+      setLoadingStates(prev => ({
+        ...prev,
+        [loadingKey]: additionalData ? { isLoading: false, ...additionalData } : false
+      }));
+
+    } catch (error) {
+      console.error('API call failed:', error);
+      alert(error.message === 'Request timeout' ? 'คำขอหมดเวลา กรุณาลองใหม่อีกครั้ง' : 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+      
+      setLoadingStates(prev => ({
+        ...prev,
+        [loadingKey]: additionalData ? { isLoading: false, ...additionalData } : false
+      }));
+    }
+  };
+
   /* Preload 1 */
   const preload_texts = {
     unk: '( - ) กำลังเตรียมความพร้อมของระบบ',
@@ -219,8 +246,6 @@ const OverviewView = ({ t }: WithTranslation) => {
     ) {
       setIsPreload(false);
     }
-    // test
-    // setTimeout(()=>setIsPreload(false), 8000)
   }, [latestStatus]);
   /* end Preload 1 */
 
@@ -235,9 +260,30 @@ const OverviewView = ({ t }: WithTranslation) => {
   const preloadError = Object.values(preload_texts).some(text => text !== '');
 
   const goMaintenance = () => {
-    api
-      .post('/robot/play-job', { job: 'BTN_GO_MAINTENANCE' })
-      .catch(err => alert(err));
+    handleApiCall(
+      () => api.post('/robot/play-job', { job: 'BTN_GO_MAINTENANCE' }),
+      'maintenance',
+      null,
+      'เข้าสู่โหมดบำรุงรักษาสำเร็จ'
+    );
+  };
+
+  const handleConveyorToggle = (conveyorId: number, isEnable: boolean) => {
+    handleApiCall(
+      () => api.post('/robot/conveyor-enable-toggle', { conveyorId, isEnable }),
+      'conveyorToggle',
+      { conveyorId },
+      `${isEnable ? 'เปิด' : 'ปิด'}สายพานที่ ${conveyorId + 1} สำเร็จ`
+    );
+  };
+
+  const handleClearState = (line_index: number) => {
+    handleApiCall(
+      () => api.post('/robot/clear-state', { input: true, line_index }),
+      'clearState',
+      { lineIndex: line_index },
+      `เคลียร์สถานะไลน์ ${line_index + 1} สำเร็จ`
+    );
   };
 
   return (
@@ -287,28 +333,20 @@ const OverviewView = ({ t }: WithTranslation) => {
           </span>
           {preloadError && (
             <MaintenanceButton
-              // label={t('manualbuttons.move_to_maintenance')}
               onTap={() => goMaintenance()}
               frontIcon={<GrVmMaintenance />}
+              label={loadingStates.maintenance ? 
+                t('component.common.loading.text') + '...' : 
+                'บำรุงรักษา'}
               doubleLine
+              disabled={loadingStates.maintenance}
             />
           )}
         </div>
       </div>
       {/* end Preload 2 */}
 
-
-      {/* <div>
-        {JSON.stringify(latestStatus)}
-      </div> */}
-
       <OverviewViewContainer>
-        {/* <div>
-          layerIdx {latestStatus.layerIdx}<br/>
-          boxIdx {latestStatus.boxIdx}<br/>
-          finishLayerIdx {latestStatus.finishLayerIdx}<br/>
-          finishBoxIdx {latestStatus.finishBoxIdx}<br/>
-        </div> */}
         <OverviewContent
           style={{ width: 800, borderLeft: 'none', paddingLeft: 0 }}
         >
@@ -333,28 +371,20 @@ const OverviewView = ({ t }: WithTranslation) => {
                 offLabel={t('common.off')}
                 offValue={false}
                 onToggle={(toggleValue: boolean) => {
-                  api
-                    .post('/robot/conveyor-enable-toggle', {
-                      conveyorId: 0,
-                      isEnable: toggleValue,
-                    })
-                    .then((res: any) => { });
+                  handleConveyorToggle(0, toggleValue);
                 }}
                 selected={conveyor_enabled[0]}
                 hilighted
+                disabled={loadingStates.conveyorToggle.isLoading && loadingStates.conveyorToggle.conveyorId === 0}
               />
               <Button
                 style={{ width: 150, marginLeft: 0 }}
-                disabled={false}
+                disabled={loadingStates.clearState.isLoading && loadingStates.clearState.lineIndex === 0}
                 frontIcon={<IoIosCube />}
-                label={t('common.clear')}
-                onTap={() => {
-                  api
-                    .post('/robot/clear-state', { input: true, line_index: 0 })
-                    .then((res: any) => { });
-                }}
+                label={loadingStates.clearState.isLoading && loadingStates.clearState.lineIndex === 0 ? 
+                  t('component.common.loading.text') + '...' : t('common.clear')}
+                onTap={() => handleClearState(0)}
               />
-
             </Column>
             <Column>
               <ConveyorBoxStatus style={{ backgroundColor: 'transparent' }}>
@@ -378,7 +408,6 @@ const OverviewView = ({ t }: WithTranslation) => {
                     latestStatus?.conveyorBox?.[0]?.d == 5
                   }
                 />
-
               </ConveyorBoxStatus>
             </Column>
           </Row>
@@ -395,28 +424,20 @@ const OverviewView = ({ t }: WithTranslation) => {
                 offLabel={t('common.off')}
                 offValue={false}
                 onToggle={(toggleValue: boolean) => {
-                  api
-                    .post('/robot/conveyor-enable-toggle', {
-                      conveyorId: 1,
-                      isEnable: toggleValue,
-                    })
-                    .then((res: any) => { });
+                  handleConveyorToggle(1, toggleValue);
                 }}
                 selected={conveyor_enabled[1]}
                 hilighted
+                disabled={loadingStates.conveyorToggle.isLoading && loadingStates.conveyorToggle.conveyorId === 1}
               />
               <Button
                 style={{ width: 150, marginLeft: 0 }}
-                disabled={false}
+                disabled={loadingStates.clearState.isLoading && loadingStates.clearState.lineIndex === 1}
                 frontIcon={<IoIosCube />}
-                label={t('common.clear')}
-                onTap={() => {
-                  api
-                    .post('/robot/clear-state', { input: true, line_index: 1 })
-                    .then((res: any) => { });
-                }}
+                label={loadingStates.clearState.isLoading && loadingStates.clearState.lineIndex === 1 ? 
+                  t('component.common.loading.text') + '...' : t('common.clear')}
+                onTap={() => handleClearState(1)}
               />
-
             </Column>
             <Column>
               <ConveyorBoxStatus style={{ backgroundColor: 'transparent' }}>
@@ -440,7 +461,6 @@ const OverviewView = ({ t }: WithTranslation) => {
                     latestStatus?.conveyorBox?.[0]?.d == 5
                   }
                 />
-
               </ConveyorBoxStatus>
             </Column>
           </Row>
@@ -465,62 +485,27 @@ const OverviewView = ({ t }: WithTranslation) => {
                   {
                     !pallet_enabled[iPallet] ? t('overview.pallet_is_off')
                       .replace('{i}', iPallet == 0 ? 'A' : 'B')
-                      .replaceJSX('{off}', <Red>{t('pallet.off')}</Red>) : // <>Pallet {iPallet==0 ? 'A':'B'} is <Red>OFF</Red></> : 
+                      .replaceJSX('{off}', <Red>{t('pallet.off')}</Red>) :
                       curent_order[iPallet] != iConv ? t('overview.pallet_is_order')
                         .replace('{iPallet}', iPallet == 0 ? 'A' : 'B')
-                        .replaceJSX('{order}', <Red>{t('pallet.order')} {iConv == 1 ? 'A' : 'B'}</Red>) : // <>Pallet {iPallet==0 ? 'A':'B'} is currently <Red>Order {iConv==1 ? 'A':'B'}</Red></> : 
+                        .replaceJSX('{order}', <Red>{t('pallet.order')} {iConv == 1 ? 'A' : 'B'}</Red>) :
                         !conveyor_enabled[iConv] ? t('overview.conv_is_off')
                           .replace('{i}', iConv == 0 ? 'A' : 'B')
-                          .replaceJSX('{off}', <Red>{t('pallet.off')}</Red>) : // <>Input Conveyor {iConv==0 ? 'A':'B'} is <Red>OFF</Red></> : 
+                          .replaceJSX('{off}', <Red>{t('pallet.off')}</Red>) :
                           curent_task[iConv] === null ? t('overview.create_new_order')
-                            .replaceJSX('{new_order}', <Red>{t('overview.new_order').replace('{i}', iConv == 0 ? 'A' : 'B')}</Red>) : // <>Please create <Red>New Order {iConv==0 ? 'A':'B'}</Red></> : 
+                            .replaceJSX('{new_order}', <Red>{t('overview.new_order').replace('{i}', iConv == 0 ? 'A' : 'B')}</Red>) :
                             !pallet_operating[iPallet] ? t('overview.no_pallet')
-                              .replaceJSX('{no_pallet}', <Red>{t('pallet.no_in_output')}</Red>) : // <><Red>No pallet</Red>. Wait for picking...</> : 
+                              .replaceJSX('{no_pallet}', <Red>{t('pallet.no_in_output')}</Red>) :
                               <Green>{t('overview.on')}</Green>
                   }
                 </h2>
               )}
             </div>
           </Row>
-          {/* <Row>
-            <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
-              {t('pallet.pallet_slipsh')}
-            </h1>
-          </Row> */}
           <Row>
-            {/* <VerticalPercentBar
-              label={t('maincomponent.overviewview.remaining_pallet')}
-              percent={palletStockAmount / 100}
-              color={
-                palletStockAmount / 100 < dangerTreshold
-                  ? styles.colors.danger2
-                  : styles.colors.success1
-              }
-            /> */}
-
-            {/* <VerticalPercentBar
-              label={t('maincomponent.overviewview.remaining_slipsheet') + ' 1'}
-              percent={slipSheetStockAmount?.[0] / 100}
-              color={
-                slipSheetStockAmount?.[0] / 100 < dangerTreshold
-                  ? styles.colors.danger2
-                  : styles.colors.success1
-              }
-            /> */}
-            {/* <VerticalPercentBar
-              label={t('maincomponent.overviewview.remaining_slipsheet') + ' 2'}
-              percent={slipSheetStockAmount?.[1] / 100}
-              color={
-                slipSheetStockAmount?.[1] / 100 < dangerTreshold
-                  ? styles.colors.danger2
-                  : styles.colors.success1
-              }
-            /> */}
           </Row>
         </OverviewContent>
         <OverviewContent>
-          {/*JSON.stringify(task.robotSimulation)*/}
-          {/*<BoxSizePreview dataToDisplay={dummyData.stackCenter} layerHeight={dummyData.layerHeight} />*/}
           <Row>
             <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
               {t('maincomponent.overviewview.current_task')}
@@ -530,49 +515,29 @@ const OverviewView = ({ t }: WithTranslation) => {
           <TaskStat line_index={1} />
           <OverViewDivider />
           <Button
-            // disabled={
-            //   latestStatus.finishBoxIdx?.some((x) => x != 0) ||
-            //   latestStatus.finishLayerIdx?.some((x) => x != 0) ||
-            //   ((latestStatus?.palletEnabled?.[0] !== true ||
-            //     latestStatus?.palletState?.[0]?.mn == 6) && // wait load
-            //     (latestStatus?.palletEnabled?.[1] !== true ||
-            //       latestStatus?.palletState?.[1]?.mn == 6)) // wait load
-            // }
             disabled={
-              latestStatus?.currentOrder?.[0] === 0 && (latestStatus?.finishLayerIdx?.[0] !== 0 || latestStatus?.finishBoxIdx?.[0] !== 0) ||
-              latestStatus?.currentOrder?.[1] === 0 && (latestStatus?.finishLayerIdx?.[1] !== 0 || latestStatus?.finishBoxIdx?.[1] !== 0)
+              (latestStatus?.currentOrder?.[0] === 0 && (latestStatus?.finishLayerIdx?.[0] !== 0 || latestStatus?.finishBoxIdx?.[0] !== 0)) ||
+              (latestStatus?.currentOrder?.[1] === 0 && (latestStatus?.finishLayerIdx?.[1] !== 0 || latestStatus?.finishBoxIdx?.[1] !== 0)) ||
+              loadingStates.createTask
             }
             frontIcon={<IoIosCreate />}
-            label={t('maincomponent.createtask.button') + " A"}
+            label={loadingStates.createTask ? 
+              t('component.common.loading.text') + '...' : 
+              t('maincomponent.createtask.button') + " A"}
             onTap={() => onCreateTask(0)}
           />
           <Button
-            // disabled={
-            //   latestStatus.finishBoxIdx?.some((x) => x != 0) ||
-            //   latestStatus.finishLayerIdx?.some((x) => x != 0) ||
-            //   ((latestStatus?.palletEnabled?.[0] !== true ||
-            //     latestStatus?.palletState?.[0]?.mn == 6) && // wait load
-            //     (latestStatus?.palletEnabled?.[1] !== true ||
-            //       latestStatus?.palletState?.[1]?.mn == 6)) // wait load
-            // }
             disabled={
-              latestStatus?.currentOrder?.[0] === 1 && (latestStatus?.finishLayerIdx?.[0] !== 0 || latestStatus?.finishBoxIdx?.[0] !== 0) ||
-              latestStatus?.currentOrder?.[1] === 1 && (latestStatus?.finishLayerIdx?.[1] !== 0 || latestStatus?.finishBoxIdx?.[1] !== 0)
+              (latestStatus?.currentOrder?.[0] === 1 && (latestStatus?.finishLayerIdx?.[0] !== 0 || latestStatus?.finishBoxIdx?.[0] !== 0)) ||
+              (latestStatus?.currentOrder?.[1] === 1 && (latestStatus?.finishLayerIdx?.[1] !== 0 || latestStatus?.finishBoxIdx?.[1] !== 0)) ||
+              loadingStates.createTask
             }
             frontIcon={<IoIosCreate />}
-            label={t('maincomponent.createtask.button') + " B"}
+            label={loadingStates.createTask ? 
+              t('component.common.loading.text') + '...' : 
+              t('maincomponent.createtask.button') + " B"}
             onTap={() => onCreateTask(1)}
           />
-          {/* <WhyDisabledText
-            show={
-              (latestStatus?.palletEnabled?.[0] !== true ||
-                latestStatus?.palletState?.[0]?.mn == 6) && // wait load
-              (latestStatus?.palletEnabled?.[1] !== true ||
-                latestStatus?.palletState?.[1]?.mn == 6) // wait load
-            }
-          >
-            กรุณาโหลดพาเลท และเปิดพาเลท ก่อนเริ่มสั่งงานใหม่
-          </WhyDisabledText> */}
           <ManualControlButtons />
           {/*Start of modal components*/}
           <BasicModal
@@ -621,4 +586,5 @@ const OverviewView = ({ t }: WithTranslation) => {
     </Page>
   );
 };
+
 export default withTranslation()(OverviewView);

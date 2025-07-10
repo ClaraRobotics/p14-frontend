@@ -53,72 +53,109 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
 
   const latestStatus = status.lastHeartBeatMessage;
 
+  const [loadingStates, setLoadingStates] = useState({
+    loadPalletAndStart: false,
+    gripperReleaseA: false,
+    gripperReleaseB: false,
+    goHome: false,
+    goMaintenance: false,
+    pickPallet1: false,
+    pickPallet2: false
+  });
+
+  const handleApiCall = async (
+    apiCall: () => Promise<any>,
+    loadingKey: string,
+    successMessage: string = 'สำเร็จ'
+  ) => {
+    try {
+      setLoadingStates(prev => ({
+        ...prev,
+        [loadingKey]: true
+      }));
+
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timeout')), 10000);
+      });
+
+      await Promise.race([apiCall(), timeoutPromise]);
+
+      console.log(successMessage);
+
+      setLoadingStates(prev => ({
+        ...prev,
+        [loadingKey]: false
+      }));
+
+    } catch (error) {
+      console.error('API call failed:', error);
+      alert(error.message === 'Request timeout' ? 'คำขอหมดเวลา กรุณาลองใหม่อีกครั้ง' : 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+      
+      setLoadingStates(prev => ({
+        ...prev,
+        [loadingKey]: false
+      }));
+    }
+  };
+
   const checkEmerThenCallAction = (callbackFunction: () => any) => {
     viewActions.checkEmerThencall(view, setView, status, callbackFunction);
   };
+
   const loadPalletAndStart = () => {
-    //TODO handle error
-    api
-      .post('/robot/play-job', { job: 'RUN_STACK' })
-      .then((res: any) => {})
-      .catch((err: any) => {
-        alert(err);
-      });
+    handleApiCall(
+      () => api.post('/robot/play-job', { job: 'RUN_STACK' }),
+      'loadPalletAndStart',
+      'เริ่มงาน RUN_STACK สำเร็จ'
+    );
   };
+
   const gripperReleaseA = () => {
-    //TODO handle error
-    api
-      .post('/robot/play-job', { job: 'BTN_GRIPPER_R_A' })
-      .then((res: any) => {})
-      .catch((err: any) => {
-        alert(err);
-      });
+    handleApiCall(
+      () => api.post('/robot/play-job', { job: 'BTN_GRIPPER_R_A' }),
+      'gripperReleaseA',
+      'ปล่อย Gripper A สำเร็จ'
+    );
   };
+
   const gripperReleaseB = () => {
-    //TODO handle error
-    api
-      .post('/robot/play-job', { job: 'BTN_GRIPPER_R_B' })
-      .then((res: any) => {})
-      .catch((err: any) => {
-        alert(err);
-      });
+    handleApiCall(
+      () => api.post('/robot/play-job', { job: 'BTN_GRIPPER_R_B' }),
+      'gripperReleaseB',
+      'ปล่อย Gripper B สำเร็จ'
+    );
   };
 
   const goHome = () => {
-    //TODO handle error
-    api
-      .post('/robot/play-job', { job: 'BTN_GO_HOME' })
-      .then((res: any) => {})
-      .catch((err: any) => {
-        alert(err);
-      });
+    handleApiCall(
+      () => api.post('/robot/play-job', { job: 'BTN_GO_HOME' }),
+      'goHome',
+      'กลับตำแหน่ง Home สำเร็จ'
+    );
   };
+
   const goMaintenance = () => {
-    //TODO handle error
-    api
-      .post('/robot/play-job', { job: 'BTN_GO_MAINTENANCE' })
-      .then((res: any) => {})
-      .catch((err: any) => {
-        alert(err);
-      });
+    handleApiCall(
+      () => api.post('/robot/play-job', { job: 'BTN_GO_MAINTENANCE' }),
+      'goMaintenance',
+      'ไปตำแหน่ง Maintenance สำเร็จ'
+    );
   };
+
   const pickPallet1 = () => {
-    //TODO handle error
-    api
-      .post('/robot/play-job', { job: 'PICK_PALLET_1' })
-      .then((res: any) => {})
-      .catch((err: any) => {
-        alert(err);
-      });
+    handleApiCall(
+      () => api.post('/robot/play-job', { job: 'PICK_PALLET_1' }),
+      'pickPallet1',
+      'หยิบ Pallet 1 สำเร็จ'
+    );
   };
+
   const pickPallet2 = () => {
-    //TODO handle error
-    api
-      .post('/robot/play-job', { job: 'PICK_PALLET_2' })
-      .then((res: any) => {})
-      .catch((err: any) => {
-        alert(err);
-      });
+    handleApiCall(
+      () => api.post('/robot/play-job', { job: 'PICK_PALLET_2' }),
+      'pickPallet2',
+      'หยิบ Pallet 2 สำเร็จ'
+    );
   };
 
   // console.log({latestStatus})
@@ -191,32 +228,36 @@ const ManualControlButtons = ({ t }: WithTranslation) => {
         </ButtonsGroupLabel>
         <ButtonColumn>
           <Button
-            label={t('manualbuttons.move_to_home')}
+            label={loadingStates.goHome ? t('component.common.loading.text') + '...' : t('manualbuttons.move_to_home')}
             onTap={() => checkEmerThenCallAction(goHome)}
             frontIcon={<AiFillHome />}
             doubleLine
+            disabled={loadingStates.goHome}
           />
           <Button
-            label={t('manualbuttons.move_to_maintenance')}
+            label={loadingStates.goMaintenance ? t('component.common.loading.text') + '...' : t('manualbuttons.move_to_maintenance')}
             onTap={() => checkEmerThenCallAction(goMaintenance)}
             frontIcon={<GrVmMaintenance />}
             doubleLine
+            disabled={loadingStates.goMaintenance}
           />
         </ButtonColumn>
         <ButtonColumn>
           <Button
             // style={{ width: 130 }}
-            label={t('manualbuttons.gripper_release_a')}
+            label={loadingStates.gripperReleaseA ? t('component.common.loading.text') + '...' : t('manualbuttons.gripper_release_a')}
             onTap={() => checkEmerThenCallAction(gripperReleaseA)}
             // frontIcon={<GiHorizontalFlip />}
             doubleLine
+            disabled={loadingStates.gripperReleaseA}
           />
           <Button
             // style={{ width: 130 }}
-            label={t('manualbuttons.gripper_release_b')}
+            label={loadingStates.gripperReleaseB ? t('component.common.loading.text') + '...' : t('manualbuttons.gripper_release_b')}
             onTap={() => checkEmerThenCallAction(gripperReleaseB)}
             // frontIcon={<GiHorizontalFlip />}
             doubleLine
+            disabled={loadingStates.gripperReleaseB}
           />
           {/* <Button
             style={{ width: 130, fontSize: '1.4rem' }}

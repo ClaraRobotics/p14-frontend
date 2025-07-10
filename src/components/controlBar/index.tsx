@@ -32,6 +32,7 @@ const LeftBtnGroup = styled.div`
   display: flex;
   flex: 1;
 `;
+
 const RightBtnGroup = styled.div`
   display: flex;
   justify-content: right;
@@ -70,15 +71,16 @@ const RobotStatusValue = styled.div<{status?: boolean}>`
 
 const Green = styled.span`
   color: ${styles.colors.green};
-`
+`;
 
 const Yellow = styled.span`
   color: ${styles.colors.primary2};
-`
+`;
 
 const Red = styled.span`
   color: ${styles.colors.danger2};
-`
+`;
+
 const SpeedIconWrapper = styled.div`
   transition: all 0.3s ease;
   transform-origin: center;
@@ -89,12 +91,6 @@ const SpeedIconWrapper = styled.div`
   width: 24px; 
   height: 24px; 
 `;
-
-// const SpeedSvg = styled.svg`
-//   width: 24px;
-//   height: 24px;
-//   fill: ${styles.colors.gray2};
-// `;
 
 const RabbitIcon = () => (
   <svg 
@@ -206,8 +202,53 @@ const ControlBar = ({ t }: WithTranslation) => {
   const [view, setView] = useRecoilState(viewState);
 
   const latestStatus = status.lastHeartBeatMessage;
-
   const palletStockAmount = latestStatus?.palletStockAmount;
+
+  const [loadingStates, setLoadingStates] = useState({
+    startRobot: false,
+    holdRobot: false,
+    endStack: { isLoading: false, lineIndex: null },
+    robotSpeed: false
+  });
+
+  const [isCountingDown, setIsCountingDown] = useState(false);
+  const [countdown, setCountdown] = useState(5);
+
+  const handleApiCall = async (
+    apiCall: () => Promise<any>,
+    loadingKey: string,
+    additionalData: any = null,
+    successMessage: string = 'สำเร็จ'
+  ) => {
+    try {
+      setLoadingStates(prev => ({
+        ...prev,
+        [loadingKey]: additionalData ? { isLoading: true, ...additionalData } : true
+      }));
+
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timeout')), 10000);
+      });
+
+      await Promise.race([apiCall(), timeoutPromise]);
+
+      console.log(successMessage);
+
+      setLoadingStates(prev => ({
+        ...prev,
+        [loadingKey]: additionalData ? { isLoading: false, ...additionalData } : false
+      }));
+
+    } catch (error) {
+      console.error('API call failed:', error);
+      alert(error.message === 'Request timeout' ? 'คำขอหมดเวลา กรุณาลองใหม่อีกครั้ง' : 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+      
+      setLoadingStates(prev => ({
+        ...prev,
+        [loadingKey]: additionalData ? { isLoading: false, ...additionalData } : false
+      }));
+    }
+  };
 
   const status_code_texts = {
     idle: 'หุ่นยนต์ว่าง',
@@ -224,15 +265,12 @@ const ControlBar = ({ t }: WithTranslation) => {
   };
 
   const endStack = (line_index) => {
-    //TODO handle error
-
-    // statusActions.setCurrentTask(status, setStatus, {});
-    api
-      .post('/robot/end-order',{line_index:line_index})
-      .then((res: any) => {})
-      .catch((err: any) => {
-        alert(err);
-      });
+    handleApiCall(
+      () => api.post('/robot/end-order', { line_index: line_index }),
+      'endStack',
+      { lineIndex: line_index },
+      `จบงานไลน์ ${line_index + 1} สำเร็จ`
+    );
   };
 
   const startRobot = () => {
@@ -242,42 +280,42 @@ const ControlBar = ({ t }: WithTranslation) => {
       latestStatus.running_job?.job_name?.slice(0, 4) == 'RUN_'  ||
       latestStatus.running_job?.job_name?.slice(0, 5) == 'PICK_'
     ) {
-      api
-        .get('/robot/start')
-        .then((res) => {})
-        .catch((err) => {});
-    }
-    else {
-      api
-        .post('/robot/play-job', { job: 'ENTER_RUN_STACK' })
-        .then((res: any) => {})
-        .catch((err: any) => {
-          alert(err);
-        })
+      handleApiCall(
+        () => api.get('/robot/start'),
+        'startRobot',
+        null,
+        'เริ่มทำงานหุ่นยนต์สำเร็จ'
+      );
+    } else {
+      handleApiCall(
+        () => api.post('/robot/play-job', { job: 'ENTER_RUN_STACK' }),
+        'startRobot',
+        null,
+        'เข้าสู่โหมดทำงานสำเร็จ'
+      );
     }
   };
 
   const holdRobot = () => {
-    api
-      .get('/robot/hold')
-      .then((res) => {})
-      .catch((err) => {});
+    handleApiCall(
+      () => api.get('/robot/hold'),
+      'holdRobot',
+      null,
+      'หยุดหุ่นยนต์ชั่วคราวสำเร็จ'
+    );
   };
 
-  const [isCountingDown, setIsCountingDown] = useState(false);
-  const [countdown, setCountdown] = useState(5);
-
   const robotSpeed = () => {
-    if (isCountingDown) return;
+    if (isCountingDown || loadingStates.robotSpeed) return;
 
-    api
-      .post('/robot/change-robot-speed', { speed: latestStatus.robotSpeed === 1 ? 0 : 1 })
-      .then((res) => {
-        console.log('Robot speed changed successfully');
-      })
-      .catch((err) => {
-        console.error('Error changing robot speed:', err);
-      });
+    const newSpeed = latestStatus.robotSpeed === 1 ? 0 : 1;
+    
+    handleApiCall(
+      () => api.post('/robot/change-robot-speed', { speed: newSpeed }),
+      'robotSpeed',
+      null,
+      `เปลี่ยนความเร็วหุ่นยนต์เป็น ${newSpeed === 1 ? 'เร็ว' : 'ช้า'} สำเร็จ`
+    );
   
     setIsCountingDown(true);
     setCountdown(5);
@@ -299,20 +337,30 @@ const ControlBar = ({ t }: WithTranslation) => {
       <LeftBtnGroup>
         <ControlButton
           icon={<BsFillPlayFill />}
-          label={t('controlbar.button.start')}
+          label={loadingStates.startRobot ? 
+            '...' : 
+            t('controlbar.button.start')}
           onTap={() => {checkEmerThenCallAction(startRobot)}}
           color={styles.colors.green}
+          disabled={loadingStates.startRobot}
         />
         <Divider />
         <ControlButton
           icon={<BsPauseFill />}
-          label={t('controlbar.button.pause')}
+          label={loadingStates.holdRobot ? 
+            '...' : 
+            t('controlbar.button.pause')}
           onTap={holdRobot}
+          disabled={loadingStates.holdRobot}
         />
         <Divider />
         <ControlButton
             icon={
-              isCountingDown ? (
+              loadingStates.robotSpeed ? (
+                <div style={{ fontSize: '8px', fontWeight: 'bold', width: '60px', textAlign: 'center' }}>
+                  {t('component.common.loading.text')}...
+                </div>
+              ) : isCountingDown ? (
                 <div style={{ fontSize: '20px', fontWeight: 'bold' }}>{countdown}</div>
               ) : (
                 <SpeedIconWrapper isHighSpeed={latestStatus.robotSpeed === 1}>
@@ -326,9 +374,11 @@ const ControlBar = ({ t }: WithTranslation) => {
               justifyContent: 'center',
               alignItems: 'center'
             }}
-            label={isCountingDown ? '...' : t('control.button.change_speed')}
+            label={loadingStates.robotSpeed ? 
+              '...' : 
+              isCountingDown ? '...' : t('control.button.change_speed')}
             onTap={robotSpeed}
-            disabled={isCountingDown}
+            disabled={isCountingDown || loadingStates.robotSpeed}
           />
         <Divider />
         <div style={{width: 100, textAlign: 'center'}}>
@@ -345,14 +395,20 @@ const ControlBar = ({ t }: WithTranslation) => {
         {/* <Divider />
         <ControlButton
           icon={<MdLayersClear />}
-          label={t('controlbar.button.end')+"A"}
+          label={(loadingStates.endStack.isLoading && loadingStates.endStack.lineIndex === 0) ? 
+            t('component.common.loading.text') + '...' : 
+            t('controlbar.button.end')+"A"}
           onTap={() => {checkEmerThenCallAction(()=>endStack(0))}}
+          disabled={loadingStates.endStack.isLoading && loadingStates.endStack.lineIndex === 0}
         />
         <Divider />
-                <ControlButton
+        <ControlButton
           icon={<MdLayersClear />}
-          label={t('controlbar.button.end')+"B"}
-          onTap={() => {checkEmerThenCallAction(()=>endStack(0))}}
+          label={(loadingStates.endStack.isLoading && loadingStates.endStack.lineIndex === 1) ? 
+            t('component.common.loading.text') + '...' : 
+            t('controlbar.button.end')+"B"}
+          onTap={() => {checkEmerThenCallAction(()=>endStack(1))}}
+          disabled={loadingStates.endStack.isLoading && loadingStates.endStack.lineIndex === 1}
         /> */}
       <RobotStatusContainer>
         <RobotStatusLabel>
