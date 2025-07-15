@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { toInteger } from 'lodash';
-import { FaWrench } from 'react-icons/fa';
+import { FaSave, FaWrench } from 'react-icons/fa';
 import { AiOutlineWarning } from 'react-icons/ai';
 
 import {
@@ -68,11 +68,13 @@ const SummaryContent = ({ t }: WithTranslation) => {
     api
       .post('/save/task', saveTaskPayload)
       .then((res: any) => {
-        setStatus({ ...status, taskTitle: [
-          ...status.taskTitle.slice(0, valCurrentLineIndex), 
-          taskTitle, 
-          ...status.taskTitle.slice(valCurrentLineIndex + 1)
-        ]});
+        setStatus({
+          ...status, taskTitle: [
+            ...status.taskTitle.slice(0, valCurrentLineIndex),
+            taskTitle,
+            ...status.taskTitle.slice(valCurrentLineIndex + 1)
+          ]
+        });
       })
       .catch((err: any) => {
         alert(err);
@@ -82,7 +84,7 @@ const SummaryContent = ({ t }: WithTranslation) => {
   const robotStart = () => {
     // grilled
 
-  
+
     const payloadLayers = generatePayloadLayers(
       task,
       system,
@@ -94,7 +96,7 @@ const SummaryContent = ({ t }: WithTranslation) => {
       .post('/robot/start-order', {
         ...payloadLayers,
         dryRun: isDryRun,
-        line_index:valCurrentLineIndex
+        line_index: valCurrentLineIndex
       })
       .then((res) => {
         let robotSimulation = res.data;
@@ -107,7 +109,6 @@ const SummaryContent = ({ t }: WithTranslation) => {
           'Unspec. Order',
           valCurrentLineIndex
         );
-        setIsShowSaveModal(true);
       })
       .catch((err) => {
         if (err.response) {
@@ -139,9 +140,8 @@ const SummaryContent = ({ t }: WithTranslation) => {
         label={t('taskbuilder.summary.label.boxsize')}
         slot={
           <FieldBody>
-            {`${boxDimension.width || system.boxMinWidth} x ${
-              boxDimension.height || system.boxMinHeight
-            } ${t('common.mm')}`}
+            {`${boxDimension.width || system.boxMinWidth} x ${boxDimension.height || system.boxMinHeight
+              } ${t('common.mm')}`}
           </FieldBody>
         }
         info
@@ -195,9 +195,8 @@ const SummaryContent = ({ t }: WithTranslation) => {
         slot={
           <FieldBody>
             {task.isSlipSheet
-              ? `${t('common.every')} ${
-                  task.slipSheetEvery
-                } ${t('taskbuilder.layer.title')}`
+              ? `${t('common.every')} ${task.slipSheetEvery
+              } ${t('taskbuilder.layer.title')}`
               : t('common.no')}
           </FieldBody>
         }
@@ -215,13 +214,13 @@ const SummaryContent = ({ t }: WithTranslation) => {
         slot={
           <FieldBody>
             <Toggle
-                onLabel={t('common.on')}
-                onValue={true}
-                offLabel={t('common.off')}
-                offValue={false}
-                onToggle={setIsDryRun}
-                selected={isDryRun}
-              />
+              onLabel={t('common.on')}
+              onValue={true}
+              offLabel={t('common.off')}
+              offValue={false}
+              onToggle={setIsDryRun}
+              selected={isDryRun}
+            />
           </FieldBody>
         }
         info
@@ -241,6 +240,14 @@ const SummaryContent = ({ t }: WithTranslation) => {
             }
           />
         )}
+
+        <Button
+          label={t('Save')}
+          rearIcon={<FaSave />}
+          onTap={() => {
+            setIsShowSaveModal(true);
+          }}
+        />
       </Row>
 
       <ModalSaveTask
@@ -248,7 +255,7 @@ const SummaryContent = ({ t }: WithTranslation) => {
         callbackAction={callAPISaveTask}
         callbackSubButton={() => {
           setIsShowSaveModal(false);
-          history.push('/');
+          // history.push('/');
         }}
       >
         {taskDetailContent}
