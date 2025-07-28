@@ -241,16 +241,16 @@ const SummaryContent = ({ t }: WithTranslation) => {
           />
         )}
 
-        <Button
+        {/* <Button
           label={t('Save')}
           rearIcon={<FaSave />}
           onTap={() => {
             setIsShowSaveModal(true);
           }}
-        />
+        /> */}
       </Row>
 
-      <ModalSaveTask
+      {/* <ModalSaveTask
         isShow={isShowSaveModal}
         callbackAction={callAPISaveTask}
         callbackSubButton={() => {
@@ -259,7 +259,7 @@ const SummaryContent = ({ t }: WithTranslation) => {
         }}
       >
         {taskDetailContent}
-      </ModalSaveTask>
+      </ModalSaveTask> */}
     </Wrapper>
   );
 };
