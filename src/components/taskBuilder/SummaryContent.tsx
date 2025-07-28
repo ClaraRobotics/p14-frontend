@@ -20,7 +20,6 @@ import api from '@/api';
 import Button from '@/components/common/buttons/Button';
 import Field from '@/components/common/Field';
 import Row from '@/components/common/Row';
-import ModalSaveTask from '@/components/common/modals/ModalSaveTask';
 import { WithTranslation, withTranslation } from 'react-i18next';
 import { currentLineIndex, maxPossibleBoxesPerPallet } from '@/store/task/selectors';
 import { InfoTextSmall } from '@/components/common/texts/InfoText';
@@ -40,7 +39,6 @@ const FieldBody = styled.div`
 const SummaryContent = ({ t }: WithTranslation) => {
   const [task, setTask] = useRecoilState(taskState);
   const [status, setStatus] = useRecoilState(statusState);
-  const [isShowSaveModal, setIsShowSaveModal] = useState(false);
   const system = useRecoilValue(systemState);
   const { boxDimension, palletDimension, stackHeight } = task;
   const history = useHistory();
@@ -81,9 +79,9 @@ const SummaryContent = ({ t }: WithTranslation) => {
       });
     history.push('/');
   };
+
   const robotStart = () => {
     // grilled
-
 
     const payloadLayers = generatePayloadLayers(
       task,
@@ -184,12 +182,6 @@ const SummaryContent = ({ t }: WithTranslation) => {
         info
         labelCol={4}
       />
-      {/* <Field
-        label={'ความเร็วหุ่นยนต์'}
-        slot={<FieldBody>{task.robotSpeed == 0 ? 'อัตโนมัติ' : task.robotSpeed == 1 ? 'เร็ว' : 'ช้า'}</FieldBody>}
-        info
-        labelCol={4}
-      /> */}
       <Field
         label={t('slipsheet.slipsheet')}
         slot={
@@ -205,6 +197,7 @@ const SummaryContent = ({ t }: WithTranslation) => {
       />
     </>
   );
+
   return (
     <Wrapper>
       <h1>{t('taskbuilder.summary.title')}</h1>
@@ -234,32 +227,13 @@ const SummaryContent = ({ t }: WithTranslation) => {
           <Button
             label={t('taskbuilder.summary.button.start')}
             rearIcon={<FaWrench />}
-            onTap={
-              () => checkEmerThenCallAction(() => robotStart())
-              // ()=>robotStart()
-            }
+            onTap={() => {
+              checkEmerThenCallAction(() => robotStart());
+              history.push('/');
+            }}
           />
         )}
-
-        {/* <Button
-          label={t('Save')}
-          rearIcon={<FaSave />}
-          onTap={() => {
-            setIsShowSaveModal(true);
-          }}
-        /> */}
       </Row>
-
-      {/* <ModalSaveTask
-        isShow={isShowSaveModal}
-        callbackAction={callAPISaveTask}
-        callbackSubButton={() => {
-          setIsShowSaveModal(false);
-          // history.push('/');
-        }}
-      >
-        {taskDetailContent}
-      </ModalSaveTask> */}
     </Wrapper>
   );
 };

@@ -104,8 +104,8 @@ const AlertText = styled.div`
 // Main component for pattern preview with boxes or error message
 const PatternPreview = ({ t, boxes, line_index = 0 }: PatternPreviewProps) => {
   const positionOffset = line_index === 0 
-    ? { top: '20%', left: '45%' }
-    : { top: '80%', left: '55%' };
+    ? { top: '50%', left: '45%' }
+    : { top: '50%', left: '45%' };
   
   return (
     <div>
