@@ -8,8 +8,8 @@ interface ModalSaveTaskProps extends WithTranslation {
   isShow: boolean;
   callbackAction: (taskTitle: string) => void;
   callbackSubButton: () => void;
-
 }
+
 const ModalSaveTask = ({
   t,
   isShow,
@@ -18,6 +18,7 @@ const ModalSaveTask = ({
   children,
 }: PropsWithChildren<ModalSaveTaskProps>) => {
   const [taskTitle, setTaskTitle] = useState('');
+
   return (
     <AlertModal
       title={'บันทึกออเดอร์'}
@@ -31,11 +32,11 @@ const ModalSaveTask = ({
         label="ชื่อออเดอร์"
         slot={
           <TextInput
-            value={undefined}
+            value={taskTitle}
             label={''}
             onChange={setTaskTitle}
             keyboardPosition="middle"
-          ></TextInput>
+          />
         }
       />
       {children}

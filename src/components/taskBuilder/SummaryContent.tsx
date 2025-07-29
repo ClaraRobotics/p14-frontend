@@ -20,7 +20,8 @@ import api from '@/api';
 import Button from '@/components/common/buttons/Button';
 import Field from '@/components/common/Field';
 import Row from '@/components/common/Row';
-import { WithTranslation, withTranslation } from 'react-i18next';
+
+import { useTranslation, WithTranslation, withTranslation } from 'react-i18next';
 import { currentLineIndex, maxPossibleBoxesPerPallet } from '@/store/task/selectors';
 import { InfoTextSmall } from '@/components/common/texts/InfoText';
 import generatePayloadLayers from '@/util/generatePayloadLayers';
@@ -36,7 +37,8 @@ const FieldBody = styled.div`
   font-size: 24px;
 `;
 
-const SummaryContent = ({ t }: WithTranslation) => {
+const SummaryContent = () => {
+  const { t } = useTranslation();
   const [task, setTask] = useRecoilState(taskState);
   const [status, setStatus] = useRecoilState(statusState);
   const system = useRecoilValue(systemState);
@@ -44,12 +46,14 @@ const SummaryContent = ({ t }: WithTranslation) => {
   const history = useHistory();
   const [view, setView] = useRecoilState(viewState);
   const [isDryRun, setIsDryRun] = useState(false);
-  const valMaxPossibleBoxesPerPallet = useRecoilValue(maxPossibleBoxesPerPallet);
-  const valCurrentLineIndex = useRecoilValue(currentLineIndex);
 
   const checkEmerThenCallAction = (callbackFunction: () => any) => {
     viewActions.checkEmerThencall(view, setView, status, callbackFunction);
   };
+
+  const valMaxPossibleBoxesPerPallet = useRecoilValue(
+    maxPossibleBoxesPerPallet
+  );
 
 
   const back = () => {
@@ -62,23 +66,28 @@ const SummaryContent = ({ t }: WithTranslation) => {
       system,
       toInteger(valMaxPossibleBoxesPerPallet)
     );
-    const saveTaskPayload = { ...payloadLayers, taskTitle };
+    const saveTaskPayload = { ...payloadLayers, taskTitle: taskTitle };
     api
       .post('/save/task', saveTaskPayload)
       .then((res: any) => {
-        setStatus({
-          ...status, taskTitle: [
-            ...status.taskTitle.slice(0, valCurrentLineIndex),
-            taskTitle,
-            ...status.taskTitle.slice(valCurrentLineIndex + 1)
-          ]
-        });
+        setStatus({ ...status, taskTitle });
+        // setStatus({
+        //   ...status, taskTitle: [
+        //     ...status.taskTitle.slice(0, valCurrentLineIndex),
+        //     taskTitle,
+        //     ...status.taskTitle.slice(valCurrentLineIndex + 1)
+        //   ]
+        // });
       })
       .catch((err: any) => {
         alert(err);
       });
     history.push('/');
   };
+
+  const valCurrentLineIndex = useRecoilValue(
+    currentLineIndex
+  );
 
   const robotStart = () => {
     // grilled
@@ -227,9 +236,12 @@ const SummaryContent = ({ t }: WithTranslation) => {
           <Button
             label={t('taskbuilder.summary.button.start')}
             rearIcon={<FaWrench />}
-            onTap={() => {
-              checkEmerThenCallAction(() => robotStart());
-              history.push('/');
+            onTap={
+              //() => checkEmerThenCallAction(() => robotStart())
+              // )
+              () => {
+                robotStart()
+                history.push('/');
             }}
           />
         )}

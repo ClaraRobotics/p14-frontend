@@ -170,15 +170,20 @@ const OverviewView = ({ t }: WithTranslation) => {
   const history = useHistory();
   const goToPatternBuilder = () => history.push('/pattern-builder');
   const goToTaskList = () => history.push('/existing-task');
+  const system = useRecoilValue(systemState);
+  const [hasTaskData, setHasTaskData] = useState(false);
+
+  const [isShowSaveModal, setIsShowSaveModal] = useState(false);
   const [status, setStatus] = useRecoilState(statusState);
   const [task, setTask] = useRecoilState(taskState);
-  const { boxDimension, palletDimension, stackHeight } = task;
   const [createTaskModalShow, setCreateTaskModalShow] = useState(false);
-  const [isShowSaveModal, setIsShowSaveModal] = useState(false);
-  const system = useRecoilValue(systemState);
   const valMaxPossibleBoxesPerPallet = useRecoilValue(maxPossibleBoxesPerPallet);
+  const { boxDimension, palletDimension, stackHeight } = task;
+
+  const latestStatus = status.lastHeartBeatMessage;
+
   const valCurrentLineIndex = useRecoilValue(currentLineIndex);
-  const [hasTaskData, setHasTaskData] = useState(false);
+  const [saveTargetLineIndex, setSaveTargetLineIndex] = useState<number | null>(null);
 
   const [loadingStates, setLoadingStates] = useState({
     conveyorToggle: { isLoading: false, conveyorId: null },
@@ -187,7 +192,6 @@ const OverviewView = ({ t }: WithTranslation) => {
     createTask: false
   });
 
-  const latestStatus = status.lastHeartBeatMessage;
 
   const onCreateTask = (line_index) => {
     setCreateTaskModalShow(true);
@@ -295,13 +299,16 @@ const OverviewView = ({ t }: WithTranslation) => {
     );
   };
 
-  const callAPISaveTask = (taskTitle: string) => {
+  const callAPISaveTask = (taskTitle: string, line_index: number) => {
     const payloadLayers = generatePayloadLayers(
       task,
       system,
-      toInteger(valMaxPossibleBoxesPerPallet)
+      (valMaxPossibleBoxesPerPallet),
+      line_index
     );
-    const saveTaskPayload = { ...payloadLayers, taskTitle };
+
+    const saveTaskPayload = { ...payloadLayers, taskTitle: taskTitle };
+
     api
       .post('/save/task', saveTaskPayload)
       .then((res: any) => {
@@ -458,14 +465,19 @@ const OverviewView = ({ t }: WithTranslation) => {
 
       <ModalSaveTask
         isShow={isShowSaveModal}
-        callbackAction={callAPISaveTask}
+        callbackAction={async (taskTitle: string) => {
+          if (saveTargetLineIndex !== null) {
+            await callAPISaveTask(taskTitle, saveTargetLineIndex);
+          }
+          setIsShowSaveModal(false);
+        }}
         callbackSubButton={() => {
           setIsShowSaveModal(false);
-          // history.push('/');
         }}
       >
         {taskDetailContent}
       </ModalSaveTask>
+
 
       <OverviewViewContainer>
         <OverviewContent
@@ -633,8 +645,8 @@ const OverviewView = ({ t }: WithTranslation) => {
               {t('maincomponent.overviewview.current_task')}
             </h1>
           </Row>
-            <TaskStat line_index={0} onDataStatusChange={setHasTaskData}/>
-            <TaskStat line_index={1} onDataStatusChange={setHasTaskData}/>
+          <TaskStat line_index={0} onDataStatusChange={setHasTaskData} />
+          <TaskStat line_index={1} onDataStatusChange={setHasTaskData} />
           {/* <OverViewDivider /> */}
 
           <Button
@@ -649,11 +661,15 @@ const OverviewView = ({ t }: WithTranslation) => {
               t('maincomponent.createtask.button') + " A"}
             onTap={() => onCreateTask(0)}
           />
+
           <Button
             frontIcon={<FaSave />}
             label={t('Save Order A')}
-            onTap={() => {setIsShowSaveModal(true);}}
-            disabled={!hasTaskData} // Disable when there's no data
+            onTap={() => {
+              setSaveTargetLineIndex(0);
+              setIsShowSaveModal(true);
+            }}
+            disabled={!hasTaskData}
           />
 
           <Button
@@ -671,8 +687,11 @@ const OverviewView = ({ t }: WithTranslation) => {
           <Button
             frontIcon={<FaSave />}
             label={t('Save Order B')}
-            onTap={() => {setIsShowSaveModal(true);}}
-            disabled={!hasTaskData} // Disable when there's no data
+            onTap={() => {
+              setSaveTargetLineIndex(1);
+              setIsShowSaveModal(true);
+            }}
+            disabled={!hasTaskData}
           />
 
           <ManualControlButtons />
