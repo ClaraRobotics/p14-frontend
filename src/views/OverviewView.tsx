@@ -343,7 +343,7 @@ const OverviewView = ({ t }: WithTranslation) => {
         label={t('taskbuilder.summary.label.boxsize')}
         slot={
           <FieldBody>
-            {`${boxDimension.width || system.boxMinWidth} x ${boxDimension.height || system.boxMinHeight
+            {`${status?.currentTask[0]?.widthX || system.boxMinWidth} x ${status?.currentTask[0]?.heightY || system.boxMinHeight
               } ${t('common.mm')}`}
           </FieldBody>
         }
