@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { WithTranslation, withTranslation } from 'react-i18next';
 import { NaNDisplay } from '@/util/numberDisplayUtils';
 import { useRecoilState } from 'recoil';
@@ -18,6 +18,7 @@ import NumberDisplay from '../text/NumberDisplay';
 import Column from '../common/Column';
 import VerticalPercentBar from '../PercentBar/VerticalPercentBar';
 import Row from '../common/Row';
+import AlertModal from '../common/AlertModal';
 
 interface PalletStackWithControlsContentProps {
   enabled: boolean;
@@ -41,7 +42,7 @@ const PalletStackWithControlsContent = styled.div<PalletStackWithControlsContent
 const PalletStackWrap = styled.div`
   width: 250px;
 `;
-const PalletStackEjectWrap = styled.div``;
+
 const PalletInfoContainer = styled.div`
   width: 500px;
   padding-top: 10px;
@@ -55,6 +56,21 @@ const PalletControlContainer = styled.div`
   left: 80px;
   z-index: 1;
 `;
+
+const RegisterPanelContainer = styled.div`
+  width: 400px;
+  height: 200px;
+  font-size: 0.7em;
+`;
+
+const RegValueContainer = styled.div`
+  line-height:70px;
+  font-size:30px;
+  text-align:center;
+  color:white;
+  width:80px;
+`;
+
 const TextWatermark = styled.h1`
     position: absolute;
     top: -19px;
@@ -65,7 +81,7 @@ const TextWatermark = styled.h1`
     height: 300px;
     line-height: 300px;
     text-align: center;
-`
+`;
 
 const idxToChr = (idx: number): string => {
   return String.fromCharCode('A'.charCodeAt(0) + idx);
@@ -74,7 +90,7 @@ const idxToChr = (idx: number): string => {
 const onEjectLoadTap = (idx) => {
   api
     .post('/robot/eject-pallet', { palletId: idx })
-    .then((res: any) => {})
+    .then((res: any) => { })
     .catch((err: any) => {
       alert(err);
     });
@@ -87,6 +103,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
   const { t, idx } = propsData;
   const [status, setStatus] = useRecoilState(statusState);
   const [view, setView] = useRecoilState(viewState);
+  const [showRegAdjustModal, setShowRegAdjustModal] = useState(false);
 
   const checkEmerThenCallAction = (callbackFunction: () => any) => {
     viewActions.checkEmerThencall(view, setView, status, callbackFunction);
@@ -94,25 +111,26 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
 
   const latestStatus = status.lastHeartBeatMessage;
 
-  const current_order    = latestStatus?.currentOrder?.[idx];
-  let palletEnabled      = latestStatus?.palletEnabled?.[idx] === true;
-  let palletOperating    = latestStatus?.palletOperating?.[idx] === true;
-  let layerHeightDiff    = latestStatus?.layerHeightDiff?.[idx];
-  let adjustEnabled      = latestStatus?.status_code?.slice(0, 6) != 'order_' && (
+  const current_order = latestStatus?.currentOrder?.[idx];
+  let palletEnabled = latestStatus?.palletEnabled?.[idx] === true;
+  let palletOperating = latestStatus?.palletOperating?.[idx] === true;
+  let layerHeightDiff = latestStatus?.layerHeightDiff?.[idx];
+  let adjustEnabled = latestStatus?.status_code?.slice(0, 6) != 'order_' && (
     latestStatus?.running_job?.job_name?.slice(0, 5) == 'LINE_' ||
-    latestStatus?.running_job?.job_name?.slice(0, 4) == 'RUN_'  ||
+    latestStatus?.running_job?.job_name?.slice(0, 4) == 'RUN_' ||
     latestStatus?.running_job?.job_name?.slice(0, 5) == 'PICK_'
   )
-
+  let gripperCurrentValue = latestStatus?.gripperCurrentValue;
+  
   return (
     <PalletStackWithControlsContainer>
-      <h1 style={{position: 'absolute', left: 0, top: -33, color: styles.colors.gray1, zIndex: 10}}>{t('pallet.pallet')} {idx==0 ? 'A' : 'B'}</h1>
+      <h1 style={{ position: 'absolute', left: 0, top: -33, color: styles.colors.gray1, zIndex: 10 }}>{t('pallet.pallet')} {idx == 0 ? 'A' : 'B'}</h1>
       <PalletStackWithControlsContent enabled={palletEnabled}>
         <PalletStackWrap>
           {
             palletOperating ?
               <PalletStack idx={idx} />
-            :
+              :
               <TextWatermark>{t('pallet.no_in_output')}</TextWatermark>
           }
         </PalletStackWrap>
@@ -144,10 +162,10 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
             value_1={0}
             value_2={1}
             selected={
-              !palletEnabled ? 99 : 
-              latestStatus.nextOrder?.[idx] == 0 ? 0 :
-              latestStatus.nextOrder?.[idx] == 1 ? 1 :
-              99
+              !palletEnabled ? 99 :
+                latestStatus.nextOrder?.[idx] == 0 ? 0 :
+                  latestStatus.nextOrder?.[idx] == 1 ? 1 :
+                    99
             }
             onToggle={(value) => {
               api
@@ -156,7 +174,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
                   isEnable: value != 99,
                   nextOrder: value
                 })
-                .then((res: any) => {});
+                .then((res: any) => { });
             }}
             hilighted
           />
@@ -190,9 +208,8 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
                 <NumberDisplay
                   value={
                     status.currentTask[current_order]?.isDoubleStack
-                      ? `${latestStatus?.finishLayerIdx?.[idx] + 1}-${
-                          latestStatus?.finishLayerIdx?.[idx] + 2
-                        }`
+                      ? `${latestStatus?.finishLayerIdx?.[idx] + 1}-${latestStatus?.finishLayerIdx?.[idx] + 2
+                      }`
                       : `${latestStatus?.finishLayerIdx?.[idx] + 1}`
                   }
                   label={t('taskbuilder.layer.title').toLocaleUpperCase()}
@@ -202,9 +219,8 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
                 <NumberDisplay
                   value={
                     status.currentTask[current_order]?.isDoubleStack
-                      ? `${latestStatus?.finishBoxIdx?.[idx] * 2 + 1}-${
-                          latestStatus?.finishBoxIdx?.[idx] * 2 + 2
-                        }`
+                      ? `${latestStatus?.finishBoxIdx?.[idx] * 2 + 1}-${latestStatus?.finishBoxIdx?.[idx] * 2 + 2
+                      }`
                       : `${latestStatus?.finishBoxIdx?.[idx] + 1}`
                   }
                   label={t('common.box').toLocaleUpperCase()}
@@ -219,15 +235,15 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
                     (latestStatus.finishLayerIdx?.[idx] *
                       status.currentTask[current_order]?.baseBoxes?.length +
                       latestStatus.finishBoxIdx?.[idx] *
-                        (status.currentTask[current_order]?.isDoubleStack ? 2 : 1)) /
-                      status?.currentTask[current_order]?.boxAmount ?? Number.MAX_SAFE_INTEGER
+                      (status.currentTask[current_order]?.isDoubleStack ? 2 : 1)) /
+                    status?.currentTask[current_order]?.boxAmount ?? Number.MAX_SAFE_INTEGER
                   }
                 >
                   {NaNDisplay(
                     latestStatus.finishLayerIdx?.[idx] *
-                      status.currentTask[current_order]?.baseBoxes?.length +
-                      latestStatus.finishBoxIdx?.[idx] *
-                        (status.currentTask[current_order]?.isDoubleStack ? 2 : 1)
+                    status.currentTask[current_order]?.baseBoxes?.length +
+                    latestStatus.finishBoxIdx?.[idx] *
+                    (status.currentTask[current_order]?.isDoubleStack ? 2 : 1)
                   )}
                   <br />/{NaNDisplay(status?.currentTask[current_order]?.boxAmount)}
                 </VerticalPercentBar>
@@ -235,20 +251,20 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
               <Column style={{ paddingTop: 10 }}>
                 <Row>
                   <NumberDisplay
-                      value={
-                        latestStatus.currentOrder?.[idx] == 0 ? t('pallet.order') + ' A' : 
+                    value={
+                      latestStatus.currentOrder?.[idx] == 0 ? t('pallet.order') + ' A' :
                         latestStatus.currentOrder?.[idx] == 1 ? t('pallet.order') + ' B' :
-                                                                t('pallet.no_order')
-                      }
-                      label={t('pallet.pallet_order')}
-                    />
+                          t('pallet.no_order')
+                    }
+                    label={t('pallet.pallet_order')}
+                  />
                 </Row>
-                <Row style={{height: 80}}>
+                <Row style={{ height: 80 }}>
                   <NumberDisplay
-                      value={layerHeightDiff}
-                      label={t('pallet.adjust_height')}
-                      plus
-                    />
+                    value={layerHeightDiff}
+                    label={t('pallet.adjust_height')}
+                    plus
+                  />
                 </Row>
                 <Row>
                   <Button
@@ -261,7 +277,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
                           palletId: idx,
                           adjustMm: layerHeightDiff - 10
                         })
-                        .then((res: any) => {});
+                        .then((res: any) => { });
                     }}
                   />
                   &ensp;
@@ -275,7 +291,7 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
                           palletId: idx,
                           adjustMm: layerHeightDiff + 10
                         })
-                        .then((res: any) => {});
+                        .then((res: any) => { });
                     }}
                   />
                 </Row>
@@ -295,7 +311,61 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
             </Row>
           </Column>
         </Row>
+        <Row>
+          <Button
+            label={'REG ADJ.'}
+            onTap={() => {
+              setShowRegAdjustModal(true);
+            }}
+            className="primary"
+          />
+        </Row>
       </PalletInfoContainer>
+
+      <AlertModal
+        title={`ปรับค่า REGISTER`}
+        show={showRegAdjustModal}
+        actionButtonLabel={'ปิด'}
+        onActionButtonTap={() => {
+          setShowRegAdjustModal(false);
+        }}
+        actionButtonType="danger"
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '16px',
+            height: '300px',
+            width: '200px',
+          }}
+        >
+          <RegisterPanelContainer>
+            <Row>
+              <div className="register-title">แรงบีบกริปเปอร์</div>
+            </Row>
+            <Row>
+              <Column className="col-4 ">
+                <Button
+                  style={{ width: '80px' }}
+                  label="-10"
+                  onTap={() => { }}
+                  className="primary"
+                />
+              </Column>
+              <Column className="col-4 "><RegValueContainer>{gripperCurrentValue}30%</RegValueContainer></Column>
+              <Column className="col-4 ">
+                <Button
+                  style={{ width: '80px' }}
+                  label="+10"
+                  onTap={() => { }}
+                  className="primary"
+                />
+              </Column>
+            </Row>
+          </RegisterPanelContainer>
+        </div>
+      </AlertModal>
     </PalletStackWithControlsContainer>
   );
 };
