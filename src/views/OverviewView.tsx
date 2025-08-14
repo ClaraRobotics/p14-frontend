@@ -481,7 +481,7 @@ const OverviewView = ({ t }: WithTranslation) => {
 
       <OverviewViewContainer>
         <OverviewContent
-          style={{ width: 800, borderLeft: 'none', paddingLeft: 0 }}
+          style={{ width: 700, borderLeft: 'none', paddingLeft: 0 }}
         >
           <Row>
             <PalletStackWithControls idx={0} />
