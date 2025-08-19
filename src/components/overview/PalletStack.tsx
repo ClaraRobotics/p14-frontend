@@ -11,8 +11,8 @@ interface PalletStackProps extends WithTranslation {
   idx: number
 }
 
-const CONTAINER_WIDTH = 300;
-const CONTAINER_HEIGHT = 300;
+const CONTAINER_WIDTH = 200;
+const CONTAINER_HEIGHT = 200;
 
 const PalletStack = ({ t, idx }: PalletStackProps) => {
   const [status, setStatus] = useRecoilState(statusState);

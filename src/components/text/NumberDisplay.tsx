@@ -14,14 +14,14 @@ interface NumberDisplayContainerProps{
 }
  //width:${props=>props.width};
 const NumberDisplayContainer = styled.div<NumberDisplayContainerProps>`
-
-  height:100px;
+  height:80px;
   background-color:purple
   position:fixed;
   bottom:100mm;
   left:calc(vw - 250px);
 `;
 const NumberContainer = styled.div`
+  width: 200px;
   font-weight:700;
   font-size:35px;
   line-height:35px;

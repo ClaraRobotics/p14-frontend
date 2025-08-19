@@ -4,7 +4,7 @@ import { IconContext } from 'react-icons';
 import { useHistory } from 'react-router';
 import { WithTranslation, withTranslation } from 'react-i18next';
 import { statusState, statusActions } from '@/store';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import TaskStat from '@/components/statusdisplay/TaskStat';
 import styled from 'styled-components';
 import { systemState, taskState, taskActions } from '@/store';
@@ -15,27 +15,24 @@ import BasicModal from '@/components/common/BasicModal';
 import Button from '@/components/common/buttons/Button';
 import Toggle from '../components/common/Toggle';
 import Page from '@/components/common/Page';
-import BoxSizePreview from '@/components/3Ddisplay/BoxSizePreview';
-import dummyData from '@/components/3Ddisplay/dummyData';
 import ManualControlButtons from '@/components/controlCenter/ManualControlButtons';
-import UndoComponent from '@/components/controlCenter/UndoComponent';
+import ModalSaveTask from '@/components/common/modals/ModalSaveTask';
 
 import { IoIosCreate, IoIosCube } from 'react-icons/io';
 import Row from '@/components/common/Row';
-import PalletStack from '@/components/overview/PalletStack';
-import { BsEject } from 'react-icons/bs';
 import PalletStackWithControls from '@/components/overview/PalletStackWithControls';
-import Conveyor from '@/components/overview/Conveyor';
-
-import { BsArrowLeftSquareFill } from 'react-icons/bs';
-import NumberDisplay from '@/components/text/NumberDisplay';
-import VerticalPercentBar from '@/components/PercentBar/VerticalPercentBar';
 
 import preloadBg from '@assets/img/CLARA.png';
 
 import Column from '@/components/common/Column';
-import { setLineIndex } from '@/store/task/actions';
 import { GrVmMaintenance } from 'react-icons/gr';
+import generatePayloadLayers from '@/util/generatePayloadLayers';
+import { toInteger } from 'lodash';
+import { currentLineIndex, maxPossibleBoxesPerPallet } from '@/store/task/selectors';
+import Field from '@/components/common/Field';
+import { InfoTextSmall } from '@/components/common/texts/InfoText';
+import { AiOutlineWarning } from 'react-icons/ai';
+import { FaSave } from 'react-icons/fa';
 
 declare global {
   interface String {
@@ -163,13 +160,30 @@ const Red = styled.span`
   color: ${styles.colors.danger2};
 `;
 
+const FieldBody = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+`;
+
 const OverviewView = ({ t }: WithTranslation) => {
   const history = useHistory();
   const goToPatternBuilder = () => history.push('/pattern-builder');
   const goToTaskList = () => history.push('/existing-task');
+  const system = useRecoilValue(systemState);
+  const [hasTaskData, setHasTaskData] = useState(false);
+
+  const [isShowSaveModal, setIsShowSaveModal] = useState(false);
   const [status, setStatus] = useRecoilState(statusState);
   const [task, setTask] = useRecoilState(taskState);
   const [createTaskModalShow, setCreateTaskModalShow] = useState(false);
+  const valMaxPossibleBoxesPerPallet = useRecoilValue(maxPossibleBoxesPerPallet);
+  const { boxDimension, palletDimension, stackHeight } = task;
+
+  const latestStatus = status.lastHeartBeatMessage;
+
+  const valCurrentLineIndex = useRecoilValue(currentLineIndex);
+  const [saveTargetLineIndex, setSaveTargetLineIndex] = useState<number | null>(null);
 
   const [loadingStates, setLoadingStates] = useState({
     conveyorToggle: { isLoading: false, conveyorId: null },
@@ -178,7 +192,6 @@ const OverviewView = ({ t }: WithTranslation) => {
     createTask: false
   });
 
-  const latestStatus = status.lastHeartBeatMessage;
 
   const onCreateTask = (line_index) => {
     setCreateTaskModalShow(true);
@@ -213,7 +226,7 @@ const OverviewView = ({ t }: WithTranslation) => {
     } catch (error) {
       console.error('API call failed:', error);
       alert(error.message === 'Request timeout' ? 'คำขอหมดเวลา กรุณาลองใหม่อีกครั้ง' : 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
-      
+
       setLoadingStates(prev => ({
         ...prev,
         [loadingKey]: additionalData ? { isLoading: false, ...additionalData } : false
@@ -286,6 +299,110 @@ const OverviewView = ({ t }: WithTranslation) => {
     );
   };
 
+  const callAPISaveTask = (taskTitle: string, line_index: number) => {
+    const payloadLayers = generatePayloadLayers(
+      task,
+      system,
+      (valMaxPossibleBoxesPerPallet),
+      line_index
+    );
+
+    const saveTaskPayload = { ...payloadLayers, taskTitle: taskTitle };
+
+    api
+      .post('/save/task', saveTaskPayload)
+      .then((res: any) => {
+        setStatus({
+          ...status, taskTitle: [
+            ...status.taskTitle.slice(0, valCurrentLineIndex),
+            taskTitle,
+            ...status.taskTitle.slice(valCurrentLineIndex + 1)
+          ]
+        });
+      })
+      .catch((err: any) => {
+        alert(err);
+      });
+    history.push('/');
+  };
+
+  const taskDetailContent = (
+    <>
+      {' '}
+      <Field
+        label={t('taskbuilder.summary.label.palletsize')}
+        slot={
+          <FieldBody>{`${palletDimension.width} x ${palletDimension.height} ${t(
+            'common.mm'
+          )}`}</FieldBody>
+        }
+        info
+        labelCol={4}
+      />
+      <Field
+        label={t('taskbuilder.summary.label.boxsize')}
+        slot={
+          <FieldBody>
+            {`${status?.currentTask[0]?.widthX || system.boxMinWidth} x ${status?.currentTask[0]?.heightY || system.boxMinHeight
+              } ${t('common.mm')}`}
+          </FieldBody>
+        }
+        info
+        labelCol={4}
+      />
+      <Field
+        label={t('taskbuilder.summary.label.stackheight')}
+        slot={
+          <FieldBody>{`${stackHeight || 200} ${t('common.mm')}`}</FieldBody>
+        }
+        info
+        labelCol={4}
+      />
+      <Field
+        label={t('taskbuilder.summary.label.numberofbundles')}
+        slot={
+          task.boxAmount !== undefined ? (
+            task.boxAmount <= valMaxPossibleBoxesPerPallet ? (
+              <FieldBody>{task.boxAmount}</FieldBody>
+            ) : (
+              <FieldBody>
+                {valMaxPossibleBoxesPerPallet}{' '}
+                <InfoTextSmall>
+                  &nbsp;
+                  <AiOutlineWarning />
+                  &nbsp;{t('validation.pallet.exceed.short')}
+                </InfoTextSmall>
+              </FieldBody>
+            )
+          ) : (
+            <div>{valMaxPossibleBoxesPerPallet}</div>
+          )
+        }
+        info
+        labelCol={4}
+      />
+      <Field
+        label={t('taskbuilder.layer.dbl_stacker')}
+        slot={<FieldBody>{task.isDoubleStack ? t('common.yes') : t('common.no')}</FieldBody>}
+        info
+        labelCol={4}
+      />
+      <Field
+        label={t('slipsheet.slipsheet')}
+        slot={
+          <FieldBody>
+            {task.isSlipSheet
+              ? `${t('common.every')} ${task.slipSheetEvery
+              } ${t('taskbuilder.layer.title')}`
+              : t('common.no')}
+          </FieldBody>
+        }
+        info
+        labelCol={4}
+      />
+    </>
+  );
+
   return (
     <Page>
       {/* Preload 2 */}
@@ -335,8 +452,8 @@ const OverviewView = ({ t }: WithTranslation) => {
             <MaintenanceButton
               onTap={() => goMaintenance()}
               frontIcon={<GrVmMaintenance />}
-              label={loadingStates.maintenance ? 
-                t('component.common.loading.text') + '...' : 
+              label={loadingStates.maintenance ?
+                t('component.common.loading.text') + '...' :
                 'บำรุงรักษา'}
               doubleLine
               disabled={loadingStates.maintenance}
@@ -346,20 +463,38 @@ const OverviewView = ({ t }: WithTranslation) => {
       </div>
       {/* end Preload 2 */}
 
+      <ModalSaveTask
+        isShow={isShowSaveModal}
+        callbackAction={async (taskTitle: string) => {
+          if (saveTargetLineIndex !== null) {
+            await callAPISaveTask(taskTitle, saveTargetLineIndex);
+          }
+          setIsShowSaveModal(false);
+        }}
+        callbackSubButton={() => {
+          setIsShowSaveModal(false);
+        }}
+      >
+        {taskDetailContent}
+      </ModalSaveTask>
+
       <OverviewViewContainer>
         <OverviewContent
-          style={{ width: 800, borderLeft: 'none', paddingLeft: 0 }}
+          style={{ width: 700, borderLeft: 'none', paddingLeft: 0, paddingTop: 22 }}
         >
           <Row>
             <PalletStackWithControls idx={0} />
           </Row>
-          <Row style={{marginLeft: 30}}>
+          <Row style={{ marginLeft: 30 }}>
             <PalletStackWithControls idx={1} />
           </Row>
         </OverviewContent>
-        <OverviewContent>
+
+        <OverviewContent
+          style={{ width: 700, paddingLeft: 10 }}
+        >
           <Row>
-            <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
+            <h1 style={{ color: styles.colors.gray3, fontWeight: 600, fontSize: 30 }}>
               {t('maincomponent.overviewview.inputconveyor') + " A"}
             </h1>
           </Row>
@@ -381,7 +516,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                 style={{ width: 150, marginLeft: 0 }}
                 disabled={loadingStates.clearState.isLoading && loadingStates.clearState.lineIndex === 0}
                 frontIcon={<IoIosCube />}
-                label={loadingStates.clearState.isLoading && loadingStates.clearState.lineIndex === 0 ? 
+                label={loadingStates.clearState.isLoading && loadingStates.clearState.lineIndex === 0 ?
                   t('component.common.loading.text') + '...' : t('common.clear')}
                 onTap={() => handleClearState(0)}
               />
@@ -411,12 +546,12 @@ const OverviewView = ({ t }: WithTranslation) => {
               </ConveyorBoxStatus>
             </Column>
           </Row>
-          <Row style={{marginLeft: 30}}>
-            <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
+          <Row style={{ marginLeft: 30 }}>
+            <h1 style={{ color: styles.colors.gray3, fontWeight: 600, fontSize: 30 }}>
               {t('maincomponent.overviewview.inputconveyor') + " B"}
             </h1>
           </Row>
-          <Row style={{marginLeft: 30}}>
+          <Row style={{ marginLeft: 30 }}>
             <Column>
               <Toggle
                 onLabel={t('common.on')}
@@ -434,7 +569,7 @@ const OverviewView = ({ t }: WithTranslation) => {
                 style={{ width: 150, marginLeft: 0 }}
                 disabled={loadingStates.clearState.isLoading && loadingStates.clearState.lineIndex === 1}
                 frontIcon={<IoIosCube />}
-                label={loadingStates.clearState.isLoading && loadingStates.clearState.lineIndex === 1 ? 
+                label={loadingStates.clearState.isLoading && loadingStates.clearState.lineIndex === 1 ?
                   t('component.common.loading.text') + '...' : t('common.clear')}
                 onTap={() => handleClearState(1)}
               />
@@ -465,14 +600,15 @@ const OverviewView = ({ t }: WithTranslation) => {
             </Column>
           </Row>
           <Row>
-            <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
+            <h1 style={{ color: styles.colors.gray3, fontWeight: 600, fontSize: 30 }}>
               {t('overview.checklist')}
             </h1>
           </Row>
           <Row>
             <div>
               {[[0, 0], [1, 1], [0, 1], [1, 0]].map(([iConv, iPallet]) =>
-                <h2 key={iConv * 2 + iPallet}>
+                <h2 style={{ color: styles.colors.gray3, fontWeight: 200, fontSize: 24 }}
+                    key={iConv * 2 + iPallet}>
                   {
                     pallet_enabled[iPallet] &&
                       curent_order[iPallet] == iConv &&
@@ -505,39 +641,69 @@ const OverviewView = ({ t }: WithTranslation) => {
           <Row>
           </Row>
         </OverviewContent>
-        <OverviewContent>
+
+        <OverviewContent
+          style={{ width: 700, paddingLeft: 10 }}
+        >
           <Row>
-            <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
+            <h1 style={{ color: styles.colors.gray3, fontWeight: 600, fontSize: 25 }}>
               {t('maincomponent.overviewview.current_task')}
             </h1>
           </Row>
-          <TaskStat line_index={0} />
-          <TaskStat line_index={1} />
-          <OverViewDivider />
+          <TaskStat line_index={0} onDataStatusChange={setHasTaskData} />
+          <TaskStat line_index={1} onDataStatusChange={setHasTaskData} />
+          {/* <OverViewDivider /> */}
+
           <Button
+            style={{ width: '200px', height: '48px' }}
             disabled={
               (latestStatus?.currentOrder?.[0] === 0 && (latestStatus?.finishLayerIdx?.[0] !== 0 || latestStatus?.finishBoxIdx?.[0] !== 0)) ||
               (latestStatus?.currentOrder?.[1] === 0 && (latestStatus?.finishLayerIdx?.[1] !== 0 || latestStatus?.finishBoxIdx?.[1] !== 0)) ||
               loadingStates.createTask
             }
             frontIcon={<IoIosCreate />}
-            label={loadingStates.createTask ? 
-              t('component.common.loading.text') + '...' : 
+            label={loadingStates.createTask ?
+              t('component.common.loading.text') + '...' :
               t('maincomponent.createtask.button') + " A"}
             onTap={() => onCreateTask(0)}
           />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <Button
+            style={{ width: '200px', height: '48px' }}
+            frontIcon={<FaSave />}
+            label={t('Save Order A')}
+            onTap={() => {
+              setSaveTargetLineIndex(0);
+              setIsShowSaveModal(true);
+            }}
+            disabled={!hasTaskData}
+          />
+          
+          <Button
+            style={{ width: '200px', height: '48px' }}
             disabled={
               (latestStatus?.currentOrder?.[0] === 1 && (latestStatus?.finishLayerIdx?.[0] !== 0 || latestStatus?.finishBoxIdx?.[0] !== 0)) ||
               (latestStatus?.currentOrder?.[1] === 1 && (latestStatus?.finishLayerIdx?.[1] !== 0 || latestStatus?.finishBoxIdx?.[1] !== 0)) ||
               loadingStates.createTask
             }
             frontIcon={<IoIosCreate />}
-            label={loadingStates.createTask ? 
-              t('component.common.loading.text') + '...' : 
+            label={loadingStates.createTask ?
+              t('component.common.loading.text') + '...' :
               t('maincomponent.createtask.button') + " B"}
             onTap={() => onCreateTask(1)}
           />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <Button
+            style={{ width: '200px', height: '48px' }}
+            frontIcon={<FaSave />}
+            label={t('Save Order B')}
+            onTap={() => {
+              setSaveTargetLineIndex(1);
+              setIsShowSaveModal(true);
+            }}
+            disabled={!hasTaskData}
+          />
+
           <ManualControlButtons />
           {/*Start of modal components*/}
           <BasicModal

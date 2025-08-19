@@ -20,8 +20,8 @@ import api from '@/api';
 import Button from '@/components/common/buttons/Button';
 import Field from '@/components/common/Field';
 import Row from '@/components/common/Row';
-import ModalSaveTask from '@/components/common/modals/ModalSaveTask';
-import { WithTranslation, withTranslation } from 'react-i18next';
+
+import { useTranslation, WithTranslation, withTranslation } from 'react-i18next';
 import { currentLineIndex, maxPossibleBoxesPerPallet } from '@/store/task/selectors';
 import { InfoTextSmall } from '@/components/common/texts/InfoText';
 import generatePayloadLayers from '@/util/generatePayloadLayers';
@@ -37,21 +37,23 @@ const FieldBody = styled.div`
   font-size: 24px;
 `;
 
-const SummaryContent = ({ t }: WithTranslation) => {
+const SummaryContent = () => {
+  const { t } = useTranslation();
   const [task, setTask] = useRecoilState(taskState);
   const [status, setStatus] = useRecoilState(statusState);
-  const [isShowSaveModal, setIsShowSaveModal] = useState(false);
   const system = useRecoilValue(systemState);
   const { boxDimension, palletDimension, stackHeight } = task;
   const history = useHistory();
   const [view, setView] = useRecoilState(viewState);
   const [isDryRun, setIsDryRun] = useState(false);
-  const valMaxPossibleBoxesPerPallet = useRecoilValue(maxPossibleBoxesPerPallet);
-  const valCurrentLineIndex = useRecoilValue(currentLineIndex);
 
   const checkEmerThenCallAction = (callbackFunction: () => any) => {
     viewActions.checkEmerThencall(view, setView, status, callbackFunction);
   };
+
+  const valMaxPossibleBoxesPerPallet = useRecoilValue(
+    maxPossibleBoxesPerPallet
+  );
 
 
   const back = () => {
@@ -64,26 +66,31 @@ const SummaryContent = ({ t }: WithTranslation) => {
       system,
       toInteger(valMaxPossibleBoxesPerPallet)
     );
-    const saveTaskPayload = { ...payloadLayers, taskTitle };
+    const saveTaskPayload = { ...payloadLayers, taskTitle: taskTitle };
     api
       .post('/save/task', saveTaskPayload)
       .then((res: any) => {
-        setStatus({
-          ...status, taskTitle: [
-            ...status.taskTitle.slice(0, valCurrentLineIndex),
-            taskTitle,
-            ...status.taskTitle.slice(valCurrentLineIndex + 1)
-          ]
-        });
+        setStatus({ ...status, taskTitle });
+        // setStatus({
+        //   ...status, taskTitle: [
+        //     ...status.taskTitle.slice(0, valCurrentLineIndex),
+        //     taskTitle,
+        //     ...status.taskTitle.slice(valCurrentLineIndex + 1)
+        //   ]
+        // });
       })
       .catch((err: any) => {
         alert(err);
       });
     history.push('/');
   };
+
+  const valCurrentLineIndex = useRecoilValue(
+    currentLineIndex
+  );
+
   const robotStart = () => {
     // grilled
-
 
     const payloadLayers = generatePayloadLayers(
       task,
@@ -184,12 +191,6 @@ const SummaryContent = ({ t }: WithTranslation) => {
         info
         labelCol={4}
       />
-      {/* <Field
-        label={'ความเร็วหุ่นยนต์'}
-        slot={<FieldBody>{task.robotSpeed == 0 ? 'อัตโนมัติ' : task.robotSpeed == 1 ? 'เร็ว' : 'ช้า'}</FieldBody>}
-        info
-        labelCol={4}
-      /> */}
       <Field
         label={t('slipsheet.slipsheet')}
         slot={
@@ -205,6 +206,7 @@ const SummaryContent = ({ t }: WithTranslation) => {
       />
     </>
   );
+
   return (
     <Wrapper>
       <h1>{t('taskbuilder.summary.title')}</h1>
@@ -235,31 +237,15 @@ const SummaryContent = ({ t }: WithTranslation) => {
             label={t('taskbuilder.summary.button.start')}
             rearIcon={<FaWrench />}
             onTap={
-              () => checkEmerThenCallAction(() => robotStart())
-              // ()=>robotStart()
-            }
+              //() => checkEmerThenCallAction(() => robotStart())
+              // )
+              () => {
+                robotStart()
+                history.push('/');
+            }}
           />
         )}
-
-        {/* <Button
-          label={t('Save')}
-          rearIcon={<FaSave />}
-          onTap={() => {
-            setIsShowSaveModal(true);
-          }}
-        /> */}
       </Row>
-
-      {/* <ModalSaveTask
-        isShow={isShowSaveModal}
-        callbackAction={callAPISaveTask}
-        callbackSubButton={() => {
-          setIsShowSaveModal(false);
-          // history.push('/');
-        }}
-      >
-        {taskDetailContent}
-      </ModalSaveTask> */}
     </Wrapper>
   );
 };
