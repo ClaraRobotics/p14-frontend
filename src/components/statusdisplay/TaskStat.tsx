@@ -17,8 +17,8 @@ interface TaskStatContainerProps {
 }
 const TaskStatContainer = styled.div<TaskStatContainerProps>`
   font-size: 14pt;
-  width: 300px;
-  height: 300px;
+  width: 250px;
+  height: 200px;
   margin-left:  ${(props) => props.line_index == 1 ? "0px" : "0px"};
   display: inline-block;
 `;
@@ -51,7 +51,7 @@ const TaskStat = ({ t, line_index, onDataStatusChange }: TaskStatProps) => {
       onDataStatusChange(isThereCurrenTask);
     }
   }, [isThereCurrenTask, onDataStatusChange]);
-  
+
   let currentPattern = [];
   try {
     currentPattern = status.currentTask[line_index].stackCenter[0];
@@ -61,7 +61,8 @@ const TaskStat = ({ t, line_index, onDataStatusChange }: TaskStatProps) => {
 
   return (
     <>
-      { // !isThereCurrenTask ? (
+      {
+        // !isThereCurrenTask ? (
         false ? (
           <TaskStatContainer line_index={line_index}>
             {t('taskstatus.no_task_assigned')}
@@ -71,12 +72,22 @@ const TaskStat = ({ t, line_index, onDataStatusChange }: TaskStatProps) => {
             <PatternPreviewWrapper>
               <PatternPreview boxes={currentPattern} line_index={line_index} />
             </PatternPreviewWrapper>
-            {t('Task.Preview.Size')}: {status?.currentTask[line_index]?.widthX}x{status?.currentTask[line_index]?.heightY}x
+
+            <span style={{ fontSize: '18px', fontWeight: 'bold' }}>
+              {t('Task.Preview.Size')}:
+            </span>{' '}
+            {status?.currentTask[line_index]?.widthX}x
+            {status?.currentTask[line_index]?.heightY}x
             {status?.currentTask[line_index]?.layerHeight}
             <br />
-            {t('Task.Preview.OrderName')}: {status?.taskTitle[line_index]}
+
+            <span style={{ fontSize: '18px', fontWeight: 'bold' }}>
+              {t('Task.Preview.OrderName')}:
+            </span>{' '}
+            {status?.taskTitle[line_index]}
           </TaskStatContainer>
-        )}
+        )
+      }
     </>
   );
 };

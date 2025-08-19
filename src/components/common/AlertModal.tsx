@@ -23,20 +23,22 @@ interface PropsData {
 }
 
 const Container = styled.div`
-  width: 50%;
-  max-height: 80%;
   box-sizing: border-box;
   background-color: ${styles.colors.gray8};
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-direction: column;
-  top: 15%;
-  left: 25%;
-  z-index: 10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
   padding: 48px 64px;
   font-size: 20px;
   font-weight: 600;
   color: ${styles.colors.gray3};
+  border: 2px solid white;
+  border-radius: 12px;
+
   transition: ${styles.transition.animationDuration}
     ${styles.transition.timingFunction};
   -webkit-box-shadow: 0px 0px 18px 0px rgba(31, 31, 31, 0.5);
@@ -45,19 +47,19 @@ const Container = styled.div`
 
   &.${transitionName}-enter {
     opacity: 0;
-    transform: translateY(-10%);
+    transform: translate(-50%, -60%); /* animate from above center */
   }
   &.${transitionName}-enter-active {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate(-50%, -50%);
   }
   &.${transitionName}-exit {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate(-50%, -50%);
   }
   &.${transitionName}-exit-active {
     opacity: 0;
-    transform: translateY(-10%);
+    transform: translate(-50%, -60%);
   }
 `;
 
@@ -94,7 +96,7 @@ const AlertModal = (props: PropsWithChildren<PropsData>) => {
   const numButton = (!!actionButtonLabel?1:0) + (!!action2ButtonLabel?1:0) + (!!subButtonLabel?1:0)
 
   return (
-    <Backdrop show={show}>
+    <div>
       <CSSTransition
         in={show}
         timeout={500}
@@ -134,7 +136,7 @@ const AlertModal = (props: PropsWithChildren<PropsData>) => {
             </ButtonGroup>
           </Container>
      </CSSTransition>
-    </Backdrop>
+    </div>
   );
 };
 

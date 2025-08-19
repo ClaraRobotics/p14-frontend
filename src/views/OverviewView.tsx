@@ -478,10 +478,9 @@ const OverviewView = ({ t }: WithTranslation) => {
         {taskDetailContent}
       </ModalSaveTask>
 
-
       <OverviewViewContainer>
         <OverviewContent
-          style={{ width: 700, borderLeft: 'none', paddingLeft: 0 }}
+          style={{ width: 700, borderLeft: 'none', paddingLeft: 0, paddingTop: 22 }}
         >
           <Row>
             <PalletStackWithControls idx={0} />
@@ -490,9 +489,12 @@ const OverviewView = ({ t }: WithTranslation) => {
             <PalletStackWithControls idx={1} />
           </Row>
         </OverviewContent>
-        <OverviewContent>
+
+        <OverviewContent
+          style={{ width: 700, paddingLeft: 10 }}
+        >
           <Row>
-            <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
+            <h1 style={{ color: styles.colors.gray3, fontWeight: 600, fontSize: 30 }}>
               {t('maincomponent.overviewview.inputconveyor') + " A"}
             </h1>
           </Row>
@@ -545,7 +547,7 @@ const OverviewView = ({ t }: WithTranslation) => {
             </Column>
           </Row>
           <Row style={{ marginLeft: 30 }}>
-            <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
+            <h1 style={{ color: styles.colors.gray3, fontWeight: 600, fontSize: 30 }}>
               {t('maincomponent.overviewview.inputconveyor') + " B"}
             </h1>
           </Row>
@@ -598,14 +600,15 @@ const OverviewView = ({ t }: WithTranslation) => {
             </Column>
           </Row>
           <Row>
-            <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
+            <h1 style={{ color: styles.colors.gray3, fontWeight: 600, fontSize: 30 }}>
               {t('overview.checklist')}
             </h1>
           </Row>
           <Row>
             <div>
               {[[0, 0], [1, 1], [0, 1], [1, 0]].map(([iConv, iPallet]) =>
-                <h2 key={iConv * 2 + iPallet}>
+                <h2 style={{ color: styles.colors.gray3, fontWeight: 200, fontSize: 24 }}
+                    key={iConv * 2 + iPallet}>
                   {
                     pallet_enabled[iPallet] &&
                       curent_order[iPallet] == iConv &&
@@ -639,9 +642,11 @@ const OverviewView = ({ t }: WithTranslation) => {
           </Row>
         </OverviewContent>
 
-        <OverviewContent>
+        <OverviewContent
+          style={{ width: 700, paddingLeft: 10 }}
+        >
           <Row>
-            <h1 style={{ color: styles.colors.gray3, fontWeight: 600 }}>
+            <h1 style={{ color: styles.colors.gray3, fontWeight: 600, fontSize: 25 }}>
               {t('maincomponent.overviewview.current_task')}
             </h1>
           </Row>
@@ -650,6 +655,7 @@ const OverviewView = ({ t }: WithTranslation) => {
           {/* <OverViewDivider /> */}
 
           <Button
+            style={{ width: '200px', height: '48px' }}
             disabled={
               (latestStatus?.currentOrder?.[0] === 0 && (latestStatus?.finishLayerIdx?.[0] !== 0 || latestStatus?.finishBoxIdx?.[0] !== 0)) ||
               (latestStatus?.currentOrder?.[1] === 0 && (latestStatus?.finishLayerIdx?.[1] !== 0 || latestStatus?.finishBoxIdx?.[1] !== 0)) ||
@@ -661,8 +667,9 @@ const OverviewView = ({ t }: WithTranslation) => {
               t('maincomponent.createtask.button') + " A"}
             onTap={() => onCreateTask(0)}
           />
-
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <Button
+            style={{ width: '200px', height: '48px' }}
             frontIcon={<FaSave />}
             label={t('Save Order A')}
             onTap={() => {
@@ -671,8 +678,9 @@ const OverviewView = ({ t }: WithTranslation) => {
             }}
             disabled={!hasTaskData}
           />
-
+          
           <Button
+            style={{ width: '200px', height: '48px' }}
             disabled={
               (latestStatus?.currentOrder?.[0] === 1 && (latestStatus?.finishLayerIdx?.[0] !== 0 || latestStatus?.finishBoxIdx?.[0] !== 0)) ||
               (latestStatus?.currentOrder?.[1] === 1 && (latestStatus?.finishLayerIdx?.[1] !== 0 || latestStatus?.finishBoxIdx?.[1] !== 0)) ||
@@ -684,7 +692,9 @@ const OverviewView = ({ t }: WithTranslation) => {
               t('maincomponent.createtask.button') + " B"}
             onTap={() => onCreateTask(1)}
           />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <Button
+            style={{ width: '200px', height: '48px' }}
             frontIcon={<FaSave />}
             label={t('Save Order B')}
             onTap={() => {

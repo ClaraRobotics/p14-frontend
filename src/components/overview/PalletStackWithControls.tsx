@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { WithTranslation, withTranslation } from 'react-i18next';
 import { NaNDisplay } from '@/util/numberDisplayUtils';
 import { useRecoilState } from 'recoil';
@@ -21,17 +21,9 @@ import AlertModal from '../common/AlertModal';
 interface PalletStackWithControlsContentProps {
   enabled: boolean;
 }
-const PalletStackWithControlsContainer = styled.div`
-  margin-left: 20px;
-  position: relative;
-  width: 170px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-`;
 
 const PalletStackWithControlsContent = styled.div<PalletStackWithControlsContentProps>`
-  paddding-top: 0px;
+  padding-top: 0px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -56,11 +48,14 @@ const RegisterPanelContainer = styled.div`
 `;
 
 const RegValueContainer = styled.div`
-  line-height:70px;
-  font-size:30px;
-  text-align:center;
-  color:white;
-  width:80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 70px;
+  font-size: 30px;
+  color: white;
+  text-align: center;
 `;
 
 const TextWatermark = styled.h1`
@@ -79,6 +74,53 @@ const REGButton = styled(Button)`
   width: 150px;
   height: 30px;
   font-size: 18px;
+`;
+
+const RegisterPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  margin-top: 12px;
+`;
+
+const RegisterTitle = styled.div`
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+  font-size: 24px;
+  margin-bottom: 8px;
+`;
+
+const GripperControls = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+`;
+
+const GripperButton = styled(Button)`
+  width: 80px;
+  height: 50px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const GripperValue = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 70px;
+  font-size: 30px;
+  color: white;
+  background-color: ${styles.colors.gray3};
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 `;
 
 const idxToChr = (idx: number): string => {
@@ -111,9 +153,11 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
   const latestStatus = status.lastHeartBeatMessage;
 
   const current_order = latestStatus?.currentOrder?.[idx];
+
   let palletEnabled = latestStatus?.palletEnabled?.[idx] === true;
   let palletOperating = latestStatus?.palletOperating?.[idx] === true;
   let layerHeightDiff = latestStatus?.layerHeightDiff?.[idx];
+
   let adjustEnabled = latestStatus?.status_code?.slice(0, 6) != 'order_' && (
     latestStatus?.running_job?.job_name?.slice(0, 5) == 'LINE_' ||
     latestStatus?.running_job?.job_name?.slice(0, 4) == 'RUN_' ||
@@ -121,20 +165,19 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
   )
 
   let gripperCurrentValue = latestStatus?.gripperCurrentValue;
-
   const [gripperValueA, setGripperValueA] = useState(30);
   const [gripperValueB, setGripperValueB] = useState(30);
 
-  const adjustGripper = (pallet: 'A' | 'B', delta: number) => {
-    const setValue = pallet === 'A' ? setGripperValueA : setGripperValueB;
-    const currentValue = pallet === 'A' ? gripperValueA : gripperValueB;
+  const adjustGripper = (palletId: number, delta: number) => {
+    const setValue = palletId === 0 ? setGripperValueA : setGripperValueB;
+    const currentValue = palletId === 0 ? gripperValueA : gripperValueB;
 
     const newValue = Math.max(0, Math.min(100, currentValue + delta));
     setValue(newValue);
 
-    api.post('/robot/adjust-gripper', {
-      pallet,
-      value: newValue,
+    api.post("/robot/gripper-torque-adjust", {
+      palletId: idx,
+      value: newValue
     });
   };
 
@@ -151,9 +194,10 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
           >
             {t('pallet.pallet')} {idx === 0 ? 'A' : 'B'}
           </h1>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
           <REGButton
-            label={'REG ADJ.'}
+            label={`REG ADJ.`}
             onTap={() => {
               setShowRegAdjustModal(true);
             }}
@@ -190,29 +234,29 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
           />
         </PalletStackWithControlsContent>
         <TriToggle
-            label_0={t('pallet.off')}
-            label_1={t('pallet.order') + ' A'}
-            label_2={t('pallet.order') + ' B'}
-            value_0={99}
-            value_1={0}
-            value_2={1}
-            selected={
-              !palletEnabled ? 99 :
-                latestStatus.nextOrder?.[idx] == 0 ? 0 :
-                  latestStatus.nextOrder?.[idx] == 1 ? 1 :
-                    99
-            }
-            onToggle={(value) => {
-              api
-                .post('/robot/pallet-enable-toggle', {
-                  palletId: idx,        // 0, 1
-                  isEnable: value != 99,
-                  nextOrder: value
-                })
-                .then((res: any) => { });
-            }}
-            hilighted
-          />
+          label_0={t('pallet.off')}
+          label_1={t('pallet.order') + ' A'}
+          label_2={t('pallet.order') + ' B'}
+          value_0={99}
+          value_1={0}
+          value_2={1}
+          selected={
+            !palletEnabled ? 99 :
+              latestStatus.nextOrder?.[idx] == 0 ? 0 :
+                latestStatus.nextOrder?.[idx] == 1 ? 1 :
+                  99
+          }
+          onToggle={(value) => {
+            api
+              .post('/robot/pallet-enable-toggle', {
+                palletId: idx,        // 0, 1
+                isEnable: value != 99,
+                nextOrder: value
+              })
+              .then((res: any) => { });
+          }}
+          hilighted
+        />
       </Column>
 
       <Column>
@@ -323,79 +367,36 @@ const PalletStackWithControls = (propsData: PalletStackWithControlsProps) => {
           </Row>
         </PalletInfoContainer>
       </Column>
-      <PalletStackWithControlsContainer>
 
-        <AlertModal
-          title="ปรับค่า REGISTER"
-          show={showRegAdjustModal}
-          actionButtonLabel="ปิด"
-          onActionButtonTap={() => setShowRegAdjustModal(false)}
-          actionButtonType="danger"
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '12px' }}>
-            {/* Pallet A */}
-            <RegisterPanelContainer>
-              <Row style={{ marginBottom: '8px' }}>
-                <div className="register-title" style={{ fontWeight: 'bold', textAlign: 'center', width: '100%' }}>
-                  แรงบีบกริปเปอร์ (Pallet A)
-                </div>
-              </Row>
-              <Row>
-                <Column className="col-4">
-                  <Button
-                    style={{ width: '80px' }}
-                    label="-10"
-                    onTap={() => adjustGripper('A', -10)}
-                    className="primary"
-                  />
-                </Column>
-                <Column className="col-4">
-                  <RegValueContainer>{`${gripperValueA}%`}</RegValueContainer>
-                </Column>
-                <Column className="col-4">
-                  <Button
-                    style={{ width: '80px' }}
-                    label="+10"
-                    onTap={() => adjustGripper('A', 10)}
-                    className="primary"
-                  />
-                </Column>
-              </Row>
-            </RegisterPanelContainer>
+      <AlertModal
+        title={`ปรับค่า REGISTER (Pallet ${idx === 0 ? 'A' : 'B'})`}
+        show={showRegAdjustModal}
+        actionButtonLabel="ปิด"
+        onActionButtonTap={() => setShowRegAdjustModal(false)}
+        actionButtonType="danger"
+      >
+        <RegisterPanel>
+          <RegisterTitle>
+            แรงบีบกริปเปอร์ (Pallet {idx === 0 ? 'A' : 'B'})
+          </RegisterTitle>
 
-            {/* Pallet B */}
-            <RegisterPanelContainer>
-              <Row style={{ marginBottom: '8px' }}>
-                <div className="register-title" style={{ fontWeight: 'bold', textAlign: 'center', width: '100%' }}>
-                  แรงบีบกริปเปอร์ (Pallet B)
-                </div>
-              </Row>
-              <Row>
-                <Column className="col-4">
-                  <Button
-                    style={{ width: '80px' }}
-                    label="-10"
-                    onTap={() => adjustGripper('B', -10)}
-                    className="primary"
-                  />
-                </Column>
-                <Column className="col-4">
-                  <RegValueContainer>{`${gripperValueB}%`}</RegValueContainer>
-                </Column>
-                <Column className="col-4">
-                  <Button
-                    style={{ width: '80px' }}
-                    label="+10"
-                    onTap={() => adjustGripper('B', 10)}
-                    className="primary"
-                  />
-                </Column>
-              </Row>
-            </RegisterPanelContainer>
-          </div>
-        </AlertModal>
-
-      </PalletStackWithControlsContainer>
+          <GripperControls>
+            <GripperButton
+              label="-10"
+              onTap={() => adjustGripper(idx, -10)}   // idx = 0 or 1
+              className="primary"
+            />
+            <GripperValue>
+              {`${idx === 0 ? gripperValueA : gripperValueB}%`}
+            </GripperValue>
+            <GripperButton
+              label="+10"
+              onTap={() => adjustGripper(idx, 10)}
+              className="primary"
+            />
+          </GripperControls>
+        </RegisterPanel>
+      </AlertModal>
     </div>
   );
 };
